@@ -14,37 +14,37 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServerResponse<T> implements Serializable {
 
-    private int status;
+    private int code;
     private String msg;
     private T data;
 
-    private ServerResponse(int status){
-        this.status = status;
+    private ServerResponse(int code){
+        this.code = code;
     }
 
-    private ServerResponse(int status, T data){
-        this.status = status;
+    private ServerResponse(int code, T data){
+        this.code = code;
         this.data = data;
     }
 
-    private ServerResponse(int status, String msg, T data){
-        this.status = status;
+    private ServerResponse(int code, String msg, T data){
+        this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    private ServerResponse(int status, String msg){
-        this.status = status;
+    private ServerResponse(int code, String msg){
+        this.code = code;
         this.msg = msg;
     }
 
     @JsonIgnore
     public boolean isSuccess(){
-        return this.status == ResponseCode.SUCCESS.getCode();
+        return this.code == ResponseCode.SUCCESS.getCode();
     }
 
-    public int getStatus() {
-        return status;
+    public int getcode() {
+        return code;
     }
 
     public String getMsg() {
