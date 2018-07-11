@@ -27,4 +27,10 @@
         where phone = #{phone}
     </select>
 
+    <insert id="register" parameterType="String" >
+        insert into normal_user (user_id,phone, password)
+        values (#{user_id,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR})
+    </insert>
+    
+    
 </mapper>

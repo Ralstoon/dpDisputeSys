@@ -9,4 +9,7 @@ public interface NormalUserRepository  {
     NormalUser selectLogin(@Param("phone")String phone, @Param("password") String md5Password);
 
     int checkUser(String phone);
+    /** 注册操作，成功返回1 */
+    int register(@Param("user_id") String user_id,@Param("phone")String phone, @Param("password") String password);
+
 }
