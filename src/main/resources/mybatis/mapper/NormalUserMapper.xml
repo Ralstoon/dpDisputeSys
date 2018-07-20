@@ -5,9 +5,9 @@
         <constructor >
             <idArg column="user_id" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-            <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
-            <arg column="id_card" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="id_card" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
         </constructor>
     </resultMap>
     <sql id="Base_Column_List" >
