@@ -16,4 +16,6 @@ import java.util.List;
  **/
 public interface DisputeInfoRepository extends JpaRepository<DisputeInfo,String> {
     Page<DisputeInfo> findByUserId(String userId, Pageable pageable);
+
+    DisputeInfo findByDisputeId(String disputeId);
 }
