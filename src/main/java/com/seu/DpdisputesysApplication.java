@@ -16,12 +16,12 @@ public class DpdisputesysApplication {
 	}
 
 
-	@Bean
-	public CommandLineRunner init(final FrameStartUpService frameStartUpService) {
-		return new CommandLineRunner() {
-			public void run(String... strings) throws Exception {
-				frameStartUpService.initActiUserAndGroup();
-			}
-		};
-	}
+//	@Bean
+//	public CommandLineRunner init(final FrameStartUpService frameStartUpService) {
+//		return new CommandLineRunner() {
+//			public void run(String... strings) throws Exception {
+//				frameStartUpService.initActiUserAndGroup();
+//			}
+//		};
+//	}
 }

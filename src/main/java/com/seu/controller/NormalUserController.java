@@ -34,6 +34,7 @@ public class NormalUserController {
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public ServerResponse<NormalUser> login(String phone, String password, HttpSession session) {
+        //TODO 没有处理用户反复登陆以及换账户登录的问题
         session.getAttribute("NormalUser");
         ServerResponse<NormalUser> response = iNormalUserService.login(phone, password);
         if (response.isSuccess()) {

@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 @Data
 public class DisputeRegisterDetailForm implements Serializable {
-    private String name="吴宇航";
-    private String sex="男";
+    private String content="这是纠纷信息内容";
 
 }

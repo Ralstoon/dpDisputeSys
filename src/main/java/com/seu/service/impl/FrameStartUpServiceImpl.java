@@ -41,11 +41,19 @@ public class FrameStartUpServiceImpl implements FrameStartUpService {
         Group mediatorGroup=identityService.createGroupQuery().groupId("mediator").singleResult();
 
         for(Admin adminOne:admins){
-            User user=identityService.newUser(adminOne.getAdminId());
+            User user=identityService.createUserQuery().userId(adminOne.getAdminId()).singleResult();
+            if(user==null){
+                user=identityService.newUser(adminOne.getAdminId());
+                identityService.saveUser(user);
+            }
             identityService.createMembership(user.getId(),adminGroup.getId());
         }
         for(Mediator mediatorOne:mediators){
-            User user=identityService.newUser(mediatorOne.getMediatorId());
+            User user=identityService.createUserQuery().userId(mediatorOne.getMediatorId()).singleResult();
+            if(user==null){
+                user=identityService.newUser(mediatorOne.getMediatorId());
+                identityService.saveUser(user);
+            }
             identityService.createMembership(user.getId(),mediatorGroup.getId());
         }
         log.info("【完成将管理员和调解员导入activiti用户和用户组】");

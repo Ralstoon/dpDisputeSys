@@ -45,4 +45,10 @@ public class NormalUserDetailServiceImpl implements NormalUserDetailService {
         BeanUtils.copyProperties(resutDetail,normalUserDetailForm);
         return normalUserDetailForm;
     }
+
+    @Override
+    public String findNormalUserNameByUserId(String userId) {
+        NormalUserDetail normalUserDetail=normalUserDetailRepository.findByUserId(userId);
+        return normalUserDetail.getName();
+    }
 }

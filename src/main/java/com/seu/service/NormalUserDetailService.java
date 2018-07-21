@@ -9,4 +9,7 @@ public interface NormalUserDetailService {
 
     /** 修改普通用户信息 */
     NormalUserDetailForm updateNormalUserDetail(NormalUserDetailForm normalUserDetailForm,String userId);
+
+    /** 根据用户id查找用户实际姓名 */
+    String findNormalUserNameByUserId(String userId);
 }

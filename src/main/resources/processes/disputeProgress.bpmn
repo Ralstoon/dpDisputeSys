@@ -18,6 +18,7 @@
         <flowNodeRef>sid-86A73B28-E468-444C-B32C-B013D3DB9F76</flowNodeRef>
         <flowNodeRef>sid-862F2FDD-2C74-4434-AD6F-A38544819702</flowNodeRef>
         <flowNodeRef>sid-3914F429-DFD7-4B10-8A4C-2BF439B3E7CA</flowNodeRef>
+        <flowNodeRef>_3</flowNodeRef>
       </lane>
       <lane id="lane2" name="调解员">
         <flowNodeRef>usertask3</flowNodeRef>
@@ -94,7 +95,7 @@
     <userTask activiti:exclusive="true" id="usertask3" name="调解员选用户"/>
     <parallelGateway gatewayDirection="Unspecified" id="sid-97E25BEA-8882-464A-81D8-D019E2E88A12"/>
     <serviceTask activiti:class="com.seu.service.webServiceTask.StartMediate" activiti:exclusive="true" id="sid-E98F408E-5F2A-4394-BB72-B85530C82896" name="调解开始"/>
-    <userTask activiti:exclusive="true" id="sid-CCC5ABB1-28C0-47BE-923B-98C8F2B38055" name="暂存确认"/>
+    <userTask activiti:candidateGroups="mediator" activiti:exclusive="true" id="sid-CCC5ABB1-28C0-47BE-923B-98C8F2B38055" name="暂存确认"/>
     <boundaryEvent attachedToRef="sid-CCC5ABB1-28C0-47BE-923B-98C8F2B38055" cancelActivity="true" id="sid-B7C42434-9AB7-4B8E-BB1B-C389029C609B">
       <signalEventDefinition id="sid-B7C42434-9AB7-4B8E-BB1B-C389029C609B_ED_1" signalRef="SIG_1"/>
     </boundaryEvent>
@@ -161,6 +162,8 @@
     <sequenceFlow id="sid-3914F429-DFD7-4B10-8A4C-2BF439B3E7CA" sourceRef="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3" targetRef="sid-55CC4E9A-DC62-4B75-864D-7C8FFAC12E04"/>
     <sequenceFlow id="sid-813C4A38-427C-460C-8558-1FA14B74A0BB" sourceRef="sid-AE3539B0-BAFB-45B7-A65B-BA4CE423DCD4" targetRef="sid-07FF97CD-28E2-4D54-BC14-540719110F9F"/>
     <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
+    <startEvent id="_3" name="StartEvent"/>
+    <sequenceFlow id="_4" sourceRef="_3" targetRef="usertask1"/>
   </process>
   <signal id="SIG_1" name="disputeModifySignal"/>
   <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=3;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
@@ -221,6 +224,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E" id="Shape-sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E">
         <omgdc:Bounds height="32.0" width="32.0" x="2145.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" id="Shape-_3">
+        <omgdc:Bounds height="32.0" width="32.0" x="61.0" y="170.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -520,6 +529,13 @@
       <bpmndi:BPMNEdge bpmnElement="_2" id="BPMNEdge__2" sourceElement="usertask4" targetElement="sid-E98F408E-5F2A-4394-BB72-B85530C82896">
         <omgdi:waypoint x="728.5" y="564.0"/>
         <omgdi:waypoint x="728.5" y="445.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="_3" targetElement="usertask1">
+        <omgdi:waypoint x="82.0" y="201.19868415357067"/>
+        <omgdi:waypoint x="82.0" y="225.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
