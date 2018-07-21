@@ -57,11 +57,9 @@ public class DisputeProgressController {
         }
         //1、存储纠纷信息
         String starterId=((NormalUser)session.getAttribute("currentUser")).getUserId();
-        System.out.println(starterId);
         disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
         String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,starterId);
         String name=normalUserDetailService.findNormalUserNameByUserId(starterId);
-        System.out.println(name);
         session.setAttribute("name",name);
         //2、用纠纷信息id启动流程
         disputeProgressService.startProcess(disputeId);
@@ -71,7 +69,6 @@ public class DisputeProgressController {
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId());
         Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),(String)session.getAttribute("name"));
-        System.out.println(map.toString());
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
 
     }
@@ -161,12 +158,6 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_DISPUTECASELIST_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_DISPUTECASELIST_SUCCESS.getMsg());
     }
 
-    @Autowired
-    private TaskService taskService;
-    @PostMapping(value = "/testlist")
-    public int testlist(HttpSession session){
-        List<Task> taskList = taskService.createTaskQuery().taskCandidateGroup("mediator").list();
-        return taskList.size();
-    }
+
 
 }
