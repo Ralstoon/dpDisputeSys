@@ -4,17 +4,21 @@ package com.seu.controller;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.Const;
+import com.seu.domian.DisputeInfo;
 import com.seu.domian.NormalUser;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.enums.LoginEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
+import com.seu.repository.DisputeInfoRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.NormalUserDetailService;
 import com.seu.utils.CurrentTimeUtil;
 import com.seu.utils.DisputeProcessReturnMap;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,10 +167,30 @@ public class DisputeProgressController {
 
     @Autowired
     private TaskService taskService;
-    @PostMapping(value = "/testlist")
-    public int testlist(HttpSession session){
-        List<Task> taskList = taskService.createTaskQuery().taskCandidateGroup("mediator").list();
-        return taskList.size();
+    @Autowired
+    private RuntimeService runtimeService;
+    @Autowired
+    private DisputeInfoRepository disputeInfoRepository;
+
+
+    /**
+     * @Author: W
+     * @Description: 查询待办任务，根据 参数 task
+     * @Date: 18:08 2018/7/21
+     * @param page
+     * @param size
+     */
+    @PostMapping(value = "/taskList")
+    public ResultVO testlist(HttpSession httpSession,
+                             @RequestParam(value = "page",defaultValue = "1") Integer page,
+                             @RequestParam(value = "size",defaultValue = "10") Integer size,
+                             @RequestParam("task") String task){
+        //todo 身份认证
+        List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByTask(task,page-1,size);
+        Map<String,Object> map=new HashMap<>();
+        map.put("disputeCaseList",disputeCaseFormList);
+        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
     }
+
 
 }

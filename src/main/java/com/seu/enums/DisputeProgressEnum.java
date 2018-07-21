@@ -12,6 +12,7 @@ public enum DisputeProgressEnum {
     TRIGGERSIGNAL_SUCCESS(5,"用户提出纠纷案件信息修改信号触发成功"),
     PROCESSINSTANCE_HASEXIST(6,"该用户的流程实例已经存在，不能再启动新的流程实例"),
     SEARCH_DISPUTECASELIST_SUCCESS(7,"查询当前用户纠纷案例列表成功"),
+    SEARCH_TASK_SUCCESS(8,"查询当前待办任务列表成功"),
 
     ;
     private String msg;

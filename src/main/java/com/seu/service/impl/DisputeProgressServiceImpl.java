@@ -23,7 +23,6 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -157,5 +156,48 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         return disputeCaseFormList;
 
+    }
+
+    @Override
+    public List<DisputeCaseForm> getDisputeListByTask(String task, Integer page, Integer size) {
+
+        List<Task> taskList = taskService.createTaskQuery().taskCandidateGroup(task).listPage(page,size);
+        List<DisputeCaseForm> disputeCaseFormList=new ArrayList<>();
+        for(Task taskItem: taskList){
+            DisputeCaseForm disputeCaseForm=new DisputeCaseForm();
+            //设置DisputeRegisterDetailForm属性
+            disputeCaseForm.setDisputeRegisterDetailForm(DisputeInfo2DisputeRegisterDetailForm.convert(new DisputeInfo()));
+
+            //ProcessInstance processInstance = null;
+            String disputeID = null;
+            while(disputeID == null){
+                disputeID = runtimeService
+                        .createProcessInstanceQuery()
+                        .processInstanceId(taskItem.getProcessInstanceId())
+                        .singleResult().getBusinessKey();
+            }
+
+            DisputeInfo disputeInfo = disputeInfoRepository.findByDisputeId(disputeID);
+
+
+            //设置userName属性
+            String name=normalUserDetailRepository.findByUserId(disputeInfo.getUserId()).getName();
+            disputeCaseForm.setUserName(name);
+            //设置time属性
+            String disputeId=disputeInfo.getDisputeId();
+            Date time=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(disputeId).singleResult().getStartTime(); //2018-07-21 13:42:49.734 yyyy-MM-dd HH:mm:ss.
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            disputeCaseForm.setRegisterTime(sdf.format(time).toString());
+            //设置disputeId
+            disputeCaseForm.setDisputeId(disputeInfo.getDisputeId());
+
+            //设置content
+
+
+            disputeCaseFormList.add(disputeCaseForm);
+
+        }
+        //String disputeID = runtimeService.createProcessInstanceQuery().processInstanceId(taskList.get(0).getProcessInstanceId()).singleResult().getBusinessKey();
+        return disputeCaseFormList;
     }
 }

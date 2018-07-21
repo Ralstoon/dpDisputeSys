@@ -34,4 +34,6 @@ public interface DisputeProgressService {
 
     /** 通过userId分页查找该用户尚未完成的纠纷案件 */
     List<DisputeCaseForm> getDisputeListByUserId(String userId, Integer page, Integer size);
+
+    List<DisputeCaseForm> getDisputeListByTask(String task, Integer page, Integer size);
 }
