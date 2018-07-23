@@ -55,4 +55,10 @@ public class NormalUserImpl implements INormalUserService {
         int resultNum2=normalUserDetailService.registerWithNormalUserDetail(user_id);
         return (resultNum1==resultNum2)?1:-1;
     }
+
+    @Override
+    public String findPhoneByUserId(String userId) {
+        String phone = normalUserRepository.findNormalUserByUserId(userId).getPhone();
+        return phone;
+    }
 }

@@ -8,4 +8,6 @@ public interface INormalUserService {
     ServerResponse<NormalUser> login(String phone, String password);
     /** 用户注册 */
     int register(String phone,String password);
+
+    String findPhoneByUserId(String userId);
 }
