@@ -22,4 +22,5 @@ public class Mediator {
     private String phone;
     private String idCard;
     private String password;
+    private String mediateCenter;
 }

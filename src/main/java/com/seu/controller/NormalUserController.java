@@ -6,6 +6,7 @@ import com.seu.common.Const;
 import com.seu.common.ServerResponse;
 import com.seu.domian.NormalUser;
 import com.seu.domian.NormalUserDetail;
+import com.seu.enums.LoginEnum;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.NormalUserDetailForm;
@@ -20,6 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -72,5 +77,13 @@ public class NormalUserController {
     }
 
 
-
+    @RequestMapping(value = "loginout",method = RequestMethod.GET)
+    public ResultVO loginout(HttpSession session){
+        //删除session中的内容，包括name,currentUser，userType等
+        List<String> params= Collections.list(session.getAttributeNames());
+        for(String param:params){
+            session.removeAttribute(param);
+        }
+        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
+    }
 }

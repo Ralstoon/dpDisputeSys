@@ -21,8 +21,6 @@ public class AutoInform implements JavaDelegate {
         //先从流程中取出变量userId和disputeId
         String email=delegateExecution.getVariable("email").toString();
         String disputeId=delegateExecution.getVariable("disputeId").toString();
-        System.out.println(email);
-        System.out.println(disputeId);
         //验证是否Email是否已填写,填写的话发送邮件
         if(!(email.equals("")||email==null)){
             sendEmail(disputeId,email);

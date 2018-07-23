@@ -8,10 +8,11 @@
             <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="id_card" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="role" jdbcType="VARCHAR" javaType="java.lang.String" />
         </constructor>
     </resultMap>
     <sql id="Base_Column_List" >
-        user_id, user_name, phone, id_card, password
+        user_id, user_name, phone, id_card, password,role
     </sql>
 
     <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
