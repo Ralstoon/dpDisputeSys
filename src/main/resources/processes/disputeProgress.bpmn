@@ -19,6 +19,7 @@
         <flowNodeRef>sid-862F2FDD-2C74-4434-AD6F-A38544819702</flowNodeRef>
         <flowNodeRef>sid-3914F429-DFD7-4B10-8A4C-2BF439B3E7CA</flowNodeRef>
         <flowNodeRef>_3</flowNodeRef>
+        <flowNodeRef>_7</flowNodeRef>
       </lane>
       <lane id="lane2" name="调解员">
         <flowNodeRef>usertask3</flowNodeRef>
@@ -88,7 +89,7 @@
     </laneSet>
     <userTask activiti:exclusive="true" id="usertask1" name="纠纷登记"/>
     <userTask activiti:exclusive="true" id="usertask5" name="用户选择调解员"/>
-    <serviceTask activiti:class="com.seu.service.webServiceTask.AutoInformAfterRegister" activiti:exclusive="true" id="sid-7CC128D2-7049-4434-8C2B-2FA55A4740D4" name="自动通知"/>
+    <serviceTask activiti:class="com.seu.service.webServiceTask.AutoInform" activiti:exclusive="true" id="sid-7CC128D2-7049-4434-8C2B-2FA55A4740D4" name="自动通知"/>
     <userTask activiti:exclusive="true" id="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3" name="损害/医疗鉴定"/>
     <endEvent id="sid-01815696-C738-453B-A88C-1FD1445E1F9F" name="结束1：立案失败"/>
     <endEvent id="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E" name="撤销结束"/>
@@ -117,7 +118,7 @@
     <endEvent id="sid-FBACFE1A-238A-4A9A-9AA8-37E794D626E4" name="调解成功结束"/>
     <endEvent id="sid-07FF97CD-28E2-4D54-BC14-540719110F9F" name="诉讼结束"/>
     <userTask activiti:exclusive="true" id="usertask4" name="管理员做决定"/>
-    <userTask activiti:exclusive="true" id="usertask2" name="立案判断"/>
+    <userTask activiti:candidateGroups="立案判断" activiti:exclusive="true" id="usertask2" name="立案判断"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway2" name="Exclusive Gateway"/>
     <boundaryEvent attachedToRef="usertask2" cancelActivity="true" id="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879">
       <signalEventDefinition id="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879_ED_1" signalRef="SIG_1"/>
@@ -164,6 +165,22 @@
     <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
     <startEvent id="_3" name="StartEvent"/>
     <sequenceFlow id="_4" sourceRef="_3" targetRef="usertask1"/>
+    <serviceTask activiti:exclusive="true" activiti:type="mail" id="_7" name="MailTask">
+      <extensionElements>
+        <activiti:field name="to">
+          <activiti:string>${recipient}</activiti:string>
+        </activiti:field>
+        <activiti:field name="subject">
+          <activiti:string>邮件主题：自动通知,订单${disputeId}已暂存</activiti:string>
+        </activiti:field>
+        <activiti:field name="text">
+          <activiti:string>我是自动通知的内容啊，${content}就是我啊</activiti:string>
+        </activiti:field>
+        <activiti:field name="from">
+          <activiti:string>395699110@qq.com</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
   </process>
   <signal id="SIG_1" name="disputeModifySignal"/>
   <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=3;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
@@ -232,6 +249,12 @@
         <omgdc:Bounds height="32.0" width="32.0" x="61.0" y="170.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_7" id="Shape-_7">
+        <omgdc:Bounds height="55.0" width="85.0" x="790.0" y="245.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask3" id="Shape-usertask3">

@@ -13,7 +13,7 @@ public interface DisputeProgressService {
 
     /** 启动工作流 */
     ResultVO startProcess(String disputeId);
-
+    ResultVO startProcess(String disputeId,Map<String,Object> vars);
     /** 查询当前任务 */
     List<Task> searchCurrentTasks(String disputeId);
 //    List<Task> searchCurrentTasks();

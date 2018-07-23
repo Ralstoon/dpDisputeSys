@@ -51,4 +51,10 @@ public class NormalUserDetailServiceImpl implements NormalUserDetailService {
         NormalUserDetail normalUserDetail=normalUserDetailRepository.findByUserId(userId);
         return normalUserDetail.getName();
     }
+
+    @Override
+    public String findEmailByUserId(String userId) {
+        NormalUserDetail normalUserDetail=normalUserDetailRepository.findByUserId(userId);
+        return normalUserDetail.getEmail();
+    }
 }

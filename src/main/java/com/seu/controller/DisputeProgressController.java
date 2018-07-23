@@ -60,22 +60,24 @@ public class DisputeProgressController {
             return ResultVOUtil.ReturnBack(DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
         }
         //1、存储纠纷信息
-        String starterId=((NormalUser)session.getAttribute("currentUser")).getUserId();
-        System.out.println(starterId);
+        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
         disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
-        String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,starterId);
-        String name=normalUserDetailService.findNormalUserNameByUserId(starterId);
-        System.out.println(name);
+        String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,userId);
+        System.out.println("disputeId："+disputeId);
+        String name=normalUserDetailService.findNormalUserNameByUserId(userId);
+        String email=normalUserDetailService.findEmailByUserId(userId);
         session.setAttribute("name",name);
+        Map<String,Object> vars=new HashMap<>();
+        vars.put("disputeId",disputeId);
+        vars.put("userId",userId);
+        vars.put("email",email);
         //2、用纠纷信息id启动流程
-        disputeProgressService.startProcess(disputeId);
-//        Map<String,Object> var=new HashMap<>();
-//        var.put("disputeId",disputeId);
+        disputeProgressService.startProcess(disputeId,vars);
+
         //3、完成纠纷登记操作
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId());
         Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),(String)session.getAttribute("name"));
-        System.out.println(map.toString());
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
 
     }

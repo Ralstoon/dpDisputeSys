@@ -17,5 +17,6 @@ public class NormalUserDetail {
     private String education;
     private String userId;
     private String name;
+    private String email;
 
 }

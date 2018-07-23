@@ -73,6 +73,21 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         else
             return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_SUCCESS.getCode(),DisputeProgressEnum.STARTUP_SUCCESS.getMsg());
     }
+    public ResultVO startProcess(String disputeId,Map<String,Object> vars){
+        // TODO 判断用户是否有未完成的纠纷流程实例
+//        if(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(starterId).list().size()!=0){
+//            return ResultVOUtil.ReturnBack(DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getCode(),DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getMsg());
+//        }
+        //该用户尚未创建流程实例，可以创建
+        deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn").deploy();
+        pd=repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+        ProcessInstance pi=runtimeService.startProcessInstanceById(pd.getId(),disputeId,vars);
+        if(pi==null)
+            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_FAIL.getCode(),DisputeProgressEnum.STARTUP_FAIL.getMsg());
+        else
+            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_SUCCESS.getCode(),DisputeProgressEnum.STARTUP_SUCCESS.getMsg());
+    }
+
 
 
     /*

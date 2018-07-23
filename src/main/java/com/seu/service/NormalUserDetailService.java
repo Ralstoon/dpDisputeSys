@@ -12,4 +12,7 @@ public interface NormalUserDetailService {
 
     /** 根据用户id查找用户实际姓名 */
     String findNormalUserNameByUserId(String userId);
+
+    /** 根据用户id查找用户email */
+    String findEmailByUserId(String userId);
 }
