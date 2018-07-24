@@ -93,7 +93,7 @@
     <userTask activiti:exclusive="true" id="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3" name="损害/医疗鉴定"/>
     <endEvent id="sid-01815696-C738-453B-A88C-1FD1445E1F9F" name="结束1：立案失败"/>
     <endEvent id="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E" name="撤销结束"/>
-    <userTask activiti:exclusive="true" id="usertask3" name="调解员选用户"/>
+    <userTask activiti:candidateGroups="调解员选用户" activiti:exclusive="true" id="usertask3" name="调解员选用户"/>
     <parallelGateway gatewayDirection="Unspecified" id="sid-97E25BEA-8882-464A-81D8-D019E2E88A12"/>
     <serviceTask activiti:class="com.seu.service.webServiceTask.StartMediate" activiti:exclusive="true" id="sid-E98F408E-5F2A-4394-BB72-B85530C82896" name="调解开始"/>
     <userTask activiti:candidateGroups="mediator" activiti:exclusive="true" id="sid-CCC5ABB1-28C0-47BE-923B-98C8F2B38055" name="暂存确认"/>

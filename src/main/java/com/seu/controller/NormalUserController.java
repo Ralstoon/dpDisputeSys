@@ -78,12 +78,7 @@ public class NormalUserController {
 
 
     @RequestMapping(value = "loginout",method = RequestMethod.GET)
-    public ResultVO loginout(HttpSession session){
-        //删除session中的内容，包括name,currentUser，userType等
-        List<String> params= Collections.list(session.getAttributeNames());
-        for(String param:params){
-            session.removeAttribute(param);
-        }
-        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
+    public ResultVO loginout(HttpSession session) throws Exception {
+        return iNormalUserService.loginout(session);
     }
 }

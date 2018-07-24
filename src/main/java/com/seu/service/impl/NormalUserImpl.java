@@ -1,7 +1,11 @@
 package com.seu.service.impl;
 
+        import com.seu.ViewObject.ResultVO;
+        import com.seu.ViewObject.ResultVOUtil;
         import com.seu.common.ServerResponse;
         import com.seu.domian.NormalUser;
+        import com.seu.enums.LoginEnum;
+        import com.seu.exception.NormalUserException;
         import com.seu.repository.NormalUserRepository;
         import com.seu.service.INormalUserService;
         import com.seu.service.NormalUserDetailService;
@@ -11,6 +15,10 @@ package com.seu.service.impl;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Service;
         import org.springframework.transaction.annotation.Transactional;
+
+        import javax.servlet.http.HttpSession;
+        import java.util.Collections;
+        import java.util.List;
 
 @Service
 public class NormalUserImpl implements INormalUserService {
@@ -60,5 +68,17 @@ public class NormalUserImpl implements INormalUserService {
     public String findPhoneByUserId(String userId) {
         String phone = normalUserRepository.findNormalUserByUserId(userId).getPhone();
         return phone;
+    }
+
+    @Override
+    public ResultVO loginout(HttpSession session) throws Exception{
+        if(session==null ||(Collections.list(session.getAttributeNames()).size()==0)){
+            throw new NormalUserException(LoginEnum.LOGINSESSION_NULL.getCode(),LoginEnum.LOGINSESSION_NULL.getMsg());
+        }
+        List<String> params= Collections.list(session.getAttributeNames());
+        for(String param:params){
+            session.removeAttribute(param);
+        }
+        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
     }
 }
