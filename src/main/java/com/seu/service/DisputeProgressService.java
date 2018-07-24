@@ -3,6 +3,7 @@ package com.seu.service;
 import com.seu.ViewObject.ResultVO;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
+import com.seu.form.HistoricTaskForm;
 import org.activiti.engine.task.Task;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -36,4 +37,7 @@ public interface DisputeProgressService {
     List<DisputeCaseForm> getDisputeListByUserId(String userId, Integer page, Integer size);
 
     List<DisputeCaseForm> getDisputeListByTask(String task, Integer page, Integer size);
+
+    /** 通过disoutrId分页查询纠纷调解历史记录*/
+    List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId, Integer page, Integer size);
 }

@@ -11,6 +11,7 @@ import com.seu.enums.LoginEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
+import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.INormalUserService;
@@ -196,12 +197,25 @@ public class DisputeProgressController {
                              @RequestParam(value = "page",defaultValue = "1") Integer page,
                              @RequestParam(value = "size",defaultValue = "10") Integer size,
                              @RequestParam("task") String task){
-        //todo 身份认证
+        //todo 身份认证(管理员、调解员）
         List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByTask(task,page-1,size);
         Map<String,Object> map=new HashMap<>();
         map.put("disputeCaseList",disputeCaseFormList);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
     }
 
+    @PostMapping(value = "/historicTaskList")
+    public ResultVO getHistoricTaskListByDispute(HttpSession session,
+                                                 @RequestParam(value = "page",defaultValue = "1") Integer page,
+                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
+                                                 @RequestParam(value = "disputeId") String disputeId){
+        // todo 身份认证(普通用户)
+
+        List<HistoricTaskForm> historicTaskFormList = disputeProgressService
+                .getHistoricTaskListByDisputeId(disputeId, page, size);
+        Map<String,Object> map=new HashMap<>();
+        map.put("historicTaskFormList",historicTaskFormList);
+        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getCode(),DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getMsg());
+    }
 
 }

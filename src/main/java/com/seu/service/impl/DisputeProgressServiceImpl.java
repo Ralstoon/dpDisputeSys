@@ -8,6 +8,7 @@ import com.seu.domian.DisputeInfo;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
+import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
 import com.seu.repository.NormalUserDetailRepository;
 import com.seu.service.DisputeProgressService;
@@ -16,6 +17,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -214,5 +216,31 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         //String disputeID = runtimeService.createProcessInstanceQuery().processInstanceId(taskList.get(0).getProcessInstanceId()).singleResult().getBusinessKey();
         return disputeCaseFormList;
+    }
+
+    @Override
+    public List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId, Integer page, Integer size) {
+
+        String processInstanceId = runtimeService
+                .createProcessInstanceQuery()
+                .processInstanceBusinessKey(disputeId)
+                .singleResult().getProcessInstanceId();
+
+        List<HistoricTaskInstance> taskInstanceList = historyService
+                .createHistoricTaskInstanceQuery()
+                .processInstanceId(processInstanceId).listPage(page - 1, size);
+
+        List<HistoricTaskForm> historicTaskFormList = new ArrayList<>();
+
+        for (HistoricTaskInstance taskInstanceItem: taskInstanceList) {
+            HistoricTaskForm historicTaskForm = new HistoricTaskForm();
+            historicTaskForm.setDisputeId(disputeId);
+            historicTaskForm.setTaskName(taskInstanceItem.getName());
+            historicTaskForm.setCreateTime(taskInstanceItem.getStartTime());
+            historicTaskForm.setCompleteTime(taskInstanceItem.getEndTime());
+            historicTaskFormList.add(historicTaskForm);
+        }
+
+        return historicTaskFormList;
     }
 }
