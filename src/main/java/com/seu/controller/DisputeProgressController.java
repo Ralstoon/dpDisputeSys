@@ -13,6 +13,7 @@ import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.repository.DisputeInfoRepository;
 import com.seu.service.DisputeProgressService;
+import com.seu.service.INormalUserService;
 import com.seu.service.NormalUserDetailService;
 import com.seu.utils.CurrentTimeUtil;
 import com.seu.utils.DisputeProcessReturnMap;
@@ -41,6 +42,8 @@ public class DisputeProgressController {
     @Autowired
     private NormalUserDetailService normalUserDetailService;
 
+    @Autowired
+    private INormalUserService iNormalUserService;
 
 
     /*
@@ -66,11 +69,17 @@ public class DisputeProgressController {
         System.out.println("disputeId："+disputeId);
         String name=normalUserDetailService.findNormalUserNameByUserId(userId);
         String email=normalUserDetailService.findEmailByUserId(userId);
+
+        String phone = iNormalUserService.findPhoneByUserId(userId);
+
         session.setAttribute("name",name);
         Map<String,Object> vars=new HashMap<>();
         vars.put("disputeId",disputeId);
         vars.put("userId",userId);
         vars.put("email",email);
+
+        vars.put("phone",phone);
+
         //2、用纠纷信息id启动流程
         disputeProgressService.startProcess(disputeId,vars);
 
