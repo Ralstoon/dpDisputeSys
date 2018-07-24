@@ -11,6 +11,7 @@ import com.seu.enums.LoginEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
+import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.INormalUserService;
@@ -160,7 +161,7 @@ public class DisputeProgressController {
 
     /*
      *@Author 吴宇航
-     *@Description  用户：在每次进行任务前，都先要查询他所拥有的disputeId(未完成)，从中选出disputeId并进行相应的操作
+     *@Description  用户在每次进行任务前，都先要查询他所拥有的disputeId(未完成)，从中选出disputeId并进行相应的操作
      *@Date 13:22 2018/7/21
      *@Param [session, page, size] page从1开始，需要处理减一
      *@return com.seu.ViewObject.ResultVO
@@ -186,7 +187,7 @@ public class DisputeProgressController {
 
     /**
      * @Author: W
-     * @Description:  管理员、调解员：查询待办任务，根据 参数 task   暂存确认、立案判断、调解员选用户可使用
+     * @Description: 查询待办任务，根据 参数 task
      * @Date: 18:08 2018/7/21
      * @param page
      * @param size
@@ -203,6 +204,19 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
     }
 
+    @PostMapping(value = "/historicTaskList")
+    public ResultVO getHistoricTaskListByDispute(HttpSession session,
+                                                 @RequestParam(value = "page",defaultValue = "1") Integer page,
+                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
+                                                 @RequestParam(value = "disputeId") String disputeId){
+        // todo 身份认证(普通用户)
+
+        List<HistoricTaskForm> historicTaskFormList = disputeProgressService
+                .getHistoricTaskListByDisputeId(disputeId, page, size);
+        Map<String,Object> map=new HashMap<>();
+        map.put("historicTaskFormList",historicTaskFormList);
+        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getCode(),DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getMsg());
+    }
     /*
      *@Author 吴宇航
      *@Description  //调解员确定用户(纠纷案件) 完成”调解员选用户“任务
@@ -247,19 +261,4 @@ public class DisputeProgressController {
         // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
     }
 
-    /*
-     *@Author 吴宇航
-     *@Description  //用户获取调解员列表（用户选调解员之前的操作）
-     *@Date 17:01 2018/7/24
-     *@Param [disputeId, session]
-     *@return com.seu.ViewObject.ResultVO
-     **/
-    @PostMapping(value = "/mediatorList")
-    public ResultVO mediatorList(HttpSession httpSession,
-                                 @RequestParam(value = "page",defaultValue = "1") Integer page,
-                                 @RequestParam(value = "size",defaultValue = "10") Integer size){
-        // TODO 用户获取调解员的列表，单个调解员信息为mediatorDetailForm形式
-
-
-    }
 }

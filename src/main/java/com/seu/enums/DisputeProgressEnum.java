@@ -14,6 +14,7 @@ public enum DisputeProgressEnum {
     SEARCH_DISPUTECASELIST_SUCCESS(7,"查询当前用户纠纷案例列表成功"),
     CASEACCEPT_SUCCESS(8,"立案审核成功"),
     SEARCH_TASK_SUCCESS(9,"查询当前待办任务列表成功"),
+    SEARCH_HISTORICTASKLIST_SUCESS(10,"查询历史任务成功"),
 
     ;
     private String msg;
