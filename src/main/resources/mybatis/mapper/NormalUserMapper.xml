@@ -32,7 +32,7 @@
         values (#{user_id,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR})
     </insert>
 
-    <select id="findNormalUserByUserId" resultType="com.seu.domian.NormalUser" parameterType="String" >
+    <select id="findNormalUserByUserId" resultMap="BaseResultMap" parameterType="String" >
         SELECT <include refid="Base_Column_List"/> FROM normal_user
         WHERE user_id = #{user_id}
     </select>

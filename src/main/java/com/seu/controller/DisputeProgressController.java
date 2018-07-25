@@ -9,6 +9,7 @@ import com.seu.domian.NormalUser;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.enums.LoginEnum;
 import com.seu.enums.UpdateInfoEnum;
+import com.seu.form.CommentForm;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
@@ -206,16 +207,24 @@ public class DisputeProgressController {
 
     @PostMapping(value = "/historicTaskList")
     public ResultVO getHistoricTaskListByDispute(HttpSession session,
-                                                 @RequestParam(value = "page",defaultValue = "1") Integer page,
-                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
                                                  @RequestParam(value = "disputeId") String disputeId){
         // todo 身份认证(普通用户)
 
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
-                .getHistoricTaskListByDisputeId(disputeId, page, size);
+                .getHistoricTaskListByDisputeId(disputeId);
         Map<String,Object> map=new HashMap<>();
         map.put("historicTaskFormList",historicTaskFormList);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getCode(),DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getMsg());
+    }
+
+    //添加具体任务的评价
+    @PostMapping(value = "/addTaskComment")
+    public ResultVO addTaskComment(HttpSession session,
+                                   @RequestParam(value = "comment") String comment,
+                                   @RequestParam(value = "taskId") String taskId,
+                                   @RequestParam(value = "disputeId") String disputeId){
+        CommentForm commentForm = disputeProgressService.addCommentByTaskId(taskId, disputeId, comment);
+        return ResultVOUtil.ReturnBack(commentForm,DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getCode(),DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getMsg());
     }
 
 }

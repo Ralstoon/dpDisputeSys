@@ -10,4 +10,5 @@ public class HistoricTaskForm {
     private String taskName;
     private Date createTime;
     private Date completeTime;
+    private String taskId;
 }
