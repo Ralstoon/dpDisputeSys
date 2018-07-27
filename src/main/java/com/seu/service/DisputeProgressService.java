@@ -1,6 +1,7 @@
 package com.seu.service;
 
 import com.seu.ViewObject.ResultVO;
+import com.seu.form.CommentForm;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
@@ -39,5 +40,8 @@ public interface DisputeProgressService {
     List<DisputeCaseForm> getDisputeListByTask(String task, Integer page, Integer size);
 
     /** 通过disoutrId分页查询纠纷调解历史记录*/
-    List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId, Integer page, Integer size);
+    List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId);
+
+    /** 根据taskId对流程中的任务进行评价*/
+    CommentForm addCommentByTaskId(String taskId, String disputeId, String comment);
 }

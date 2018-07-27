@@ -1,8 +1,13 @@
 import com.seu.DpdisputesysApplication;
+import com.seu.domian.Comment;
+import com.seu.domian.NormalUser;
 import com.seu.form.HistoricTaskForm;
+import com.seu.repository.CommentRepository;
 import com.seu.repository.DisputeInfoRepository;
+import com.seu.repository.NormalUserRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.INormalUserService;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.test.Deployment;
 import org.junit.Test;
@@ -25,6 +30,15 @@ public class test {
     @Autowired
     private DisputeProgressService disputeProgressService;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private NormalUserRepository normalUserRepository;
+
+    @Autowired
+    private HistoryService historyService;
+
     @Test
     @Deployment(resources = "processes/disputeProgress.bpmn")
     public void webServiceTaskTest(){
@@ -39,8 +53,20 @@ public class test {
     @Test
     public void historicTaskListTest(){
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
-                .getHistoricTaskListByDisputeId("1532413108579745686", 1, 10);
+                .getHistoricTaskListByDisputeId("1532413108579745686");
         System.out.println("asd");
     }
 
+    @Test
+    public void addCommentTest(){
+        commentRepository.addComment("123","123","qwe","123");
+    }
+
+    @Test
+    public void findCommentByTaskIdTest(){
+        Comment comment = commentRepository.findCommentByTaskId("123");
+        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
+        System.out.println(comment.getComment());
+        //historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey("s").singleResult().
+    }
 }

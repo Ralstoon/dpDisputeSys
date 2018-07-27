@@ -6,6 +6,7 @@ import com.seu.converter.DisputeInfo2DisputeRegisterDetailForm;
 import com.seu.converter.DisputeRegisterDetailForm2DisputeInfo;
 import com.seu.domian.DisputeInfo;
 import com.seu.enums.DisputeProgressEnum;
+import com.seu.form.CommentForm;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
@@ -225,16 +226,20 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId, Integer page, Integer size) {
+    public List<HistoricTaskForm> getHistoricTaskListByDisputeId(String disputeId) {
 
-        String processInstanceId = runtimeService
-                .createProcessInstanceQuery()
+//        String processInstanceId = runtimeService
+//                .createProcessInstanceQuery()
+//                .processInstanceBusinessKey(disputeId)
+//                .singleResult().getProcessInstanceId();
+        String processInstanceId = historyService
+                .createHistoricProcessInstanceQuery()
                 .processInstanceBusinessKey(disputeId)
-                .singleResult().getProcessInstanceId();
+                .singleResult().getId();
 
         List<HistoricTaskInstance> taskInstanceList = historyService
                 .createHistoricTaskInstanceQuery()
-                .processInstanceId(processInstanceId).listPage(page - 1, size);
+                .processInstanceId(processInstanceId).list();
 
         List<HistoricTaskForm> historicTaskFormList = new ArrayList<>();
 
@@ -244,9 +249,23 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             historicTaskForm.setTaskName(taskInstanceItem.getName());
             historicTaskForm.setCreateTime(taskInstanceItem.getStartTime());
             historicTaskForm.setCompleteTime(taskInstanceItem.getEndTime());
+            historicTaskForm.setTaskId(taskInstanceItem.getId());
             historicTaskFormList.add(historicTaskForm);
         }
 
         return historicTaskFormList;
+    }
+
+    @Override
+    public CommentForm addCommentByTaskId(String taskId, String disputeId, String comment) {
+//        String processInstanceId = runtimeService
+//                .createProcessInstanceQuery()
+//                .processInstanceBusinessKey(disputeId)
+//                .singleResult().getProcessInstanceId();
+//        //String processInstanceId = taskService.createTaskQuery().taskId(taskId).singleResult().getProcessInstanceId();
+//        taskService.addComment(taskId, processInstanceId, comment);
+//        //taskService.add
+//        return new CommentForm(comment, taskId, historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult().getName());
+    return null;
     }
 }
