@@ -1,6 +1,10 @@
 package com.seu.domian;
 
-public class NormalUser {
+import java.io.Serializable;
+
+public class NormalUser implements Serializable {
+    private static final long serialVersionUID = 3053943621192103688L;
+
     private String userId;
     private String userName;
     private String phone;

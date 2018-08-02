@@ -15,6 +15,6 @@ public interface INormalUserService {
     String findPhoneByUserId(String userId);
 
     /** 用户注销 */
-    ResultVO loginout(HttpSession session) throws Exception;
+    ResultVO loginout(String userId) throws Exception;
 
 }

@@ -223,20 +223,20 @@ public class DisputeProgressController {
      *@Param [disputeId, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    @PostMapping(value = "/mediatorSelectUser")
-    public ResultVO mediatorSelectUser(@RequestParam("disputeId") String disputeId,
-                                       HttpSession session){
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-        Task currentTask=null;
-        for(Task task:tasks){
-            if(task.getName().equals("调解员选用户")){
-                currentTask=task;
-                break;
-            }
-        }
-        disputeProgressService.completeCurrentTask(currentTask.getId());
-        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
-    }
+//    @PostMapping(value = "/mediatorSelectUser")
+//    public ResultVO mediatorSelectUser(@RequestParam("disputeId") String disputeId,
+//                                       HttpSession session){
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        Task currentTask=null;
+//        for(Task task:tasks){
+//            if(task.getName().equals("调解员选用户")){
+//                currentTask=task;
+//                break;
+//            }
+//        }
+//        disputeProgressService.completeCurrentTask(currentTask.getId());
+//        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
+//    }
 
     /*
      *@Author 吴宇航
@@ -245,20 +245,21 @@ public class DisputeProgressController {
      *@Param [disputeId, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    @PostMapping(value = "/userSelectMediator")
-    public ResultVO userSelectMediator(@RequestParam("mediatorId") String mediatorId,
-                                       HttpSession session){
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-        Task currentTask=null;
-        for(Task task:tasks){
-            if(task.getName().equals("用户选择调解员")){
-                currentTask=task;
-                break;
-            }
-        }
-        disputeProgressService.completeCurrentTask(currentTask.getId());
-        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
-    }
+//    @PostMapping(value = "/userSelectMediator")
+//    public ResultVO userSelectMediator(@RequestParam("mediatorId") String mediatorId,
+//                                       @RequestParam("disputeId") String disputeId,
+//                                       HttpSession session){
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        Task currentTask=null;
+//        for(Task task:tasks){
+//            if(task.getName().equals("用户选择调解员")){
+//                currentTask=task;
+//                break;
+//            }
+//        }
+//        disputeProgressService.completeCurrentTask(currentTask.getId());
+//        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
+//    }
 
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")

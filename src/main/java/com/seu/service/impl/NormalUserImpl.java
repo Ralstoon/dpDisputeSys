@@ -1,24 +1,26 @@
 package com.seu.service.impl;
 
-        import com.seu.ViewObject.ResultVO;
-        import com.seu.ViewObject.ResultVOUtil;
-        import com.seu.common.ServerResponse;
-        import com.seu.domian.NormalUser;
-        import com.seu.enums.LoginEnum;
-        import com.seu.exception.NormalUserException;
-        import com.seu.repository.NormalUserRepository;
-        import com.seu.service.INormalUserService;
-        import com.seu.service.NormalUserDetailService;
-        import com.seu.util.MD5Util;
-        import com.seu.utils.KeyUtil;
-        import org.apache.commons.lang3.StringUtils;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Service;
-        import org.springframework.transaction.annotation.Transactional;
+import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
+import com.seu.common.RedisConstant;
+import com.seu.common.ServerResponse;
+import com.seu.domian.NormalUser;
+import com.seu.enums.LoginEnum;
+import com.seu.exception.NormalUserException;
+import com.seu.repository.NormalUserRepository;
+import com.seu.service.INormalUserService;
+import com.seu.service.NormalUserDetailService;
+import com.seu.util.MD5Util;
+import com.seu.utils.KeyUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-        import javax.servlet.http.HttpSession;
-        import java.util.Collections;
-        import java.util.List;
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class NormalUserImpl implements INormalUserService {
@@ -27,6 +29,11 @@ public class NormalUserImpl implements INormalUserService {
     private NormalUserRepository normalUserRepository;
     @Autowired
     private NormalUserDetailService normalUserDetailService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
+
 
     @Override
     public ServerResponse<NormalUser> login(String phone, String password) {
@@ -71,14 +78,22 @@ public class NormalUserImpl implements INormalUserService {
     }
 
     @Override
-    public ResultVO loginout(HttpSession session) throws Exception{
-        if(session==null ||(Collections.list(session.getAttributeNames()).size()==0)){
+    public ResultVO loginout(String userId) throws Exception{
+        Object currentUser=redisTemplate.opsForValue().get(String.format(RedisConstant.USER_RREFIX,userId));
+        if(currentUser==null){
             throw new NormalUserException(LoginEnum.LOGINSESSION_NULL.getCode(),LoginEnum.LOGINSESSION_NULL.getMsg());
+        }else{
+            redisTemplate.opsForValue().getOperations().delete(String.format(RedisConstant.USER_RREFIX,userId));
+            return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
         }
-        List<String> params= Collections.list(session.getAttributeNames());
-        for(String param:params){
-            session.removeAttribute(param);
-        }
-        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
+
+//        if(session==null ||(Collections.list(session.getAttributeNames()).size()==0)){
+//            throw new NormalUserException(LoginEnum.LOGINSESSION_NULL.getCode(),LoginEnum.LOGINSESSION_NULL.getMsg());
+//        }
+//        List<String> params= Collections.list(session.getAttributeNames());
+//        for(String param:params){
+//            session.removeAttribute(param);
+//        }
+//        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
     }
 }

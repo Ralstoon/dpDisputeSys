@@ -19,7 +19,6 @@
         <flowNodeRef>sid-862F2FDD-2C74-4434-AD6F-A38544819702</flowNodeRef>
         <flowNodeRef>sid-3914F429-DFD7-4B10-8A4C-2BF439B3E7CA</flowNodeRef>
         <flowNodeRef>_3</flowNodeRef>
-        <flowNodeRef>_7</flowNodeRef>
       </lane>
       <lane id="lane2" name="调解员">
         <flowNodeRef>usertask3</flowNodeRef>
@@ -165,22 +164,6 @@
     <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
     <startEvent id="_3" name="StartEvent"/>
     <sequenceFlow id="_4" sourceRef="_3" targetRef="usertask1"/>
-    <serviceTask activiti:exclusive="true" activiti:type="mail" id="_7" name="MailTask">
-      <extensionElements>
-        <activiti:field name="to">
-          <activiti:string>${recipient}</activiti:string>
-        </activiti:field>
-        <activiti:field name="subject">
-          <activiti:string>邮件主题：自动通知,订单${disputeId}已暂存</activiti:string>
-        </activiti:field>
-        <activiti:field name="text">
-          <activiti:string>我是自动通知的内容啊，${content}就是我啊</activiti:string>
-        </activiti:field>
-        <activiti:field name="from">
-          <activiti:string>395699110@qq.com</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
   </process>
   <signal id="SIG_1" name="disputeModifySignal"/>
   <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=3;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
@@ -249,12 +232,6 @@
         <omgdc:Bounds height="32.0" width="32.0" x="61.0" y="170.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_7" id="Shape-_7">
-        <omgdc:Bounds height="55.0" width="85.0" x="790.0" y="245.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="usertask3" id="Shape-usertask3">

@@ -12,7 +12,9 @@ spring:
           hibernate:
             hbm2ddl:
               auto: update
-
+  redis:
+    host: 223.3.79.0
+    port: 6379
 
 server:
   port: 8088

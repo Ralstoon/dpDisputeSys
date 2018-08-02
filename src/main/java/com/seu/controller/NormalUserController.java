@@ -3,6 +3,7 @@ package com.seu.controller;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.Const;
+import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.domian.NormalUser;
 import com.seu.domian.NormalUserDetail;
@@ -15,16 +16,21 @@ import com.seu.service.NormalUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @CrossOrigin
@@ -36,14 +42,25 @@ public class NormalUserController {
     private INormalUserService iNormalUserService;
     @Autowired
     private NormalUserDetailService normalUserDetailService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public ServerResponse<NormalUser> login(String phone, String password, HttpSession session) {
+    public ServerResponse<NormalUser> login(String phone, String password, HttpServletResponse httpServletResponse) {
         //TODO 没有处理用户反复登陆以及换账户登录的问题
-        session.getAttribute("NormalUser");
+//        session.getAttribute("NormalUser");
         ServerResponse<NormalUser> response = iNormalUserService.login(phone, password);
+
         if (response.isSuccess()) {
-            session.setAttribute(Const.CURRENT_USER, response.getData());
+            NormalUser currentUser=(NormalUser)response.getData();
+//            session.setAttribute(Const.CURRENT_USER, response.getData());
+            // 先放入redis服务器，设置key为token_
+            String userId=currentUser.getUserId();
+            Integer expire=RedisConstant.EXPIRE;
+            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,userId),currentUser,expire,TimeUnit.SECONDS);
+            // TODO 暂且未设置cookie，问询前端需要后决定
+//            Cookie cookie=new Cookie("currentUser",token);
         }
         return response;
     }
@@ -78,7 +95,8 @@ public class NormalUserController {
 
 
     @RequestMapping(value = "loginout",method = RequestMethod.GET)
-    public ResultVO loginout(HttpSession session) throws Exception {
-        return iNormalUserService.loginout(session);
+    public ResultVO loginout(@RequestParam("userId") String userId) throws Exception {
+
+        return iNormalUserService.loginout(userId);
     }
 }
