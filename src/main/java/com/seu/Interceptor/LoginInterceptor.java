@@ -18,10 +18,12 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        HttpSession session=httpServletRequest.getSession();
-        if(session.getAttribute("currentUser")==null){
-            System.out.println("改用壶尚未登录");
-        }
+        System.out.println("拦截器进行验证：");
+//        HttpSession session=httpServletRequest.getSession();
+//
+//        if(session.getAttribute("ID")==null){
+//            System.out.println("该用户尚未登录");
+//        }
         return true;
     }
 

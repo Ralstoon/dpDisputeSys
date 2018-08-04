@@ -3,10 +3,9 @@ import com.seu.domian.Comment;
 import com.seu.domian.NormalUser;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.CommentRepository;
-import com.seu.repository.DisputeInfoRepository;
 import com.seu.repository.NormalUserRepository;
 import com.seu.service.DisputeProgressService;
-import com.seu.service.INormalUserService;
+import com.seu.service.UserService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.test.Deployment;
@@ -25,7 +24,7 @@ public class test {
     private TaskService taskService;
 
     @Autowired
-    private INormalUserService iNormalUserService;
+    private UserService iNormalUserService;
 
     @Autowired
     private DisputeProgressService disputeProgressService;
@@ -47,7 +46,7 @@ public class test {
 
     @Test
     public void findPhoneByuserIdTest(){
-        System.out.println(iNormalUserService.findPhoneByUserId("1532004655415202278"));
+//        System.out.println(iNormalUserService.findPhoneByUserId("1532004655415202278"));
     }
 
     @Test
@@ -65,7 +64,7 @@ public class test {
     @Test
     public void findCommentByTaskIdTest(){
         Comment comment = commentRepository.findCommentByTaskId("123");
-        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
+//        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
         System.out.println(comment.getComment());
         //historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey("s").singleResult().
     }

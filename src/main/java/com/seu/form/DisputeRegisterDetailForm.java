@@ -2,6 +2,7 @@ package com.seu.form;
 
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
@@ -11,6 +12,8 @@ import java.io.Serializable;
 
 @Data
 public class DisputeRegisterDetailForm implements Serializable {
+    @NotEmpty(message = "主ID号必须提供")
+    private String ID;
     private String content="这是纠纷信息内容";
 
 }

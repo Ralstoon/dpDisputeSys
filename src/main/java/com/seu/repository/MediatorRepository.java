@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Version 1.0
  **/
 public interface MediatorRepository extends JpaRepository<Mediator,String> {
+    Mediator findByFatherId(String ID);
 }

@@ -27,9 +27,10 @@ public class CommentController {
     @PostMapping(value="/addComment")
     public ResultVO temporaryConfirm(HttpSession session,
                                      @RequestParam(value = "task_id") String taskId,
-                                     @RequestParam(value = "comment") String comment){
+                                     @RequestParam(value = "comment") String comment,
+                                     @RequestParam(value = "ID") String userId){
         //todo 身份认证
-        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
+//        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
         commentService.addComment(taskId,comment,userId);
 
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getCode(), DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getMsg());

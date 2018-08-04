@@ -18,9 +18,10 @@ import javax.persistence.Id;
 public class Mediator {
     @Id
     private String mediatorId;
+    private String fatherId;
     private String mediatorName;
-    private String phone;
     private String idCard;
-    private String password;
     private String mediateCenter;
+    private String authorityConfirm;
+    private String authorityJudiciary;
 }

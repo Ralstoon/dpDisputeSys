@@ -11,7 +11,7 @@ import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
-import com.seu.repository.NormalUserDetailRepository;
+import com.seu.repository.NormalUserRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.utils.KeyUtil;
 import org.activiti.engine.HistoryService;
@@ -49,7 +49,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Autowired
     private DisputeInfoRepository disputeInfoRepository;
     @Autowired
-    private NormalUserDetailRepository normalUserDetailRepository;
+    private NormalUserRepository normalUserRepository;
+
 
     private ProcessDefinition pd;
     private Deployment deployment;
@@ -166,7 +167,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             //设置DisputeRegisterDetailForm属性
             disputeCaseForm.setDisputeRegisterDetailForm(DisputeInfo2DisputeRegisterDetailForm.convert(disputeInfoOne));
             //设置userName属性
-            String name=normalUserDetailRepository.findByUserId(disputeInfoOne.getUserId()).getName();
+//            String name=normalUserDetailRepository.findByUserId(disputeInfoOne.getUserId()).getName();
+            String name=normalUserRepository.findByFatherId(disputeInfoOne.getUserId()).getName();
             disputeCaseForm.setUserName(name);
             //设置time属性
             String disputeId=disputeInfoOne.getDisputeId();
@@ -205,7 +207,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
             //设置userName属性
-            String name=normalUserDetailRepository.findByUserId(disputeInfo.getUserId()).getName();
+//            String name=normalUserDetailRepository.findByUserId(disputeInfo.getUserId()).getName();
+            String name=normalUserRepository.findByFatherId(disputeInfo.getUserId()).getName();
             disputeCaseForm.setUserName(name);
             //设置time属性
             String disputeId=disputeInfo.getDisputeId();

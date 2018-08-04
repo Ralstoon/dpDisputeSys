@@ -4,24 +4,20 @@ package com.seu.controller;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.Const;
-import com.seu.domian.DisputeInfo;
 import com.seu.domian.NormalUser;
 import com.seu.enums.DisputeProgressEnum;
-import com.seu.enums.LoginEnum;
-import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.CommentForm;
 import com.seu.form.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
 import com.seu.service.DisputeProgressService;
-import com.seu.service.INormalUserService;
-import com.seu.service.NormalUserDetailService;
-import com.seu.utils.CurrentTimeUtil;
+import com.seu.service.MediatorService;
+import com.seu.service.UserService;
+import com.seu.service.NormalUserService;
 import com.seu.utils.DisputeProcessReturnMap;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +37,12 @@ public class DisputeProgressController {
     @Autowired
     private DisputeProgressService disputeProgressService;
     @Autowired
-    private NormalUserDetailService normalUserDetailService;
+    private NormalUserService normalUserService;
+    @Autowired
+    private MediatorService mediatorService;
 
     @Autowired
-    private INormalUserService iNormalUserService;
+    private UserService userService;
 
 
     /*
@@ -56,25 +53,29 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     // TODO 存在问题，即用户必须在进入纠纷登记页面后完成整个操作，否则不会做任何保存
+    // TODO 问题2，未对用的身份信息进行认证（姓名、身份证）
     @PostMapping(value="/disputeRegister")
     @Transactional
     public ResultVO disputeRegister(@Valid DisputeRegisterDetailForm disputeRegisterDetailForm,
-                                    BindingResult bindingResult,HttpSession session){
+                                    BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             // bindingResult.getFieldError().getDefaultMessage()表示返回验证失败的地方，比如XX必填
-            return ResultVOUtil.ReturnBack(DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
+            Map<String,Object> param=new HashMap<>();
+            param.put("data",bindingResult.getFieldError().getDefaultMessage());
+            return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
         }
         //1、存储纠纷信息
-        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
+//        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
+        String userId=disputeRegisterDetailForm.getID();
         disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
         String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,userId);
         System.out.println("disputeId："+disputeId);
-        String name=normalUserDetailService.findNormalUserNameByUserId(userId);
-        String email=normalUserDetailService.findEmailByUserId(userId);
+        String name= normalUserService.findNormalUserNameByFatherId(userId);
+        String email= normalUserService.findEmailByUserId(userId);
+        String phone = normalUserService.findPhoneByUserId(userId);
 
-        String phone = iNormalUserService.findPhoneByUserId(userId);
 
-        session.setAttribute("name",name);
+//        session.setAttribute("name",name);
         Map<String,Object> vars=new HashMap<>();
         vars.put("disputeId",disputeId);
         vars.put("userId",userId);
@@ -88,7 +89,7 @@ public class DisputeProgressController {
         //3、完成纠纷登记操作
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId());
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),(String)session.getAttribute("name"));
+        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
 
     }
@@ -100,13 +101,14 @@ public class DisputeProgressController {
      *@Param [starterId, session] 假设前端传过来要确认的纠纷案例id或者当事人id，目前只写了当事人id
      *@return com.seu.ViewObject.ResultVO
      **/
-    //TODO 假设是调解员登录且session中已经保存有调解员的name
+    //TODO 假设是调解员登录
     @PostMapping(value="/temporaryConfirm")
     public ResultVO temporaryConfirm(@RequestParam("disputeId") String disputeId,
-                                     HttpSession session){
+                                     @RequestParam("ID") String ID){
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId());
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),(String)session.getAttribute("name"));
+        String name=mediatorService.findNameByID(ID);
+        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getCode(),DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getMsg());
 
     }
@@ -119,11 +121,11 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     //TODO 不通过需要给出理由吗？
-    //TODO 假设是管理员登录且session中已经保存有调解员的name
+    //TODO 有可能是管理者，也有可能是有权限的调解员登录,这里仅写了调解员
     @PostMapping(value="/caseAccept")
     public ResultVO caseAccept(@RequestParam(value="result") boolean result,
                                @RequestParam("disputeId") String disputeId,
-                               HttpSession session){
+                               @RequestParam("ID") String ID){
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Map<String,Object> var=new HashMap<>();
         if(result==true)
@@ -131,7 +133,8 @@ public class DisputeProgressController {
         else
             var.put("caseAccept",1);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),(String)session.getAttribute("name"));
+        String name=mediatorService.findNameByID(ID);
+        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getCode(),DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getMsg());
 
     }
@@ -145,7 +148,7 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     @PostMapping(value="/disputeRegisterModify")
-    public ResultVO disputeRegisterModify(HttpSession session,
+    public ResultVO disputeRegisterModify(@RequestParam("ID") String ID,
                                           @RequestParam("disputeId") String disputeId){
 //        String starterId=((NormalUser)session.getAttribute("currentUser")).getUserId();
         String signal="disputeRegisterModifySignal";
@@ -154,7 +157,8 @@ public class DisputeProgressController {
         DisputeRegisterDetailForm disputeRegisterDetailForm=disputeProgressService.getDisputeForm(disputeId) ;
         disputeProgressService.triggerSignalBoundary(signal);
         Task afterTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(currentTask.getName(),(String)session.getAttribute("name"));
+        String name=normalUserService.findNormalUserNameByFatherId(ID);
+        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(currentTask.getName(),name);
         map.put("after task",afterTask.getName());
         map.put("disputeRegisterContent",disputeRegisterDetailForm);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TRIGGERSIGNAL_SUCCESS.getCode(),DisputeProgressEnum.TRIGGERSIGNAL_SUCCESS.getMsg());
@@ -168,10 +172,11 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     @PostMapping(value = "/disputeList")
-    public ResultVO getDisputeListByUserId(HttpSession session,
+    public ResultVO getDisputeListByUserId(@RequestParam("ID") String ID,
                                            @RequestParam(value = "page",defaultValue = "1") Integer page,
                                            @RequestParam(value = "size",defaultValue = "10") Integer size){
-        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
+//        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
+        String userId=ID;
         List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByUserId(userId,page-1,size);
         Map<String,Object> map=new HashMap<>();
         map.put("disputeCaseList",disputeCaseFormList);
@@ -194,8 +199,7 @@ public class DisputeProgressController {
      * @param size
      */
     @PostMapping(value = "/taskList")
-    public ResultVO testlist(HttpSession httpSession,
-                             @RequestParam(value = "page",defaultValue = "1") Integer page,
+    public ResultVO testlist(@RequestParam(value = "page",defaultValue = "1") Integer page,
                              @RequestParam(value = "size",defaultValue = "10") Integer size,
                              @RequestParam("task") String task){
         //todo 身份认证
@@ -206,8 +210,7 @@ public class DisputeProgressController {
     }
 
     @PostMapping(value = "/historicTaskList")
-    public ResultVO getHistoricTaskListByDispute(HttpSession session,
-                                                 @RequestParam(value = "disputeId") String disputeId){
+    public ResultVO getHistoricTaskListByDispute(@RequestParam(value = "disputeId") String disputeId){
         // todo 身份认证(普通用户)
 
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
@@ -263,8 +266,7 @@ public class DisputeProgressController {
 
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")
-    public ResultVO addTaskComment(HttpSession session,
-                                   @RequestParam(value = "comment") String comment,
+    public ResultVO addTaskComment(@RequestParam(value = "comment") String comment,
                                    @RequestParam(value = "taskId") String taskId,
                                    @RequestParam(value = "disputeId") String disputeId){
         CommentForm commentForm = disputeProgressService.addCommentByTaskId(taskId, disputeId, comment);

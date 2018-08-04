@@ -1,11 +1,7 @@
 package com.seu.converter;
 
 import com.seu.domian.DisputeInfo;
-import com.seu.domian.NormalUserDetail;
 import com.seu.form.DisputeRegisterDetailForm;
-import com.seu.form.NormalUserDetailForm;
-
-import java.text.SimpleDateFormat;
 
 /**
  * @ClassName DisputeRegisterDetailForm2DisputeInfo
