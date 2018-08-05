@@ -13,12 +13,14 @@ import com.seu.service.NormalUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -109,4 +111,13 @@ public class UserController {
 
         return userService.loginout(ID,role);
     }
+
+//    @Autowired
+//    private StringRedisTemplate stringRedisTemplate;
+//    @RequestMapping(value="test",method = RequestMethod.GET)
+//    public Set<String> test(){
+//        String pattern="123321";
+//        Set<String> result=stringRedisTemplate.keys("*"+pattern);
+//        return result;
+//    }
 }
