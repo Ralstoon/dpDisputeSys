@@ -12,4 +12,6 @@ import com.seu.ViewObject.ResultVO;
 public interface DisputeRegisterService {
 
     ResultVO getDieaseList();
+
+    ResultVO getRoomList();
 }

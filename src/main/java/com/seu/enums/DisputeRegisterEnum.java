@@ -12,7 +12,8 @@ import lombok.Getter;
 
 @Getter
 public enum DisputeRegisterEnum {
-    GETDISEASELIST_SUCCESS(0,"获取疾病列表成功")
+    GETDISEASELIST_SUCCESS(0,"获取疾病列表成功"),
+    GETROOMLIST_SUCCESS(1,"获取科室列表成功")
 
 
     ;

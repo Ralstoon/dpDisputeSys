@@ -35,4 +35,10 @@ public class DisputeRegisterController {
     public ResultVO getDiseaseList(){
         return disputeRegisterService.getDieaseList();
     }
+
+    @GetMapping(value = "/getRoomList")
+    @Cacheable(value = "constantData",key ="'roomList'",unless = "#result.code!=0")
+    public ResultVO getRoomList(){
+        return disputeRegisterService.getRoomList();
+    }
 }

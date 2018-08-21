@@ -1,5 +1,6 @@
 package com.seu.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -42,5 +43,38 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         map.put("DiseaseKind",diseaseKind);
         map.put("DiseaseName",diseaseName);
         return ResultVOUtil.ReturnBack(map,DisputeRegisterEnum.GETDISEASELIST_SUCCESS.getCode(),DisputeRegisterEnum.GETDISEASELIST_SUCCESS.getMsg());
+    }
+
+    @Override
+    public ResultVO getRoomList() {
+        ConstantData constantData=diseaseListRepository.findByName("room_list");
+        JSONObject jsStr=JSONObject.parseObject(constantData.getData());
+        List<String> city = new ArrayList<>();
+        List<List> hospital = new ArrayList<>();
+        List<Object> room = new ArrayList<>();
+        List<Object> hospitalCity = new ArrayList<>();
+        List<Object> roomHp = new ArrayList<>();
+
+
+        // a.stream().map()
+        for(String key:jsStr.keySet()){
+            city.add(key);
+            for(String hpKey: ((JSONObject)jsStr.get(key)).keySet()){
+                hospitalCity.add(hpKey);
+                roomHp.add(((JSONObject)jsStr.get(key)).get(hpKey));
+            }
+
+            hospital.add(hospitalCity);
+            room.add(roomHp);
+            roomHp = new ArrayList<>();
+            hospitalCity = new ArrayList<>();
+        }
+
+        Map<String,Object> map=new HashMap<>();
+        map.put("City",city);
+        map.put("Hospital",hospital);
+        map.put("Department",room);
+        return ResultVOUtil.ReturnBack(map,DisputeRegisterEnum.GETROOMLIST_SUCCESS.getCode(),DisputeRegisterEnum.GETROOMLIST_SUCCESS.getMsg());
+
     }
 }
