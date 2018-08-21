@@ -1,7 +1,7 @@
 package com.seu.converter;
 
 import com.seu.domian.User;
-import com.seu.form.UserForm;
+import com.seu.form.VOForm.UserForm;
 
 /**
  * @ClassName User2UserForm

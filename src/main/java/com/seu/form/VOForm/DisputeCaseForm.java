@@ -1,10 +1,11 @@
-package com.seu.form;
+package com.seu.form.VOForm;
 
+import com.seu.form.DisputeRegisterDetailForm;
 import lombok.Data;
 
 /**
  * @ClassName DisputeCaseForm
- * @Description 用户查询时能看到的单件纠纷案件信息
+ * @Description 返回前段 用户查询时能看到的单件纠纷案件信息
  * @Author 吴宇航
  * @Date 2018/7/21 13:31
  * @Version 1.0

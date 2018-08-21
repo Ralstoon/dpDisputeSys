@@ -2,10 +2,7 @@ package com.seu.service;
 
 import com.seu.ViewObject.ResultVO;
 import com.seu.common.ServerResponse;
-import com.seu.domian.NormalUser;
-import com.seu.form.UserForm;
-
-import javax.servlet.http.HttpSession;
+import com.seu.form.VOForm.UserForm;
 
 public interface UserService {
     /** 用户登录 */

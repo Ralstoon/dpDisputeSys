@@ -3,11 +3,9 @@ package com.seu.controller;
 
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
-import com.seu.common.Const;
-import com.seu.domian.NormalUser;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.CommentForm;
-import com.seu.form.DisputeCaseForm;
+import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;
@@ -24,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;

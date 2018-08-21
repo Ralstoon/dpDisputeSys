@@ -7,20 +7,20 @@ import com.seu.common.ServerResponse;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.NormalUserForm;
-import com.seu.form.UserForm;
+import com.seu.form.VOForm.UserForm;
+import com.seu.service.DisputeRegisterService;
 import com.seu.service.UserService;
 import com.seu.service.NormalUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -120,4 +120,6 @@ public class UserController {
 //        Set<String> result=stringRedisTemplate.keys("*"+pattern);
 //        return result;
 //    }
+
+
 }

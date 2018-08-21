@@ -16,11 +16,14 @@ spring:
     host: 223.3.79.0
     port: 6379
 
+
 server:
   port: 8088
+
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   config-location: classpath:mybatis/mybatis-config.xml
+
 
 

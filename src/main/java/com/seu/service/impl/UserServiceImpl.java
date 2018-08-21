@@ -9,7 +9,7 @@ import com.seu.domian.NormalUser;
 import com.seu.domian.User;
 import com.seu.enums.LoginEnum;
 import com.seu.exception.NormalUserException;
-import com.seu.form.UserForm;
+import com.seu.form.VOForm.UserForm;
 import com.seu.repository.NormalUserRepository;
 import com.seu.repository.UserRepository;
 import com.seu.service.UserService;

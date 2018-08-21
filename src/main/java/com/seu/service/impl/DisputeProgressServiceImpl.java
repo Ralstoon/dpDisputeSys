@@ -7,7 +7,7 @@ import com.seu.converter.DisputeRegisterDetailForm2DisputeInfo;
 import com.seu.domian.DisputeInfo;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.CommentForm;
-import com.seu.form.DisputeCaseForm;
+import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputeInfoRepository;

@@ -2,12 +2,11 @@ package com.seu.service;
 
 import com.seu.ViewObject.ResultVO;
 import com.seu.form.CommentForm;
-import com.seu.form.DisputeCaseForm;
+import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import org.activiti.engine.task.Task;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Map;
 

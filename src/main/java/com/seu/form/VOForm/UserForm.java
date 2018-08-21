@@ -1,4 +1,4 @@
-package com.seu.form;
+package com.seu.form.VOForm;
 
 import lombok.Data;
 
