@@ -14,4 +14,6 @@ public interface DisputeRegisterService {
     ResultVO getDieaseList();
 
     ResultVO getMedicalBehaviorList();
+
+    ResultVO getRoomList();
 }

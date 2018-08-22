@@ -1,8 +1,12 @@
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
 import com.seu.domian.Comment;
+import com.seu.domian.ConstantData;
 import com.seu.domian.NormalUser;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.CommentRepository;
+import com.seu.repository.DiseaseListRepository;
 import com.seu.repository.NormalUserRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -37,6 +42,9 @@ public class test {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private DiseaseListRepository diseaseListRepository;
 
     @Test
     @Deployment(resources = "processes/disputeProgress.bpmn")
@@ -67,5 +75,34 @@ public class test {
 //        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
         System.out.println(comment.getComment());
         //historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey("s").singleResult().
+    }
+
+    @Test
+    public void roomListTest(){
+        ConstantData constantData=diseaseListRepository.findByName("room_list");
+        JSONObject jsStr=JSONObject.parseObject(constantData.getData());
+        List<String> city = new ArrayList<>();
+        List<List> hospital = new ArrayList<>();
+        List<Object> room = new ArrayList<>();
+        List<Object> hospitalCity = new ArrayList<>();
+        List<Object> roomHp = new ArrayList<>();
+
+
+       // a.stream().map()
+        for(String key:jsStr.keySet()){
+            city.add(key);
+            for(String hpKey: ((JSONObject)jsStr.get(key)).keySet()){
+                hospitalCity.add(hpKey);
+                roomHp.add(((JSONObject)jsStr.get(key)).get(hpKey));
+            }
+
+            hospital.add(hospitalCity);
+            room.add(roomHp);
+            roomHp = new ArrayList<>();
+            hospitalCity = new ArrayList<>();
+        }
+
+
+        List a = ((List<JSONObject>) jsStr.get("南京市"));
     }
 }

@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/RegConflict")
 @CrossOrigin
 public class DisputeRegisterController {
-
+    public final static  String s="diseaseList";
+    public final static byte[] bs=s.getBytes();
     @Autowired
     DisputeRegisterService disputeRegisterService;
 
@@ -39,5 +40,11 @@ public class DisputeRegisterController {
     @Cacheable(value = "constantData",key ="'medicalBehaviorList'",unless = "#result.code!=1")
     public ResultVO getMedicalBehaviorList(){
         return disputeRegisterService.getMedicalBehaviorList();
+    }
+
+    @GetMapping(value = "/getRoomList")
+    @Cacheable(value = "constantData",key ="'roomList'",unless = "#result.code!=2")
+    public ResultVO getRoomList(){
+        return disputeRegisterService.getRoomList();
     }
 }
