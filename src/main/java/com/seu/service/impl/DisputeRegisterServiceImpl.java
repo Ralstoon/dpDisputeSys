@@ -43,4 +43,21 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         map.put("DiseaseName",diseaseName);
         return ResultVOUtil.ReturnBack(map,DisputeRegisterEnum.GETDISEASELIST_SUCCESS.getCode(),DisputeRegisterEnum.GETDISEASELIST_SUCCESS.getMsg());
     }
+
+
+    @Override
+    public ResultVO getMedicalBehaviorList() {
+        ConstantData constantData=diseaseListRepository.findByName("medical_behavior_list");
+        JSONObject jsStr=JSONObject.parseObject(constantData.getData());
+        Map<String,Object> map=new HashMap<>();
+        for(String key:jsStr.keySet()){
+            JSONObject subJson=JSONObject.parseObject(jsStr.get(key).toString());
+            Map<String,Object> subMap=new HashMap<>();
+            for(String subKey:subJson.keySet()){
+                subMap.put(subKey,subJson.get(subKey));
+            }
+            map.put(key,subMap);
+        }
+        return ResultVOUtil.ReturnBack(map,DisputeRegisterEnum.GETMEDICALBEHAVIOR_SUCCESS.getCode(),DisputeRegisterEnum.GETMEDICALBEHAVIOR_SUCCESS.getMsg());
+    }
 }

@@ -26,4 +26,12 @@ public class DisputeRegisterServiceImplTest {
         System.out.println(resultVO.toString());
         Assert.assertNotNull(resultVO);
     }
+
+
+
+
+    @Test
+    public void getMedicalBehaviorList(){
+        disputeRegisterService.getMedicalBehaviorList();
+    }
 }

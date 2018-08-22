@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * @ClassName RedisCacheConfig
- * @Description TODO
+ * @Description redis缓存默认时间设置
  * @Author 吴宇航
  * @Date 2018/8/21 13:46
  * @Version 1.0
@@ -27,9 +27,6 @@ import java.util.Map;
 
 @Configuration
 public class RedisCacheConfig extends CachingConfigurerSupport {
-//    @Value("${redis-timeout}")
-//    private Long redisTimeout;
-
     //缓存管理器
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
