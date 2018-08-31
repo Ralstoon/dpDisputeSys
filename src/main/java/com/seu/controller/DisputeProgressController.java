@@ -248,14 +248,23 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
     }
 
-    /** 或缺调解大厅中的数据 */
+    /** 获取调解大厅中的数据 */
     @GetMapping(value = "/mediator/GetMediationHallData")
-    public ResultVO getMediationHallData(@RequestParam("ID") String id) throws  Exception{
+    public ResultVO getMediationHallData(@RequestParam("id") String id){
         return disputeProgressService.getMediationHallData(id);
     }
 
+    /** 获取我的调节中的数据 */
+    @GetMapping(value = "/mediator/GetMyMediationData")
+    public ResultVO getMyMediationData(@RequestParam("id") String id){
+        return disputeProgressService.getMyMediationData(id);
+    }
 
-
+    /** 管理者获取案件列表 */
+    @GetMapping(value = "/manager/getCaseList")
+    public ResultVO getManagerCaseList(@RequestParam("id") String id){
+        return disputeProgressService.getManagerCaseList(id);
+    }
 
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")

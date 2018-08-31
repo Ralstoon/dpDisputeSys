@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * @ClassName DisputecaseRepository
  * @Description TODO
@@ -13,4 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Version 1.0
  **/
 public interface DisputecaseRepository extends JpaRepository<Disputecase,String> {
+    List<Disputecase> findByMediatorId(String id);
 }

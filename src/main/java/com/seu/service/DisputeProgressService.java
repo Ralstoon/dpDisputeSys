@@ -60,5 +60,11 @@ public interface DisputeProgressService {
     void updateUserChoose(String disputeId,String mediatorList);
 
     /** 获取调解大厅中的数据 */
-    ResultVO getMediationHallData(String id) throws ParseException;
+    ResultVO getMediationHallData(String id);
+
+    /** 获取我的调节中的数据 */
+    ResultVO getMyMediationData(String id);
+
+    /** 管理员获得案件列表 */
+    ResultVO getManagerCaseList(String id);
 }

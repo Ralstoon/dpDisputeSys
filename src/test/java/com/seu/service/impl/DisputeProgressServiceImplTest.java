@@ -39,4 +39,10 @@ public class DisputeProgressServiceImplTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void getManagerCaseList(){
+        Object list=disputeProgressService.getManagerCaseList("123");
+        Assert.assertNotNull(list);
+    }
 }
