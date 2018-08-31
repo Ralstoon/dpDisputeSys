@@ -4,9 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
+import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
 import com.seu.repository.DiseaseListRepository;
 import com.seu.service.DisputeRegisterService;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,5 +98,33 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         map.put("Department",room);
         return ResultVOUtil.ReturnBack(map,DisputeRegisterEnum.GETROOMLIST_SUCCESS.getCode(),DisputeRegisterEnum.GETROOMLIST_SUCCESS.getMsg());
 
+    }
+
+    @Autowired
+    MyTransportClient client;
+
+    /* 模拟仅单个科室和关键词 */
+    @Override
+    public ResultVO getOperations(String keyword,String room) throws Exception {
+        String indexName=room+"_index";
+        String typeName=indexName+"_type";
+        String[] ss=new String[]{};
+//        Client client=new MyTransportClient().getClient();
+
+        SearchRequestBuilder requestbuilder=client.getClient().prepareSearch(indexName).setTypes(typeName);
+        SearchResponse searchResponse=requestbuilder.setQuery(QueryBuilders.matchPhraseQuery("keyword",keyword))
+                .setFrom(0).setSize(10).setExplain(true).execute().actionGet();
+        Map<String,Object> map=new HashMap<>();
+        SearchHits hits=searchResponse.getHits();
+//        JSONObject jsStr=JSONObject.parseObject(hits.getHits()[0].getSourceAsString());
+        List<String> operList=new ArrayList<>();
+        for(int i=0;i<hits.getHits().length;++i){
+            JSONObject jsStr=JSONObject.parseObject(hits.getHits()[i].getSourceAsString());
+            String[] temp=jsStr.get("operations").toString().trim().split(",");
+            for(String s:temp)
+                operList.add(s);
+        }
+        map.put(room,operList);
+        return ResultVOUtil.ReturnBack(map,0,"成功");
     }
 }

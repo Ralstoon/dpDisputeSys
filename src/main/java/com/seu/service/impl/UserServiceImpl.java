@@ -5,11 +5,15 @@ import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.converter.User2UserForm;
+import com.seu.domian.Admin;
+import com.seu.domian.Mediator;
 import com.seu.domian.NormalUser;
 import com.seu.domian.User;
 import com.seu.enums.LoginEnum;
 import com.seu.exception.NormalUserException;
 import com.seu.form.VOForm.UserForm;
+import com.seu.repository.AdminRepository;
+import com.seu.repository.MediatorRepository;
 import com.seu.repository.NormalUserRepository;
 import com.seu.repository.UserRepository;
 import com.seu.service.UserService;
@@ -25,12 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private NormalUserRepository normalUserRepository;
-//    @Autowired
-//    private NormalUserService normalUserDetailService;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MediatorRepository mediatorRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
 
 
@@ -102,5 +108,24 @@ public class UserServiceImpl implements UserService {
 //            session.removeAttribute(param);
 //        }
 //        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
+    }
+
+
+    @Override
+    public String findNameById(String ID) {
+        User user=userRepository.getOne(ID);
+        String name=null;
+        if(user.getRole()=="0"){
+            NormalUser currentUser=normalUserRepository.getOne(user.getSpecificId());
+            name=currentUser.getName();
+        }else if(user.getRole()=="1"){
+            Mediator currentUser=mediatorRepository.getOne(user.getSpecificId());
+            name=currentUser.getMediatorName();
+        }else if(user.getRole()=="2"){
+            Admin currentUser=adminRepository.getOne(user.getSpecificId());
+            name=currentUser.getAdminName();
+        }
+        return name;
+
     }
 }

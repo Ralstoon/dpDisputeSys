@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum DisputeProgressEnum {
+
     STARTUP_SUCCESS(0,"纠纷调解工作流启动成功"),
     STARTUP_FAIL(1,"纠纷调解工作流启动失败"),
     DISPUTEREGISTER_SUCCESS(2,"纠纷调解工作流启动成功，纠纷案件已登记暂存"),
@@ -16,7 +17,10 @@ public enum DisputeProgressEnum {
     SEARCH_TASK_SUCCESS(9,"查询当前待办任务列表成功"),
     SEARCH_HISTORICTASKLIST_SUCESS(10,"查询历史任务成功"),
     ADD_TASKCOMMIT_SUCCESS(11,"添加任务评价成功"),
-
+    MEDIATORSELECTCASE_SUCCESS(12,"调解员申请案件成功"),
+    USERCHOOSEMEDIATOR_SUCCESS(13,"用户选择调解员成功"),
+    MEDIATORAVOID_SUCCESS(14,"调解员申请回避成功"),
+    GETMYMEDIATIONDATA_SUCCESS(15,"获取案件列表成功")
     ;
     private String msg;
     private Integer code;

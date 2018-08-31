@@ -1,15 +1,13 @@
 package com.seu.controller;
 
 import com.seu.ViewObject.ResultVO;
+import com.seu.elasticsearch.MyTransportClient;
 import com.seu.service.DisputeRegisterService;
 import com.sun.deploy.net.URLEncoder;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/RegConflict")
 @CrossOrigin
 public class DisputeRegisterController {
-    public final static  String s="diseaseList";
-    public final static byte[] bs=s.getBytes();
     @Autowired
     DisputeRegisterService disputeRegisterService;
 
@@ -46,5 +42,20 @@ public class DisputeRegisterController {
     @Cacheable(value = "constantData",key ="'roomList'",unless = "#result.code!=2")
     public ResultVO getRoomList(){
         return disputeRegisterService.getRoomList();
+    }
+
+
+
+    /**
+     *@Author 吴宇航
+     *@Description  //TODO仅考虑单个keyword和room，为加入redis缓存
+     *@Date 20:40 2018/8/28
+     *@Param [keywords, room]
+     *@return com.seu.ViewObject.ResultVO
+     **/
+    @GetMapping(value="/getOperations")
+    public ResultVO getOperations(@RequestParam String keywords,
+                                  @RequestParam String room) throws Exception{
+        return disputeRegisterService.getOperations(keywords,room);
     }
 }

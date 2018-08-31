@@ -8,7 +8,7 @@ import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
-import com.seu.repository.DisputeInfoRepository;
+import com.seu.repository.DisputecaseRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.MediatorService;
 import com.seu.service.UserService;
@@ -23,12 +23,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/disputeProgress")
+@RequestMapping(value = "/DisputeWeb")
 @CrossOrigin
 public class DisputeProgressController {
     @Autowired
@@ -51,45 +52,46 @@ public class DisputeProgressController {
      **/
     // TODO 存在问题，即用户必须在进入纠纷登记页面后完成整个操作，否则不会做任何保存
     // TODO 问题2，未对用的身份信息进行认证（姓名、身份证）
-    @PostMapping(value="/disputeRegister")
-    @Transactional
-    public ResultVO disputeRegister(@Valid DisputeRegisterDetailForm disputeRegisterDetailForm,
-                                    BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            // bindingResult.getFieldError().getDefaultMessage()表示返回验证失败的地方，比如XX必填
-            Map<String,Object> param=new HashMap<>();
-            param.put("data",bindingResult.getFieldError().getDefaultMessage());
-            return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
-        }
-        //1、存储纠纷信息
-//        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
-        String userId=disputeRegisterDetailForm.getID();
-        disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
-        String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,userId);
-        System.out.println("disputeId："+disputeId);
-        String name= normalUserService.findNormalUserNameByFatherId(userId);
-        String email= normalUserService.findEmailByUserId(userId);
-        String phone = normalUserService.findPhoneByUserId(userId);
-
-
-//        session.setAttribute("name",name);
-        Map<String,Object> vars=new HashMap<>();
-        vars.put("disputeId",disputeId);
-        vars.put("userId",userId);
-        vars.put("email",email);
-
-        vars.put("phone",phone);
-
-        //2、用纠纷信息id启动流程
-        disputeProgressService.startProcess(disputeId,vars);
-
-        //3、完成纠纷登记操作
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-        disputeProgressService.completeCurrentTask(tasks.get(0).getId());
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
-        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
-
-    }
+    // TODO 大改，卸载登记controller中
+//    @PostMapping(value="/disputeRegister")
+//    @Transactional
+//    public ResultVO disputeRegister(@Valid DisputeRegisterDetailForm disputeRegisterDetailForm,
+//                                    BindingResult bindingResult){
+//        if(bindingResult.hasErrors()){
+//            // bindingResult.getFieldError().getDefaultMessage()表示返回验证失败的地方，比如XX必填
+//            Map<String,Object> param=new HashMap<>();
+//            param.put("data",bindingResult.getFieldError().getDefaultMessage());
+//            return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
+//        }
+//        //1、存储纠纷信息
+////        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
+//        String userId=disputeRegisterDetailForm.getID();
+//        disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
+//        String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,userId);
+//        System.out.println("disputeId："+disputeId);
+//        String name= normalUserService.findNormalUserNameByFatherId(userId);
+//        String email= normalUserService.findEmailByUserId(userId);
+//        String phone = normalUserService.findPhoneByUserId(userId);
+//
+//
+////        session.setAttribute("name",name);
+//        Map<String,Object> vars=new HashMap<>();
+//        vars.put("disputeId",disputeId);
+//        vars.put("userId",userId);
+//        vars.put("email",email);
+//
+//        vars.put("phone",phone);
+//
+//        //2、用纠纷信息id启动流程
+//        disputeProgressService.startProcess(disputeId,vars);
+//
+//        //3、完成纠纷登记操作
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        disputeProgressService.completeCurrentTask(tasks.get(0).getId());
+//        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
+//        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
+//
+//    }
 
     /*
      *@Author 吴宇航
@@ -112,28 +114,26 @@ public class DisputeProgressController {
 
     /*
      *@Author 吴宇航
-     *@Description  立案判断功能，建立在管理员选定具体案例并且审核
+     *@Description  立案判断功能，管理者或有权限的调解员选定具体案例并且审核
      *@Date 21:11 2018/7/20
      *@Param [result通过与否, starterId当前审核案件用户id, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    //TODO 不通过需要给出理由吗？
-    //TODO 有可能是管理者，也有可能是有权限的调解员登录,这里仅写了调解员
-    @PostMapping(value="/caseAccept")
-    public ResultVO caseAccept(@RequestParam(value="result") boolean result,
-                               @RequestParam("disputeId") String disputeId,
+    //TODO Integer类型能接受到吗
+    @PostMapping(value="/PassApply")
+    public ResultVO caseAccept(@RequestParam(value="result") Integer result,
+                               @RequestParam("disputecaseId") String disputeId,
                                @RequestParam("ID") String ID){
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Map<String,Object> var=new HashMap<>();
-        if(result==true)
-            var.put("caseAccept",0);
+        if(result==0)
+            var.put("caseAccept",0);  //不通过
         else
-            var.put("caseAccept",1);
+            var.put("caseAccept",1);  //通过
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
-        String name=mediatorService.findNameByID(ID);
+        String name=userService.findNameById(ID);
         Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getCode(),DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getMsg());
-
     }
 
 
@@ -161,50 +161,33 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TRIGGERSIGNAL_SUCCESS.getCode(),DisputeProgressEnum.TRIGGERSIGNAL_SUCCESS.getMsg());
     }
 
-    /*
-     *@Author 吴宇航
-     *@Description  用户在每次进行任务前，都先要查询他所拥有的disputeId(未完成)，从中选出disputeId并进行相应的操作
-     *@Date 13:22 2018/7/21
-     *@Param [session, page, size] page从1开始，需要处理减一
-     *@return com.seu.ViewObject.ResultVO
-     **/
-    @PostMapping(value = "/disputeList")
-    public ResultVO getDisputeListByUserId(@RequestParam("ID") String ID,
-                                           @RequestParam(value = "page",defaultValue = "1") Integer page,
-                                           @RequestParam(value = "size",defaultValue = "10") Integer size){
-//        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
-        String userId=ID;
-        List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByUserId(userId,page-1,size);
-        Map<String,Object> map=new HashMap<>();
-        map.put("disputeCaseList",disputeCaseFormList);
-        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_DISPUTECASELIST_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_DISPUTECASELIST_SUCCESS.getMsg());
-    }
+
 
     @Autowired
     private TaskService taskService;
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
-    private DisputeInfoRepository disputeInfoRepository;
+    private DisputecaseRepository disputecaseRepository;
 
 
     /**
      * @Author: W
      * @Description: 查询待办任务，根据 参数 task
      * @Date: 18:08 2018/7/21
-     * @param page
+     * @param
      * @param size
      */
-    @PostMapping(value = "/taskList")
-    public ResultVO testlist(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                             @RequestParam(value = "size",defaultValue = "10") Integer size,
-                             @RequestParam("task") String task){
-        //todo 身份认证
-        List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByTask(task,page-1,size);
-        Map<String,Object> map=new HashMap<>();
-        map.put("disputeCaseList",disputeCaseFormList);
-        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
-    }
+//    @PostMapping(value = "/taskList")
+//    public ResultVO testlist(@RequestParam(value = "page",defaultValue = "1") Integer page,
+//                             @RequestParam(value = "size",defaultValue = "10") Integer size,
+//                             @RequestParam("task") String task){
+//        //todo 身份认证
+//        List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByTask(task,page-1,size);
+//        Map<String,Object> map=new HashMap<>();
+//        map.put("disputeCaseList",disputeCaseFormList);
+//        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
+//    }
 
     @PostMapping(value = "/historicTaskList")
     public ResultVO getHistoricTaskListByDispute(@RequestParam(value = "disputeId") String disputeId){
@@ -223,43 +206,56 @@ public class DisputeProgressController {
      *@Param [disputeId, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-//    @PostMapping(value = "/mediatorSelectUser")
-//    public ResultVO mediatorSelectUser(@RequestParam("disputeId") String disputeId,
-//                                       HttpSession session){
-//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-//        Task currentTask=null;
-//        for(Task task:tasks){
-//            if(task.getName().equals("调解员选用户")){
-//                currentTask=task;
-//                break;
-//            }
-//        }
-//        disputeProgressService.completeCurrentTask(currentTask.getId());
-//        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
-//    }
+    @PostMapping(value = "/mediator/forhandler")
+    public ResultVO mediatorSelectUser(@RequestParam("CaseId") String disputeId,
+                                       @RequestParam("UserId") String ID){
+        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+        Task currentTask=null;
+        for(Task task:tasks){
+            if(task.getName().equals("调解员选用户")){
+                currentTask=task;
+                break;
+            }
+        }
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+        /** 为案件进程表添加调解员申请状态*/
+        disputeProgressService.updateApplyStatus(disputeId,ID);
+        return ResultVOUtil.ReturnBack(DisputeProgressEnum.MEDIATORSELECTCASE_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORSELECTCASE_SUCCESS.getMsg());
+    }
 
-    /*
-     *@Author 吴宇航
-     *@Description  //用户确认调解员 完成”用户选调解员“任务
-     *@Date 17:01 2018/7/24
-     *@Param [disputeId, session]
-     *@return com.seu.ViewObject.ResultVO
-     **/
-//    @PostMapping(value = "/userSelectMediator")
-//    public ResultVO userSelectMediator(@RequestParam("mediatorId") String mediatorId,
-//                                       @RequestParam("disputeId") String disputeId,
-//                                       HttpSession session){
-//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-//        Task currentTask=null;
-//        for(Task task:tasks){
-//            if(task.getName().equals("用户选择调解员")){
-//                currentTask=task;
-//                break;
-//            }
-//        }
-//        disputeProgressService.completeCurrentTask(currentTask.getId());
-//        // TODO 添加参数，可能是local disputeId 关联的 意向 disputeId
-//    }
+    /** 调解员申请回避 */
+    @PostMapping(value = "/mediator/fordebarb")
+    public ResultVO mediatorFordebarb(@RequestParam("CaseId") String disputeId,
+                                       @RequestParam("UserId") String ID){
+
+        /** 为案件进程表添加调解员回避状态*/
+        disputeProgressService.updateAvoidStatus(disputeId,ID);
+        return ResultVOUtil.ReturnBack(DisputeProgressEnum.MEDIATORAVOID_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORAVOID_SUCCESS.getMsg());
+    }
+
+
+    /** 用户选择调解员列表 */
+    @PostMapping(value = "user/postMediatorList")
+    public ResultVO getUserChoose(@RequestParam("MediatorPickedlist") String pickedList,
+                                  @RequestParam("disputecase_id") String disputeId){
+        String mediatorList="";
+        pickedList=pickedList.substring(1,pickedList.length()-1);
+        for(String s:pickedList.split(",")){
+            mediatorList+=(s.substring(1,s.length()-1))+",";
+        }
+        mediatorList=mediatorList.substring(0,mediatorList.length()-1);
+        disputeProgressService.updateUserChoose(disputeId,mediatorList);
+        return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
+    }
+
+    /** 或缺调解大厅中的数据 */
+    @GetMapping(value = "/mediator/GetMediationHallData")
+    public ResultVO getMediationHallData(@RequestParam("ID") String id) throws  Exception{
+        return disputeProgressService.getMediationHallData(id);
+    }
+
+
+
 
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")

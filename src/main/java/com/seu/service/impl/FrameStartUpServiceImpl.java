@@ -34,28 +34,28 @@ public class FrameStartUpServiceImpl implements FrameStartUpService {
 
     @Override
     public void initActiUserAndGroup() {
-        // TODO 直接全部取出有待优化，可以使用分页
-        List<Admin> admins=adminRepository.findAll();
-        List<Mediator> mediators=mediatorRepository.findAll();
-        Group adminGroup=identityService.createGroupQuery().groupId("administrator").singleResult();
-        Group mediatorGroup=identityService.createGroupQuery().groupId("mediator").singleResult();
-
-        for(Admin adminOne:admins){
-            User user=identityService.createUserQuery().userId(adminOne.getAdminId()).singleResult();
-            if(user==null){
-                user=identityService.newUser(adminOne.getAdminId());
-                identityService.saveUser(user);
-            }
-            identityService.createMembership(user.getId(),adminGroup.getId());
-        }
-        for(Mediator mediatorOne:mediators){
-            User user=identityService.createUserQuery().userId(mediatorOne.getMediatorId()).singleResult();
-            if(user==null){
-                user=identityService.newUser(mediatorOne.getMediatorId());
-                identityService.saveUser(user);
-            }
-            identityService.createMembership(user.getId(),mediatorGroup.getId());
-        }
-        log.info("【完成将管理员和调解员导入activiti用户和用户组】");
+//        // TODO 直接全部取出有待优化，可以使用分页
+//        List<Admin> admins=adminRepository.findAll();
+//        List<Mediator> mediators=mediatorRepository.findAll();
+//        Group adminGroup=identityService.createGroupQuery().groupId("administrator").singleResult();
+//        Group mediatorGroup=identityService.createGroupQuery().groupId("mediator").singleResult();
+//
+//        for(Admin adminOne:admins){
+//            User user=identityService.createUserQuery().userId(adminOne.getId()).singleResult();
+//            if(user==null){
+//                user=identityService.newUser(adminOne.getAdminId());
+//                identityService.saveUser(user);
+//            }
+//            identityService.createMembership(user.getId(),adminGroup.getId());
+//        }
+//        for(Mediator mediatorOne:mediators){
+//            User user=identityService.createUserQuery().userId(mediatorOne.getMediatorId()).singleResult();
+//            if(user==null){
+//                user=identityService.newUser(mediatorOne.getMediatorId());
+//                identityService.saveUser(user);
+//            }
+//            identityService.createMembership(user.getId(),mediatorGroup.getId());
+//        }
+//        log.info("【完成将管理员和调解员导入activiti用户和用户组】");
     }
 }

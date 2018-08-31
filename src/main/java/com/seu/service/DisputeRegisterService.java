@@ -16,4 +16,6 @@ public interface DisputeRegisterService {
     ResultVO getMedicalBehaviorList();
 
     ResultVO getRoomList();
+
+    ResultVO getOperations(String keywords,String room) throws Exception;
 }

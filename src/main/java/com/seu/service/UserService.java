@@ -15,4 +15,7 @@ public interface UserService {
     /** 用户注销 */
     ResultVO loginout(String ID,String role) throws Exception;
 
+    /** 根据用户id查找名字*/
+    String findNameById(String ID);
+
 }
