@@ -275,4 +275,20 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(commentForm,DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getCode(),DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getMsg());
     }
 
+    //管理员选择具体某个调解员调解某个案件   wj
+    @PostMapping(value = "/manager/PostMediatorForCase")
+    public ResultVO decideMediatorDisputeCase(@RequestParam(value = "MediatorId") String mediatorId,
+                                              @RequestParam(value = "CaseId") String disputeId){
+        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+        Task currentTask=null;
+        for(Task task:tasks){
+            if(task.getName().equals("管理员做决定")){
+                currentTask=task;
+                break;
+            }
+        }
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
+    }
 }

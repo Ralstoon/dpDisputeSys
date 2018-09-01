@@ -67,4 +67,6 @@ public interface DisputeProgressService {
 
     /** 管理员获得案件列表 */
     ResultVO getManagerCaseList(String id);
+
+    ResultVO decideMediatorDisputeCase(String mediator, String caseId);
 }

@@ -1,13 +1,9 @@
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
-import com.seu.domian.Comment;
-import com.seu.domian.ConstantData;
-import com.seu.domian.NormalUser;
+import com.seu.domian.*;
 import com.seu.form.HistoricTaskForm;
-import com.seu.repository.CommentRepository;
-import com.seu.repository.DiseaseListRepository;
-import com.seu.repository.NormalUserRepository;
+import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
 import org.activiti.engine.HistoryService;
@@ -48,29 +44,29 @@ public class test {
 
     @Test
     @Deployment(resources = "processes/disputeProgress.bpmn")
-    public void webServiceTaskTest(){
+    public void webServiceTaskTest() {
         System.out.println(taskService.createTaskQuery().taskCandidateGroup("mediator").list().size());
     }
 
     @Test
-    public void findPhoneByuserIdTest(){
+    public void findPhoneByuserIdTest() {
 //        System.out.println(iNormalUserService.findPhoneByUserId("1532004655415202278"));
     }
 
     @Test
-    public void historicTaskListTest(){
+    public void historicTaskListTest() {
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
                 .getHistoricTaskListByDisputeId("1532413108579745686");
         System.out.println("asd");
     }
 
     @Test
-    public void addCommentTest(){
-        commentRepository.addComment("123","123","qwe","123");
+    public void addCommentTest() {
+        commentRepository.addComment("123", "123", "qwe", "123");
     }
 
     @Test
-    public void findCommentByTaskIdTest(){
+    public void findCommentByTaskIdTest() {
         Comment comment = commentRepository.findCommentByTaskId("123");
 //        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
         System.out.println(comment.getComment());
@@ -78,9 +74,9 @@ public class test {
     }
 
     @Test
-    public void roomListTest(){
-        ConstantData constantData=diseaseListRepository.findByName("room_list");
-        JSONObject jsStr=JSONObject.parseObject(constantData.getData());
+    public void roomListTest() {
+        ConstantData constantData = diseaseListRepository.findByName("room_list");
+        JSONObject jsStr = JSONObject.parseObject(constantData.getData());
         List<String> city = new ArrayList<>();
         List<List> hospital = new ArrayList<>();
         List<Object> room = new ArrayList<>();
@@ -88,12 +84,12 @@ public class test {
         List<Object> roomHp = new ArrayList<>();
 
 
-       // a.stream().map()
-        for(String key:jsStr.keySet()){
+        // a.stream().map()
+        for (String key : jsStr.keySet()) {
             city.add(key);
-            for(String hpKey: ((JSONObject)jsStr.get(key)).keySet()){
+            for (String hpKey : ((JSONObject) jsStr.get(key)).keySet()) {
                 hospitalCity.add(hpKey);
-                roomHp.add(((JSONObject)jsStr.get(key)).get(hpKey));
+                roomHp.add(((JSONObject) jsStr.get(key)).get(hpKey));
             }
 
             hospital.add(hospitalCity);
@@ -104,5 +100,34 @@ public class test {
 
 
         List a = ((List<JSONObject>) jsStr.get("南京市"));
+
+    }
+
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
+
+
+
+    @Test
+    public void test(){
+        Disputecase disputecase = disputecaseRepository.findOne("333");
+        disputecase.setId("333");
+        disputecase.setMediatorId("999999");
+        disputecaseRepository.save(disputecase);
+    }
+
+    @Autowired
+    private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
+
+    @Test
+    public void test222(){
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId("gdgtrgrr");
+        String normalusrUpload = disputecaseAccessory.getNormaluserUpload();
+        List<NormalUserUpload> normalUserUploadList = net.sf.json.JSONArray.fromObject(normalusrUpload);
+        NormalUserUpload normalUserUpload = new NormalUserUpload("ttt", "t", "tttt", "ttt", "t");
+        normalUserUploadList.add(normalUserUpload);
+        //DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload);
+        disputecaseAccessory.setNormaluserUpload(net.sf.json.JSONArray.fromObject(normalUserUploadList).toString());
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
     }
 }
