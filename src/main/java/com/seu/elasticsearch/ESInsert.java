@@ -1,12 +1,16 @@
 package com.seu.elasticsearch;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.seu.common.InitConstant;
 import com.seu.domian.Operation;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName ESInsert
@@ -50,10 +54,14 @@ public class ESInsert {
 
 
     public static void main(String[] args) throws Exception {
-        String index="神经外科_index";
-        String index_type=index+"_type";
-        String url="D:\\worksapce_python\\666\\data\\1.txt";
-        new ESInsert().insertJSON(url,index,index_type);
+//        String index="神经外科_index";
+//        String index_type=index+"_type";
+//        String url="D:\\worksapce_python\\666\\data\\1.txt";
+//        new ESInsert().insertJSON(url,index,index_type);
+        JSONObject jsonObject=JSONArray.parseArray(InitConstant.init_mediateStage).getJSONObject(0);
+        JSONObject temp1=jsonObject.getJSONObject("预约调解").getJSONObject("currentStageContent");
+
+
     }
 
 }

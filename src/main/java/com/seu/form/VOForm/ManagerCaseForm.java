@@ -29,7 +29,7 @@ public class ManagerCaseForm {
     /** 案件名 */
     private String name;
     /** 案件id */
-    private String nameid;
+    private String CaseId;
     /** 案件状态 */
     private String status;
     /** 申请人 */
