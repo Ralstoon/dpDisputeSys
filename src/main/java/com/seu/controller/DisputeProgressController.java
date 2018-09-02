@@ -4,6 +4,7 @@ package com.seu.controller;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.enums.DisputeProgressEnum;
+import com.seu.form.ChangeAuthorityForm;
 import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
@@ -11,6 +12,7 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
+import javafx.geometry.Pos;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -118,11 +120,11 @@ public class DisputeProgressController {
      *@Param [result通过与否, starterId当前审核案件用户id, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    //TODO Integer类型能接受到吗
+    // TODO 流程测试
     @PostMapping(value="/PassApply")
     public ResultVO caseAccept(@RequestParam(value="result") Integer result,
-                               @RequestParam("disputecaseId") String disputeId,
-                               @RequestParam("ID") String ID){
+                               @RequestParam("CaseId") String disputeId,
+                               @RequestParam("id") String ID){
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Map<String,Object> var=new HashMap<>();
         if(result==0)
@@ -190,14 +192,14 @@ public class DisputeProgressController {
 
     @PostMapping(value = "/historicTaskList")
     public ResultVO getHistoricTaskListByDispute(@RequestParam(value = "disputeId") String disputeId){
-        // todo 身份认证(普通用户)
-
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
                 .getHistoricTaskListByDisputeId(disputeId);
         Map<String,Object> map=new HashMap<>();
         map.put("historicTaskFormList",historicTaskFormList);
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getCode(),DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getMsg());
     }
+
+    // TODO 流程测试
     /*
      *@Author 吴宇航
      *@Description  //调解员确定用户(纠纷案件) 完成”调解员选用户“任务
@@ -207,7 +209,7 @@ public class DisputeProgressController {
      **/
     @PostMapping(value = "/mediator/forhandler")
     public ResultVO mediatorSelectUser(@RequestParam("CaseId") String disputeId,
-                                       @RequestParam("UserId") String ID){
+                                       @RequestParam("id") String ID){
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Task currentTask=null;
         for(Task task:tasks){
@@ -225,7 +227,7 @@ public class DisputeProgressController {
     /** 调解员申请回避 */
     @PostMapping(value = "/mediator/fordebarb")
     public ResultVO mediatorFordebarb(@RequestParam("CaseId") String disputeId,
-                                       @RequestParam("UserId") String ID){
+                                       @RequestParam("id") String ID){
 
         /** 为案件进程表添加调解员回避状态*/
         disputeProgressService.updateAvoidStatus(disputeId,ID);
@@ -236,7 +238,7 @@ public class DisputeProgressController {
     /** 用户选择调解员列表 */
     @PostMapping(value = "user/postMediatorList")
     public ResultVO getUserChoose(@RequestParam("MediatorPickedlist") String pickedList,
-                                  @RequestParam("disputecase_id") String disputeId){
+                                  @RequestParam("CaseId") String disputeId){
         String mediatorList="";
         pickedList=pickedList.substring(1,pickedList.length()-1);
         for(String s:pickedList.split(",")){
@@ -265,6 +267,31 @@ public class DisputeProgressController {
         return disputeProgressService.getManagerCaseList(id);
     }
 
+
+    /** 管理员获取统计管理页面列表 */
+    @GetMapping(value = "/manager/getCase_judiciary")
+    public ResultVO getManagerCaseJudiciary(@RequestParam("id") String id){
+        return disputeProgressService.getManagerCaseJudiciary(id);
+    }
+
+    /** 管理员获取调解员列表（用于给案件分配调解员） */
+    @GetMapping(value = "/getMediatorList")
+    public ResultVO getMediatorList(@RequestParam("id") String id){
+        return disputeProgressService.getMediatorList(id);
+    }
+
+    /** 管理员 获取所有调解员的授权信息 */
+    @GetMapping(value = "/manager/getNameofAuthorityList")
+    public ResultVO getNameofAuthorityList(@RequestParam("id") String id){
+        return disputeProgressService.getNameofAuthorityList(id);
+    }
+
+    /**管理员发送授权调解员权限信息 */
+    @PostMapping(value = "/manager/ChangeAuthorityNameList")
+    public ResultVO changeAuthorityNameList(@RequestParam("param") String changeAuthorityFormList){
+        return disputeProgressService.changeAuthorityNameList(changeAuthorityFormList);
+    }
+
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")
     public ResultVO addTaskComment(@RequestParam(value = "comment") String comment,
@@ -274,6 +301,25 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(commentForm,DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getCode(),DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getMsg());
     }
 
+    /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
+    @GetMapping(value = "/mediator/getMediationStage")
+    public ResultVO getMediationStage(@RequestParam("CaseId") String caseId){
+        return disputeProgressService.getMediationStage(caseId);
+    }
+
+    /** 发送鉴定结果数据 */
+    @PostMapping(value = "/mediator/resultOfIndent")
+    public ResultVO setResultOfIndent(@RequestParam("CaseId") String caseId,
+                                      @RequestParam("resultOfIndent") String resultOfIndent){
+        return disputeProgressService.setResultOfIndent(caseId,resultOfIndent);
+    }
+
+    /** 发送预约数据 */
+    @PostMapping(value = "/mediator/appoint")
+    public ResultVO setAppoint(@RequestParam("CaseId") String caseId,
+                               @RequestParam("currentStageContent") String currentStageContent){
+        return disputeProgressService.setAppoint(caseId,currentStageContent);
+    }
     //管理员选择具体某个调解员调解某个案件   wj
     @PostMapping(value = "/manager/PostMediatorForCase")
     public ResultVO decideMediatorDisputeCase(@RequestParam(value = "MediatorId") String mediatorId,

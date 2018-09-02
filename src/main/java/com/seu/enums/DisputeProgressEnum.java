@@ -20,7 +20,14 @@ public enum DisputeProgressEnum {
     MEDIATORSELECTCASE_SUCCESS(12,"调解员申请案件成功"),
     USERCHOOSEMEDIATOR_SUCCESS(13,"用户选择调解员成功"),
     MEDIATORAVOID_SUCCESS(14,"调解员申请回避成功"),
-    GETMYMEDIATIONDATA_SUCCESS(15,"获取案件列表成功")
+    GETMYMEDIATIONDATA_SUCCESS(15,"获取案件列表成功"),
+    GETMEDIATORLIST_SUCCESS(16,"获取调解员列表成功"),
+    GETNAMEOFAUTHORITY_SUCCESS(17,"获取调解员的授权信息成功"),
+    CHANGEMEDIATORAUTHORITY_SUCCESS(18,"修改调解员权限成功"),
+    GETMEDIATIONSTAGE_SUCCESS(19,"获取当前调解步骤成功"),
+    SETRESULTOFINDENT_SUCCESS(20,"添加医疗损害鉴定结果成功"),
+    SETAPPOINT_SUCCESS(21,"添加预约数据成功"),
+
     ;
     private String msg;
     private Integer code;

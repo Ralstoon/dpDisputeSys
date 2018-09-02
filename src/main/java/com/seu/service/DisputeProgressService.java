@@ -68,6 +68,27 @@ public interface DisputeProgressService {
     /** 管理员获得案件列表 */
     ResultVO getManagerCaseList(String id);
 
+    /** 管理员获取统计管理页面列表 */
+    ResultVO getManagerCaseJudiciary(String id);
+
+    /** 管理员获取调解员列表（用于给案件分配调解员） */
+    ResultVO getMediatorList(String id);
+
+    /** 管理员 获取所有调解员的授权信息 */
+    ResultVO getNameofAuthorityList(String id);
+
+    /** 管理员发送授权调解员权限改变信息 */
+    ResultVO changeAuthorityNameList(String changeAuthorityFormList);
+
+    /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
+    ResultVO getMediationStage(String caseId);
+
+    /** 发送鉴定结果数据 */
+    ResultVO setResultOfIndent(String caseId,String resultOfIndent);
+
+    /** 发送预约数据 */
+    ResultVO setAppoint(String caseId,String currentStageContent);
+
     //管理员确定调解员
     ResultVO decideMediatorDisputeCase(String mediator, String caseId);
 

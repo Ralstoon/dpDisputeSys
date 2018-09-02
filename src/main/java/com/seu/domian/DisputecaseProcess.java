@@ -1,5 +1,6 @@
 package com.seu.domian;
 
+import com.seu.common.InitConstant;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -24,4 +25,5 @@ public class DisputecaseProcess {
     private String avoidStatus="";
     private String applyStatus="";
     private String userChoose="";
+    private String mediateStage=InitConstant.init_mediateStage;
 }
