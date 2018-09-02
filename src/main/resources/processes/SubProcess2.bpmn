@@ -7,10 +7,10 @@
     <userTask activiti:exclusive="true" id="sid-48F37B67-1148-493D-BCC8-7D7F41B30426" name="申请调解"/>
     <userTask activiti:exclusive="true" id="sid-8325CD01-3644-4075-8934-30F8FEAC5DDE" name="建议损害/医疗鉴定"/>
     <sequenceFlow id="sid-E0FD8E9A-52B0-4904-A383-17DA4F0F1F97" sourceRef="sid-D1899127-9FDA-436F-93ED-0F9C43EFA980" targetRef="sid-8325CD01-3644-4075-8934-30F8FEAC5DDE">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${subP2T1==0}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${param_sp2==0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-F4057ECD-E1F9-4D92-BCE5-3846AAF8F82F" sourceRef="sid-D1899127-9FDA-436F-93ED-0F9C43EFA980" targetRef="sid-48F37B67-1148-493D-BCC8-7D7F41B30426">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${subP2T1==1}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${param_sp2==1}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="sid-6D6342B8-D18A-44BD-A3C2-088CDE819A3E"/>
     <sequenceFlow id="sid-E6BB7187-CAE2-4BCD-828E-7D8EFDC3A4EE" sourceRef="sid-48F37B67-1148-493D-BCC8-7D7F41B30426" targetRef="sid-6D6342B8-D18A-44BD-A3C2-088CDE819A3E"/>

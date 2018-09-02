@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 public interface NormalUserRepository extends JpaRepository<NormalUser,String> {
     NormalUser findByFatherId(String fatherId);
-
+    NormalUser findByIdCard(String idCard);
 
 //    NormalUser selectLogin(@Param("phone")String phone, @Param("password") String md5Password);
 

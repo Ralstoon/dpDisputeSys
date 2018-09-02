@@ -377,4 +377,22 @@ public class DisputeProgressController {
         return disputeProgressService.setCaseLitigation(caseId);
     }
 
+    /** 申请再次调解*/
+    @PostMapping(value = "/user/reMediation")
+    public ResultVO reMediation(@RequestParam("CaseId") String caseId){
+        return disputeProgressService.reMediation(caseId);
+    }
+
+    /** 通知用户进行医疗鉴定 */
+    @PostMapping(value = "/mediator/InformIndenty")
+    public  ResultVO informIndenty(@RequestParam("CaseId") String caseId){
+        return disputeProgressService.informIndenty(caseId);
+    }
+
+    /** 获取专家库 */
+    @GetMapping(value = "/getExpertsList")
+    public ResultVO getExpertsList(){
+        return disputeProgressService.getExpertsList();
+    }
+
 }

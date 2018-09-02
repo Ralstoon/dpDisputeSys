@@ -81,12 +81,12 @@ public class MediationStageForm {
 //    public class ParticopateContact{
 //        private List<Info1> Applicants;
 //        private List<Info1> Respondents;
-//        private List<Info2> experts;
+//        private List<Info2> Experts;
 //
 //        public ParticopateContact(){
 //            Applicants=new ArrayList<>();
 //            Respondents=new ArrayList<>();
-//            experts=new ArrayList<>();
+//            Experts=new ArrayList<>();
 //        }
 //
 //        public void addApplicant(String phone,String email){
@@ -100,9 +100,9 @@ public class MediationStageForm {
 //            Respondents.add(new Info1(phone,email));
 //        }
 //        public void addExpert(String phone,String email,String name){
-//            if(experts==null)
-//                experts=new ArrayList<>();
-//            experts.add(new Info2(phone,email,name));
+//            if(Experts==null)
+//                Experts=new ArrayList<>();
+//            Experts.add(new Info2(phone,email,name));
 //        }
 //    }
 //

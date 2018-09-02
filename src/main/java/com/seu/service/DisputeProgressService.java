@@ -99,4 +99,13 @@ public interface DisputeProgressService {
     ResultVO setCaseRepeal(String caseId);
 
     ResultVO setCaseLitigation(String caseId);
+
+    /** 申请再次调解 */
+    ResultVO reMediation(String caseId);
+
+    /** 通知用户进行医疗鉴定 */
+    ResultVO informIndenty(String caseId);
+
+    /** 获取专家库 */
+    ResultVO getExpertsList();
 }
