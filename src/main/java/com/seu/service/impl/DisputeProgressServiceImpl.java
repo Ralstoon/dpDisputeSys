@@ -15,6 +15,7 @@ import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
+import com.seu.utils.AutoSendUtil;
 import com.seu.utils.GetHospitalUtil;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -56,6 +57,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
     @Autowired
     private DisputecaseActivitiRepository disputecaseActivitiRepository;
+    @Autowired
+    private ExpertsRepository expertsRepository;
 
     private ProcessDefinition pd;
     private Deployment deployment;
@@ -666,7 +669,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
 
         /** 能否预约专家  先看金额，后看是否已预约过*/
-        if(disputecase.getClaimMoney().trim()!="0" && pi.getProcessVariables().get("paramProfesor").toString().trim()=="0")
+
+        if(disputecase.getClaimMoney().trim()!="0" && taskService.getVariable(pi.getId(),"paramProfesor").toString().trim()=="0")
             mediationStageForm.setExpert(true);
         else
             mediationStageForm.setExpert(false);
@@ -715,7 +719,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         /** 目前处于主流程:损害/医疗鉴定 */
         Task task=taskService.createTaskQuery().processInstanceId(pid).singleResult();
-        taskService.complete(task.getId());  // 会进去到子流程2
+        taskService.complete(task.getId());  // 会进去到流程 调解前处理
 
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETRESULTOFINDENT_SUCCESS.getCode(),DisputeProgressEnum.SETRESULTOFINDENT_SUCCESS.getMsg());
 
@@ -808,7 +812,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          */
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Integer result=0;
-        if(JSONObject.parseObject(currentStageContent).getJSONArray("experts").size()!=0)
+        if(JSONObject.parseObject(currentStageContent).getJSONArray("Experts").size()!=0)
             result=1;
         Map<String ,Object> var=new HashMap<>();
         var.put("appointResult",result);
@@ -828,5 +832,51 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         return ResultVOUtil.ReturnBack(115,"撤销案件");
     }
 
+    @Override
+    public ResultVO reMediation(String caseId) {
+        /** 修改状态为调解中、同时阶段也要增加，调解过程页面直接获取新阶段 */
+        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("2");
+        JSONArray arr=JSONArray.parseArray(disputecaseProcess.getMediateStage());
+        arr.add(JSONObject.parseObject(InitConstant.init_mediateStage));
+        disputecaseProcess.setMediateStage(arr.toString());
+        disputecaseProcess=disputecaseProcessRepository.save(disputecaseProcess);
+        /**
+         * 对流程进行更新
+         *  设置流程参数paramMediateResult  0成功；1诉讼；2走撤销；3走其他
+         * */
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();  // 调解结果处理
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramMediateResult",3);
+        taskService.complete(currentTask.getId(),var);
+        return getMediationStage(caseId);
+    }
 
+    @Override
+    public ResultVO informIndenty(String caseId) {
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult(); // 流程：调节前处理
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramBeforeMediate",0);
+        taskService.complete(currentTask.getId(),var);
+        Disputecase disputecase=disputecaseRepository.getOne(caseId);
+        for(String s:disputecase.getProposerId().trim().split(",")){
+            DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
+            String name=disputecaseApply.getName();
+            String phone=disputecaseApply.getPhone();
+            AutoSendUtil.sendSms(caseId,phone,name);
+            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
+            if(!(email==null || email==""))
+                AutoSendUtil.sendEmail(name,email,caseId);
+        }
+
+        return ResultVOUtil.ReturnBack(DisputeProgressEnum.INFORMINDENTY_SUCCESS.getCode(),DisputeProgressEnum.INFORMINDENTY_SUCCESS.getMsg());
+    }
+
+    @Override
+    public ResultVO getExpertsList() {
+        List<Experts> expertsList=expertsRepository.findAll();
+        return ResultVOUtil.ReturnBack(expertsList,DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getCode(),DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getMsg());
+    }
 }

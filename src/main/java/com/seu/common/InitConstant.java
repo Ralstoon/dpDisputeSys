@@ -22,7 +22,7 @@ public interface InitConstant {
             "\t\t\t\t\"phone\": \"\",\n" +
             "\t\t\t\t\"email\": \"\"\n" +
             "\t\t\t}],\n" +
-            "\t\t\t\"experts\": [{\n" +
+            "\t\t\t\"Experts\": [{\n" +
             "\t\t\t\t\"name\": \"\",\n" +
             "\t\t\t\t\"phone\": \"\",\n" +
             "\t\t\t\t\"email\": \"\"\n" +
@@ -37,6 +37,6 @@ public interface InitConstant {
             "\t}\n" +
             "}]";
 
-    String mediate_inform_phone="%s 您好，请于[%s]到 %s 参加患方 %s 与院方 %s 的医患纠纷调解";
     String mediate_inform_email="%s 您好，请于[%s]到 %s 参加患方 %s 与院方 %s 的医患纠纷调解";
+    String damageIdentify= " %s您好，针对案件%s 请尽快办理医疗损害鉴定并及时上传";
 }
