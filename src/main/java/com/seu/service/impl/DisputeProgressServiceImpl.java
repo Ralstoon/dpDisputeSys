@@ -476,6 +476,18 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         return ResultVOUtil.ReturnBack(managerCaseFormList,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
     }
 
+    @Override
+    public ResultVO decideMediatorDisputeCase(String mediator, String caseId) {
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setMediatorId(mediator);
+        Map map=new HashMap();
+        map.put("meditorId", mediator);
+        map.put("caseID", caseId);
+        disputecaseRepository.save(disputecase);
+       // disputecaseRepository
+        return ResultVOUtil.ReturnBack(map,111, "成功");// todo 合并后确定返回码、信息
+    }
+
 
     @Override
     public ResultVO getManagerCaseJudiciary(String id) {

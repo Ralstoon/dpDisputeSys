@@ -5,13 +5,6 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- * @ClassName DisputecaseAccessory
- * @Description 附件表
- * @Author 吴宇航
- * @Date 2018/9/1 23:46
- * @Version 1.0
- **/
 
 @Data
 @Entity
@@ -22,4 +15,14 @@ public class DisputecaseAccessory {
     private String medicaldamageAssessment;
     private String normaluserUpload;
     private String inquireHospital;
+
+    public DisputecaseAccessory(String id, String disputecase_id, String medicaldamage_assessment, String normaluser_upload) {
+        this.id = id;
+        this.disputecaseId = disputecase_id;
+        this.medicaldamageAssessment = medicaldamage_assessment;
+        this.normaluserUpload = normaluser_upload;
+    }
+
+    public DisputecaseAccessory() {
+    }
 }

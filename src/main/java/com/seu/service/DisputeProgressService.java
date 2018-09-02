@@ -88,4 +88,6 @@ public interface DisputeProgressService {
 
     /** 发送预约数据 */
     ResultVO setAppoint(String caseId,String currentStageContent);
+
+    ResultVO decideMediatorDisputeCase(String mediator, String caseId);
 }
