@@ -9,10 +9,7 @@ import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.DisputecaseRepository;
-import com.seu.service.DisputeProgressService;
-import com.seu.service.MediatorService;
-import com.seu.service.UserService;
-import com.seu.service.NormalUserService;
+import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -42,6 +39,8 @@ public class DisputeProgressController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DisputecaseAccessoryService disputecaseAccessoryService;
 
     /*
      *@Author 吴宇航
@@ -291,4 +290,45 @@ public class DisputeProgressController {
 
         return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
     }
+
+    //发送问询医院数据
+    @PostMapping(value = "/detail/InquireInstitute")
+    public ResultVO inquireInstitute(@RequestParam(value = "CaseId") String caseId,
+                                     @RequestParam(value = "InquireText") String inquireText){
+
+        //todo activiti test
+        List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
+        Task currentTask=null;
+        for(Task task:tasks){
+            if(task.getName().equals("向院方调研")){
+                currentTask=task;
+                break;
+            }
+        }
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
+    }
+
+    //发送调解成功
+    @PostMapping(value = "/mediator/MediationFailure")
+    public ResultVO mediationFailure(@RequestParam(value = "CaseId") String caseId){
+
+        return disputeProgressService.setMediationFailure(caseId);
+    }
+
+    //发送调解成功
+    @PostMapping(value = "/user/CaseRepeal")
+    public ResultVO caseRepeal(@RequestParam(value = "CaseId") String caseId){
+
+        return disputeProgressService.setCaseRepeal(caseId);
+    }
+
+    //发送调解成功
+    @PostMapping(value = "/user/CaseLitigation")
+    public ResultVO caseLitigation(@RequestParam(value = "CaseId") String caseId){
+
+        return disputeProgressService.setCaseLitigation(caseId);
+    }
+
 }

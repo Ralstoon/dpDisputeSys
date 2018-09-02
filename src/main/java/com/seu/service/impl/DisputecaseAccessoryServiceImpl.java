@@ -81,7 +81,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             List<NormalUserUpload> normalUserUploadList =  new ArrayList<NormalUserUpload>();
             normalUserUploadList.add(normalUserUpload);
             String normaluserUpload = JSONArray.fromObject(normalUserUploadList).toString();
-            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload);
+            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload,null);
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(normalUserUpload, DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getMsg());
         }
@@ -105,5 +105,25 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
         List<NormalUserUpload> normalUserUploadList = JSONArray.fromObject(disputecaseAccessory.getNormaluserUpload());
         return ResultVOUtil.ReturnBack(normalUserUploadList, DisputecaseAccessoryEnum.GETNORMALUSERUPLOADLIST_SUCCESS.getCode(), DisputecaseAccessoryEnum.GETNORMALUSERUPLOADLIST_SUCCESS.getMsg());
+    }
+
+    @Override
+    public ResultVO addInquireHospital(String disputeId, String inquireHospital) {
+        DisputecaseAccessory dA = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+        if(dA == null){
+            String id = KeyUtil.genUniqueKey();
+            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
+            disputecaseAccessory.setId(id);
+            disputecaseAccessory.setInquireHospital(inquireHospital);
+            disputecaseAccessoryRepository.save(disputecaseAccessory);
+            return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
+        }
+        else {
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+            disputecaseAccessory.setInquireHospital(inquireHospital);
+            disputecaseAccessoryRepository.save(disputecaseAccessory);
+            return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
+
+        }
     }
 }

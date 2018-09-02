@@ -482,6 +482,36 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         map.put("caseID", caseId);
         disputecaseRepository.save(disputecase);
        // disputecaseRepository
-        return ResultVOUtil.ReturnBack(map,111, "成功");// todo 合并后确定返回码、信息
+        return ResultVOUtil.ReturnBack(map,111, "管理员确定调解员成功");// todo 合并后确定返回码、信息
     }
+
+    @Override
+    public ResultVO setMediationSuccess(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("4");
+        return ResultVOUtil.ReturnBack(112,"调解成功");
+    }
+
+    @Override
+    public ResultVO setMediationFailure(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("3");
+        return ResultVOUtil.ReturnBack(113,"调解失败");
+    }
+
+    @Override
+    public ResultVO setCaseRepeal(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("7");
+        return ResultVOUtil.ReturnBack(114,"撤销案件");
+    }
+
+    @Override
+    public ResultVO setCaseLitigation(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("7");
+        return ResultVOUtil.ReturnBack(115,"撤销案件");
+    }
+
+
 }

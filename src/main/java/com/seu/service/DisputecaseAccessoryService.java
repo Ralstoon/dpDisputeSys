@@ -11,4 +11,6 @@ public interface DisputecaseAccessoryService {
     ResultVO addNormalUserUpload(String personId, String disputeID, String disputeStatus, String fileType, String fileDescription, String url);
 
     ResultVO normalFileList(String disputeId);
+
+    ResultVO addInquireHospital(String disputeId, String inquireHospital);
 }

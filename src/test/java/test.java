@@ -7,7 +7,10 @@ import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.activiti.engine.test.Deployment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,5 +132,24 @@ public class test {
         //DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload);
         disputecaseAccessory.setNormaluserUpload(net.sf.json.JSONArray.fromObject(normalUserUploadList).toString());
         disputecaseAccessoryRepository.save(disputecaseAccessory);
+    }
+
+    @Autowired
+    RuntimeService runtimeService;
+
+    @Test
+    public void activitiTest(){
+
+        //1.流程启动
+        //ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_pool1");
+
+        //ProcessInstance processInstance = runtimeService.
+        //2.完成一个任务
+        //ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId("272501").singleResult();
+//        Task task = taskService.createTaskQuery().processInstanceId("272501").singleResult();
+//        System.out.println(task.getName());
+
+        Task currentTask=disputeProgressService.searchCurrentTasks("1532413108579745686").get(0);
+        int a;
     }
 }

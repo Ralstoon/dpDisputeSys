@@ -68,5 +68,14 @@ public interface DisputeProgressService {
     /** 管理员获得案件列表 */
     ResultVO getManagerCaseList(String id);
 
+    //管理员确定调解员
     ResultVO decideMediatorDisputeCase(String mediator, String caseId);
+
+    ResultVO setMediationSuccess(String caseId);
+
+    ResultVO setMediationFailure(String caseId);
+
+    ResultVO setCaseRepeal(String caseId);
+
+    ResultVO setCaseLitigation(String caseId);
 }
