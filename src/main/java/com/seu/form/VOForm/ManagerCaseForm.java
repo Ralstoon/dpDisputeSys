@@ -19,9 +19,11 @@ public class ManagerCaseForm {
     class intentionOne{
         private String mediatorName;
         private String mediatorId;
-        public intentionOne(String mediatorName,String mediatorId){
+        private String mediatorIntention;
+        public intentionOne(String mediatorName,String mediatorId,String mediatorIntention){
             this.mediatorId=mediatorId;
             this.mediatorName=mediatorName;
+            this.mediatorIntention=mediatorIntention;
         }
     }
     /** 案件登记日期 */
@@ -43,9 +45,9 @@ public class ManagerCaseForm {
     /** 用户意向调解员 */
     private List<intentionOne> userIntention;
 
-    public void addUserIntention(String mediatorName,String mediatorId){
+    public void addUserIntention(String mediatorName,String mediatorId,String mediatorIntention){
         if(userIntention==null)
             userIntention=new ArrayList<>();
-        userIntention.add(new intentionOne(mediatorName,mediatorId));
+        userIntention.add(new intentionOne(mediatorName,mediatorId,mediatorIntention));
     }
 }

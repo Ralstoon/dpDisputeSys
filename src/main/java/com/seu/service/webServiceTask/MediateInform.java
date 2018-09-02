@@ -57,7 +57,7 @@ public class MediateInform implements JavaDelegate {
             String phone=arr.getJSONObject(i).getString("phone").trim();
             String email=arr.getJSONObject(i).getString("email").trim();
             if(phone.trim()!="")
-                sendSms();  // TODO 自动发短信
+                //sendSms();  // TODO 自动发短信
             if(email.trim()!="")
                 sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
         }
@@ -67,7 +67,7 @@ public class MediateInform implements JavaDelegate {
             String phone=arr.getJSONObject(i).getString("phone").trim();
             String email=arr.getJSONObject(i).getString("email").trim();
             if(phone.trim()!="")
-                sendSms();  // TODO 自动发短信
+                //sendSms();  // TODO 自动发短信
             if(email.trim()!="")
                 sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
         }
@@ -78,7 +78,7 @@ public class MediateInform implements JavaDelegate {
                 String phone=arr.getJSONObject(i).getString("phone").trim();
                 String email=arr.getJSONObject(i).getString("email").trim();
                 if(phone.trim()!="")
-                    sendSms();  // TODO 自动发短信
+                    //sendSms();  // TODO 自动发短信
                 if(email.trim()!="")
                     sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
             }

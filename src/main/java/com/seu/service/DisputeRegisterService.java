@@ -18,4 +18,6 @@ public interface DisputeRegisterService {
     ResultVO getRoomList();
 
     ResultVO getOperations(String keywords,String room) throws Exception;
+
+    ResultVO getMediatorList(String id);
 }
