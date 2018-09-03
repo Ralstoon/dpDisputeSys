@@ -152,8 +152,9 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         return ResultVOUtil.ReturnBack(map,0,"成功");
     }
 
-    @Autowired
-    DisputecaseProcessRepository disputecaseProcessRepository;
+
+//    @Autowired
+//    DisputecaseProcessRepository disputecaseProcessRepository;
 
     @Override
     public ResultVO getMediatorList(String id) {
