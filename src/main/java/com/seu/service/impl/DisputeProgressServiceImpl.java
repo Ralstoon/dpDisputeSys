@@ -1,9 +1,7 @@
 package com.seu.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONStreamAware;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.InitConstant;
@@ -29,13 +27,8 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -477,11 +470,21 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             /** 用户意向的调解员 */
             DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId());
             String userChoose=disputecaseProcess.getUserChoose();
+            String mediatorApply = disputecaseProcess.getApplyStatus();
+            String mediatorIntention;
             for(String s:userChoose.trim().split(",")){
                 //s是每个用户选择的调解员id号
+                mediatorIntention = "no";
+                for(String m:mediatorApply.trim().split(",")){
+                    //m是每个调解员id号
+                    if(m == s){
+                        mediatorIntention = "yes";
+                    }
+                }
                 Mediator mediator=mediatorRepository.findByFatherId(s);
-                managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId());
+                managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),mediatorIntention);
             }
+
             managerCaseFormList.add(managerCaseForm);
         }
         return ResultVOUtil.ReturnBack(managerCaseFormList,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
@@ -572,6 +575,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Override
     public ResultVO getMediatorList(String id) {
         List<Mediator> mediatorList=mediatorRepository.findAll();
+        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(id);
+        String mediatorAvoid = disputecaseProcess.getAvoidStatus();
+
+        for(String s:mediatorAvoid.trim().split(",")){
+            mediatorList.stream().filter((Mediator mediator) -> mediator.getMediatorId() == s);
+        }
+
         List<OneMediatorForm> mediatorFormList=new ArrayList<>();
         for(Mediator mediator:mediatorList){
             String name=mediator.getMediatorName();

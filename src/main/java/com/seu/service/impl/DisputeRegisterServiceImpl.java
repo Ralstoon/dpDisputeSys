@@ -5,9 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.*;
+import com.seu.domian.ConstantData;
+import com.seu.domian.DisputecaseProcess;
+import com.seu.domian.Mediator;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
 import com.seu.repository.*;
+import com.seu.repository.DiseaseListRepository;
+import com.seu.repository.DisputecaseProcessRepository;
+import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeRegisterService;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.KeyUtil;
@@ -48,6 +54,9 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
     @Autowired
     private DisputecaseProcessRepository disputecaseProcessRepository;
+
+    @Autowired
+    MediatorRepository mediatorRepository;
 
     @Override
     public ResultVO getDieaseList() {
@@ -141,6 +150,21 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         }
         map.put(room,operList);
         return ResultVOUtil.ReturnBack(map,0,"成功");
+    }
+
+    @Autowired
+    DisputecaseProcessRepository disputecaseProcessRepository;
+
+    @Override
+    public ResultVO getMediatorList(String id) {
+        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(id);
+        String mediatorAvoid = disputecaseProcess.getAvoidStatus();
+        List<Mediator> mediatorList = mediatorRepository.findAll();
+        for(String s:mediatorAvoid.trim().split(",")){
+            mediatorList.stream().filter((Mediator mediator) -> mediator.getMediatorId() == s);
+        }
+
+        return ResultVOUtil.ReturnBack(mediatorList, 122, "获取所有调解员列表成功");
     }
 
     @Override

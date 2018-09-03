@@ -1,4 +1,3 @@
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
 import com.seu.domian.*;
@@ -145,11 +144,10 @@ public class test {
 
         //ProcessInstance processInstance = runtimeService.
         //2.完成一个任务
-        //ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId("272501").singleResult();
-//        Task task = taskService.createTaskQuery().processInstanceId("272501").singleResult();
-//        System.out.println(task.getName());
+        //ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId("325023").singleResult();
+        Task task = taskService.createTaskQuery().processInstanceId("325023").singleResult();
+        System.out.println(task.getName());
+        taskService.complete(task.getId());
 
-        Task currentTask=disputeProgressService.searchCurrentTasks("1532413108579745686").get(0);
-        int a;
     }
 }

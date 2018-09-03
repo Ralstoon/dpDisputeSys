@@ -1,8 +1,11 @@
 package com.seu.controller;
 
 import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
 import com.seu.elasticsearch.MyTransportClient;
+import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeRegisterService;
+import com.seu.service.MediatorService;
 import com.sun.deploy.net.URLEncoder;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class DisputeRegisterController {
     @Autowired
     private DisputeRegisterService disputeRegisterService;
+
+    @Autowired
+    MediatorService mediatorService;
 
     @GetMapping(value = "/getDiseaseList")
     @Cacheable(value = "constantData",key ="'diseaseList'",unless = "#result.code!=0")
@@ -57,6 +63,13 @@ public class DisputeRegisterController {
     public ResultVO getOperations(@RequestParam String keywords,
                                   @RequestParam String room) throws Exception{
         return disputeRegisterService.getOperations(keywords,room);
+    }
+
+    //用户选择调解员时，获取调解员列表
+    @GetMapping(value = "/getMediatorList")
+    public ResultVO getMediatorList(@RequestParam(value = "caseId") String id){
+
+        return disputeRegisterService.getMediatorList(id);
     }
 
     /** 进入纠纷登记时，获取案件ID */

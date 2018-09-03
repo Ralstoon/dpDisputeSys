@@ -27,4 +27,6 @@ public interface DisputeRegisterService {
 
     /** 发送医疗数据 */
     ResultVO getBasicDivideInfo(String stageContent,String caseId,Integer mainRecStage,String require,Integer claimAmount);
+
+    ResultVO getMediatorList(String id);
 }
