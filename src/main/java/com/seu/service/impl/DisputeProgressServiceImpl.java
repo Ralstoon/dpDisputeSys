@@ -28,6 +28,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -71,7 +72,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
      *@return boolean
      **/
     @Override
-    public ResultVO startProcess(String disputeId) {
+    public void startProcess(String disputeId) {
         // TODO 判断用户是否有未完成的纠纷流程实例
 //        if(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(starterId).list().size()!=0){
 //            return ResultVOUtil.ReturnBack(DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getCode(),DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getMsg());
@@ -87,31 +88,42 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         disputecaseActiviti.setProcessId(pi.getId());
         if(pi==null)
-            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_FAIL.getCode(),DisputeProgressEnum.STARTUP_FAIL.getMsg());
+            return ;
         else{
             disputecaseActivitiRepository.save(disputecaseActiviti);
-            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_SUCCESS.getCode(),DisputeProgressEnum.STARTUP_SUCCESS.getMsg());
         }
     }
-    public ResultVO startProcess(String disputeId,Map<String,Object> vars){
+
+    @Transactional
+    public void startProcess(String disputeId,Map<String,Object> vars){
         // TODO 判断用户是否有未完成的纠纷流程实例
 //        if(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(starterId).list().size()!=0){
 //            return ResultVOUtil.ReturnBack(DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getCode(),DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getMsg());
 //        }
         //该用户尚未创建流程实例，可以创建
-        deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn")
+        DisputecaseActiviti disputecaseActiviti=new DisputecaseActiviti();
+        if(deployment==null)
+            deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn")
 //                                                       .addClasspathResource("processes/SubProcess1.bpmn")
 //                                                       .addClasspathResource("processes/SubProcess2.bpmn")
 //                                                       .addClasspathResource("processes/SubProcess3.bpmn")
 //                                                       .addClasspathResource("processes/SubProcess4.bpmn")
                                                        .addClasspathResource("processes/SubProcess5.bpmn")
                                                        .addClasspathResource("processes/SubProcess6.bpmn").deploy();
-        pd=repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+
+        if(pd==null){
+            List<ProcessDefinition> temp=repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();
+            pd=temp.get(0);
+
+        }
         ProcessInstance pi=runtimeService.startProcessInstanceById(pd.getId(),disputeId,vars);
+        disputecaseActiviti.setDisputecaseId(disputeId);
+        disputecaseActiviti.setProcessId(pi.getId());
         if(pi==null)
-            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_FAIL.getCode(),DisputeProgressEnum.STARTUP_FAIL.getMsg());
-        else
-            return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_SUCCESS.getCode(),DisputeProgressEnum.STARTUP_SUCCESS.getMsg());
+            return ;
+        else{
+            disputecaseActivitiRepository.save(disputecaseActiviti);
+        }
     }
 
 
@@ -121,8 +133,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
      */
     @Override
     public List<Task> searchCurrentTasks(String disputeId) {
-        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(disputeId).singleResult();
-        return taskService.createTaskQuery().processInstanceId(pi.getId()).list();
+//        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(disputeId).singleResult();
+        String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
+        return taskService.createTaskQuery().processInstanceId(pid).list();
     }
 
 

@@ -60,7 +60,8 @@ public class ESInsert {
 //        String index_type=index+"_type";
 //        String url="D:\\worksapce_python\\666\\data\\1.txt";
 //        new ESInsert().insertJSON(url,index,index_type);
-
+        String role="申请人";
+        System.out.println(role=="申请人");
     }
 
 }

@@ -21,19 +21,27 @@ import com.seu.repository.NormalUserRepository;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
+
+@Component
 public class AutoInform implements JavaDelegate {
 
 
     @Autowired
     private DisputecaseRepository disputecaseRepository;
-    @Autowired
+    @Resource
     private DisputecaseApplyRepository disputecaseApplyRepository;
     @Autowired
     private NormalUserRepository normalUserRepository;
 
 
     @Override
+    @Transactional
     public void execute(DelegateExecution delegateExecution) {
         String caseId=delegateExecution.getVariable("disputeId").toString();
         Disputecase disputecase=disputecaseRepository.getOne(caseId);

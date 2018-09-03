@@ -14,9 +14,12 @@ import com.seu.repository.*;
 import com.seu.repository.DiseaseListRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.MediatorRepository;
+import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.KeyUtil;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -56,7 +59,14 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
     private DisputecaseProcessRepository disputecaseProcessRepository;
 
     @Autowired
-    MediatorRepository mediatorRepository;
+    private MediatorRepository mediatorRepository;
+    @Autowired
+    private DisputeProgressService disputeProgressService;
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+    @Autowired
+    private TaskService taskService;
+
 
     @Override
     public ResultVO getDieaseList() {
@@ -201,7 +211,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             JSONObject obj=array.getJSONObject(i);
             String name=obj.getString("name");
             String idCard=obj.getString("cardID");
-            String role=(obj.getString("picked").trim()=="申请人")?"0":"1";
+            String role=(obj.getString("picked").trim().equals("申请人"))?"0":"1";
             String phone=obj.getString("phone");
             DisputecaseApply applyOne=new DisputecaseApply();
             String applyId=KeyUtil.genUniqueKey();
@@ -285,9 +295,16 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
         disputecaseRepository.save(disputecase);
 
-        /** 写入参数：name，phone */
+        /** 开启流程，并完成纠纷登记 */
+        Map<String,Object> var =new HashMap<>();
+        var.put("disputeId",caseId);
+        var.put("paramProfesor",0);
+        var.put("paramAuthenticate",0);
+        disputeProgressService.startProcess(caseId,var);
 
-
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        disputeProgressService.completeCurrentTask(currentTask.getId());
 
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }

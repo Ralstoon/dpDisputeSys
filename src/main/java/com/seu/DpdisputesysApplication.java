@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.cors.CorsConfiguration;
 
 @SpringBootApplication
 @MapperScan("com.seu.repository")
@@ -17,6 +19,11 @@ public class DpdisputesysApplication {
 		SpringApplication.run(DpdisputesysApplication.class, args);
 	}
 
+
+//	private CorsConfiguration buildConfig(){
+//		CorsConfiguration corsConfiguration=new CorsConfiguration(());
+//
+//	}
 
 //	@Bean
 //	public CommandLineRunner init(final FrameStartUpService frameStartUpService) {
