@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -148,6 +150,13 @@ public class test {
         Task task = taskService.createTaskQuery().processInstanceId("325023").singleResult();
         System.out.println(task.getName());
         taskService.complete(task.getId());
+
+    }
+
+    @Test
+    public void date(){
+        SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date=sDateFormat.format(new Date());
 
     }
 }

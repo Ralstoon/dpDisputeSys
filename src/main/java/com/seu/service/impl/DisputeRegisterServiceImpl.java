@@ -175,7 +175,8 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             Disputecase disputecase=new Disputecase();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             Date d=new Date();
-            disputecase.setApplyTime(df.parse(d.toString()));
+            String dateS = df.format(d);
+            disputecase.setApplyTime(df.parse(dateS));
             disputecase.setId(caseId);
 
             disputecase=disputecaseRepository.save(disputecase);
