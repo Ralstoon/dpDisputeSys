@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class DisputeRegisterController {
     @Autowired
-    DisputeRegisterService disputeRegisterService;
+    private DisputeRegisterService disputeRegisterService;
 
     @GetMapping(value = "/getDiseaseList")
     @Cacheable(value = "constantData",key ="'diseaseList'",unless = "#result.code!=0")
@@ -57,5 +57,28 @@ public class DisputeRegisterController {
     public ResultVO getOperations(@RequestParam String keywords,
                                   @RequestParam String room) throws Exception{
         return disputeRegisterService.getOperations(keywords,room);
+    }
+
+    /** 进入纠纷登记时，获取案件ID */
+    @GetMapping(value = "/getCaseId")
+    public ResultVO getCaseId(){
+        return disputeRegisterService.getCaseId();
+    }
+
+    /** 发送涉事人员信息 */
+    @PostMapping(value = "/InvolvedPeopleInfo")
+    public ResultVO sendInvolvedPeopleInfo(@RequestParam("CaseId") String caseId,
+                                           @RequestParam("InvolvedPeople") String involvedPeople){
+        return disputeRegisterService.sendInvolvedPeopleInfo(caseId,involvedPeople);
+    }
+
+    /** 发送医疗过程数据 */
+    @PostMapping(value = "/BasicDivideInfo")
+    public ResultVO getBasicDivideInfo(@RequestParam("stageContent") String stageContent,
+                                       @RequestParam("CaseId") String caseId,
+                                       @RequestParam("mainRecStage") Integer mainRecStage,
+                                       @RequestParam("Require") String require,
+                                       @RequestParam("claimAmount") Integer claimAmount){
+        return  disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
     }
 }

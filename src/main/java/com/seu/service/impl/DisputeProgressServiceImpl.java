@@ -84,13 +84,21 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 //            return ResultVOUtil.ReturnBack(DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getCode(),DisputeProgressEnum.PROCESSINSTANCE_HASEXIST.getMsg());
 //        }
         //该用户尚未创建流程实例，可以创建
-        deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn").deploy();
+        DisputecaseActiviti disputecaseActiviti=new DisputecaseActiviti();
+        disputecaseActiviti.setDisputecaseId(disputeId);
+        deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn")
+                                                        .addClasspathResource("processes/SubProcess5.bpmn")
+                                                         .addClasspathResource("processes/SubProcess6.bpmn").deploy();
         pd=repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
         ProcessInstance pi=runtimeService.startProcessInstanceById(pd.getId(),disputeId);
+
+        disputecaseActiviti.setProcessId(pi.getId());
         if(pi==null)
             return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_FAIL.getCode(),DisputeProgressEnum.STARTUP_FAIL.getMsg());
-        else
+        else{
+            disputecaseActivitiRepository.save(disputecaseActiviti);
             return ResultVOUtil.ReturnBack(DisputeProgressEnum.STARTUP_SUCCESS.getCode(),DisputeProgressEnum.STARTUP_SUCCESS.getMsg());
+        }
     }
     public ResultVO startProcess(String disputeId,Map<String,Object> vars){
         // TODO 判断用户是否有未完成的纠纷流程实例
@@ -100,9 +108,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         //该用户尚未创建流程实例，可以创建
         deployment=repositoryService.createDeployment().addClasspathResource("processes/disputeProgress.bpmn")
 //                                                       .addClasspathResource("processes/SubProcess1.bpmn")
-                                                       .addClasspathResource("processes/SubProcess2.bpmn")
-                                                       .addClasspathResource("processes/SubProcess3.bpmn")
-                                                       .addClasspathResource("processes/SubProcess4.bpmn")
+//                                                       .addClasspathResource("processes/SubProcess2.bpmn")
+//                                                       .addClasspathResource("processes/SubProcess3.bpmn")
+//                                                       .addClasspathResource("processes/SubProcess4.bpmn")
                                                        .addClasspathResource("processes/SubProcess5.bpmn")
                                                        .addClasspathResource("processes/SubProcess6.bpmn").deploy();
         pd=repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();

@@ -12,9 +12,13 @@ import lombok.Getter;
 
 @Getter
 public enum DisputeRegisterEnum {
+    GETCASEID_FAIL(-3,"获取案件ID失败"),
     GETDISEASELIST_SUCCESS(0,"获取疾病列表成功"),
     GETMEDICALBEHAVIOR_SUCCESS(1,"获取医疗行为列表成功"),
-    GETROOMLIST_SUCCESS(2,"获取科室列表成功")
+    GETROOMLIST_SUCCESS(2,"获取科室列表成功"),
+    GETCASEID_SUCCESS(3,"获取案件ID成功"),
+    GETINVOLVEDPEOPLEINFO_SUCCESS(4,"获取涉事人员信息成功"),
+    GETBASICDIVIDEINFO_SUCCESS(5,"获取医疗过程数据成功"),
 
 
     ;

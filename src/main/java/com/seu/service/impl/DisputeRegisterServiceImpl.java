@@ -1,13 +1,16 @@
 package com.seu.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
-import com.seu.domian.ConstantData;
+import com.seu.domian.*;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
-import com.seu.repository.DiseaseListRepository;
+import com.seu.repository.*;
 import com.seu.service.DisputeRegisterService;
+import com.seu.utils.GetTitleAndAbstract;
+import com.seu.utils.KeyUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -15,11 +18,11 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @ClassName DisputeRegisterServiceImpl
@@ -32,7 +35,19 @@ import java.util.Map;
 public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Autowired
-    DiseaseListRepository diseaseListRepository;
+    private DiseaseListRepository diseaseListRepository;
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NormalUserRepository normalUserRepository;
+    @Autowired
+    private DisputecaseApplyRepository disputecaseApplyRepository;
+    @Autowired
+    private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
+    @Autowired
+    private DisputecaseProcessRepository disputecaseProcessRepository;
 
     @Override
     public ResultVO getDieaseList() {
@@ -126,5 +141,125 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         }
         map.put(room,operList);
         return ResultVOUtil.ReturnBack(map,0,"成功");
+    }
+
+    @Override
+    public ResultVO getCaseId() {
+        try {
+            String caseId=KeyUtil.genUniqueKey();
+            Disputecase disputecase=new Disputecase();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            Date d=new Date();
+            disputecase.setApplyTime(df.parse(d.toString()));
+            disputecase.setId(caseId);
+
+            disputecase=disputecaseRepository.save(disputecase);
+            Map<String,Object> var=new HashMap<>();
+            var.put("CaseId",caseId);
+            return ResultVOUtil.ReturnBack(var,DisputeRegisterEnum.GETCASEID_SUCCESS.getCode(),DisputeRegisterEnum.GETCASEID_SUCCESS.getMsg());
+        }catch (ParseException pe){
+            pe.printStackTrace();
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETCASEID_FAIL.getCode(),DisputeRegisterEnum.GETCASEID_FAIL.getMsg());
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResultVO sendInvolvedPeopleInfo(String caseId, String involvedPeople) {
+        /** disputecase表和disputecaseApply表 */
+        Disputecase disputecase=disputecaseRepository.getOne(caseId);
+        JSONArray array=JSONArray.parseArray(involvedPeople);
+        String proposerId="";
+        String agentId="";
+        for(int i=0;i<array.size();++i){
+            JSONObject obj=array.getJSONObject(i);
+            String name=obj.getString("name");
+            String idCard=obj.getString("cardID");
+            String role=(obj.getString("picked").trim()=="申请人")?"0":"1";
+            String phone=obj.getString("phone");
+            DisputecaseApply applyOne=new DisputecaseApply();
+            String applyId=KeyUtil.genUniqueKey();
+            if(role=="0")
+                proposerId+=applyId+",";
+            else
+                agentId+=applyId+",";
+            applyOne.setDisputecaseId(caseId);
+            applyOne.setId(applyId);
+            applyOne.setIdCard(idCard);
+            applyOne.setName(name);
+            applyOne.setRole(role);
+            /** 查看该手机是否已注册 */
+            User user=userRepository.findByPhone(phone);
+            if(user==null){
+                // 未注册,帮忙注册 密码初始为111111
+                String id=KeyUtil.genUniqueKey();
+                User newUser=new User();
+                newUser.setID(id);
+                newUser.setPassword("111111");
+                newUser.setPhone(phone);
+                newUser.setRole("0");
+                NormalUser newNU=new NormalUser();
+                String nuId=KeyUtil.genUniqueKey();
+                newNU.setIdCard(idCard);
+                newNU.setNormalId(nuId);
+                newNU.setFatherId(id);
+                newUser.setSpecificId(nuId);
+                userRepository.save(newUser);
+                normalUserRepository.save(newNU);
+            }else {
+                // 更新信息表中身份证
+                NormalUser normalUser=normalUserRepository.findByFatherId(user.getID());
+                normalUser.setIdCard(idCard);
+                normalUserRepository.save(normalUser);
+            }
+
+            disputecaseApplyRepository.save(applyOne);
+        }
+        disputecase.setProposerId(proposerId.substring(0,proposerId.length()-1));
+        if(agentId=="")
+            disputecase.setAgnetId("");
+        else
+            disputecase.setAgnetId(agentId.substring(0,agentId.length()-1));
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getMsg());
+    }
+
+    @Override
+    @Transactional
+    public ResultVO getBasicDivideInfo(String stageContent, String caseId, Integer mainRecStage, String require, Integer claimAmount) {
+        Disputecase disputecase=disputecaseRepository.getOne(caseId);
+        disputecase.setAppeal(require);
+        disputecase.setMainRecStage(mainRecStage+"");
+        disputecase.setClaimMoney(claimAmount+"");
+        disputecase.setMedicalProcess(stageContent);
+        String[] temp=disputecase.getProposerId().trim().split(",");
+        List<String> names=new ArrayList<>();
+        for(String s:temp){
+            names.add(disputecaseApplyRepository.getOne(s).getName());
+        }
+        Map<String,String> result=GetTitleAndAbstract.generateCaseTitleDetail(stageContent,names);
+        disputecase.setCaseName(result.get("title"));
+        disputecase.setBriefCase(result.get("detail"));
+
+
+        /** 创建process表和Accessory表 */
+        String processId=KeyUtil.genUniqueKey();
+        disputecase.setProcessId(processId);
+        DisputecaseProcess disputecaseProcess=new DisputecaseProcess();
+        disputecaseProcess.setId(processId);
+        disputecaseProcess.setDisputecaseId(caseId);
+        disputecaseProcess.setStatus("0");
+        disputecaseProcessRepository.save(disputecaseProcess);
+
+        String accessoryId=KeyUtil.genUniqueKey();
+        DisputecaseAccessory disputecaseAccessory=new DisputecaseAccessory();
+        disputecaseAccessory.setId(accessoryId);
+        disputecaseAccessory.setDisputecaseId(caseId);
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+
+        disputecaseRepository.save(disputecase);
+
+
+        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
 }

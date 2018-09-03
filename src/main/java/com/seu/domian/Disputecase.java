@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName Disputecase
@@ -44,4 +45,6 @@ public class Disputecase {
     private String recommendedPaper;
     /** 案件确定的调解员id号 */
     private String mediatorId;
+    /** 表示主要纠纷场景是第几个 */
+    private String mainRecStage;
 }
