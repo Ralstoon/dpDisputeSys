@@ -9,7 +9,9 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,9 +60,6 @@ public class ESInsert {
 //        String index_type=index+"_type";
 //        String url="D:\\worksapce_python\\666\\data\\1.txt";
 //        new ESInsert().insertJSON(url,index,index_type);
-        JSONObject jsonObject=JSONArray.parseArray(InitConstant.init_mediateStage).getJSONObject(0);
-        JSONObject temp1=jsonObject.getJSONObject("预约调解").getJSONObject("currentStageContent");
-
 
     }
 

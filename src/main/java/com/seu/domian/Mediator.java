@@ -24,4 +24,6 @@ public class Mediator {
     private String mediateCenter;
     private String authorityConfirm;
     private String authorityJudiciary;
+
+
 }

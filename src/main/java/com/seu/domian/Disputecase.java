@@ -22,29 +22,29 @@ public class Disputecase {
     @Id
     private String id;
     /** 申请人在apply表的id号列表 */
-    private String proposerId;
+    private String proposerId="";
     /** 代理人在apply表的id号列表 */
-    private String agnetId;
+    private String agnetId="";
     /** 案件名 */
-    private String caseName;
+    private String caseName="";
     /** 简要情况 */
-    private String briefCase;
+    private String briefCase="";
     /** 医疗过程 */
-    private String medicalProcess;
+    private String medicalProcess="";
     /** 索赔金额 */
-    private String claimMoney;
+    private String claimMoney="";
     /** 申请时间 */
     private Date applyTime;
     /** 诉求 */
-    private String appeal;
+    private String appeal="";
     /** 案件相关的process表id号 */
-    private String processId;
+    private String processId="";
     /** 案件相关的accessory表id号 */
-    private String accessoryId;
+    private String accessoryId="";
     /** 案件相关类案推荐 */
-    private String recommendedPaper;
+    private String recommendedPaper="";
     /** 案件确定的调解员id号 */
-    private String mediatorId;
+    private String mediatorId="";
     /** 表示主要纠纷场景是第几个 */
-    private String mainRecStage;
+    private String mainRecStage="";
 }

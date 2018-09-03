@@ -285,6 +285,9 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
         disputecaseRepository.save(disputecase);
 
+        /** 写入参数：name，phone */
+
+
 
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
