@@ -11,6 +11,7 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.seu.common.Component.SpringUtil;
 import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseApply;
 import com.seu.domian.NormalUser;
@@ -18,9 +19,12 @@ import com.seu.repository.DisputecaseApplyRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.repository.NormalUserRepository;
+import com.seu.service.CommentService;
+import com.seu.service.DisputeRegisterService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,21 +32,16 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 
-@Component
 public class AutoInform implements JavaDelegate {
 
 
-    @Autowired
-    private DisputecaseRepository disputecaseRepository;
-    @Resource
-    private DisputecaseApplyRepository disputecaseApplyRepository;
-    @Autowired
-    private NormalUserRepository normalUserRepository;
 
 
     @Override
-    @Transactional
     public void execute(DelegateExecution delegateExecution) {
+        DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
+        DisputecaseApplyRepository disputecaseApplyRepository=SpringUtil.getBean(DisputecaseApplyRepository.class);
+        NormalUserRepository normalUserRepository=SpringUtil.getBean(NormalUserRepository.class);
         String caseId=delegateExecution.getVariable("disputeId").toString();
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         String prosperId=disputecase.getProposerId();
@@ -50,7 +49,6 @@ public class AutoInform implements JavaDelegate {
         for(String s:temp){
             DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
             String phone=disputecaseApply.getPhone();
-//            String name=disputecaseApply.getName();
             String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
             if(!(email==null ||email==""))
                 sendEmail(caseId,email);
@@ -58,23 +56,6 @@ public class AutoInform implements JavaDelegate {
         }
 
 
-//        //先从流程中取出变量userId和disputeId
-//        String email=delegateExecution.getVariable("email").toString();
-//        String disputeId=delegateExecution.getVariable("disputeId").toString();
-//        String phone = delegateExecution.getVariable("phone").toString();
-//        System.out.println(email);
-//        System.out.println(disputeId);
-//        //验证是否Email是否已填写,填写的话发送邮件
-//        if(!(email.equals("")||email==null)){
-//            sendEmail(disputeId,email);
-//        }else
-//            System.out.println("邮件未发送因为用户未提供邮箱地址");
-//        //短信发送
-//        try {
-//            sendSms(disputeId, phone);
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        }
     }
 
 

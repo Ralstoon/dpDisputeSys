@@ -94,7 +94,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
     }
 
-    @Transactional
+//    @Transactional
     public void startProcess(String disputeId,Map<String,Object> vars){
         // TODO 判断用户是否有未完成的纠纷流程实例
 //        if(runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(starterId).list().size()!=0){

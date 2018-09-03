@@ -3,10 +3,15 @@ package com.seu.controller;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.elasticsearch.MyTransportClient;
+import com.seu.enums.DisputeRegisterEnum;
+import com.seu.repository.DisputecaseActivitiRepository;
+import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.MediatorRepository;
+import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
 import com.sun.deploy.net.URLEncoder;
+import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +32,10 @@ import org.springframework.web.bind.annotation.*;
 public class DisputeRegisterController {
     @Autowired
     private DisputeRegisterService disputeRegisterService;
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+    @Autowired
+    private DisputeProgressService disputeProgressService;
 
     @Autowired
     MediatorService mediatorService;
@@ -92,6 +101,11 @@ public class DisputeRegisterController {
                                        @RequestParam("mainRecStage") Integer mainRecStage,
                                        @RequestParam("Require") String require,
                                        @RequestParam("claimAmount") Integer claimAmount){
-        return  disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 @SpringBootApplication
 @MapperScan("com.seu.repository")
+//@ComponentScan(basePackages = {"com.seu.common","com.seu.config","com.seu.common"})
 @EnableCaching
 public class DpdisputesysApplication {
 

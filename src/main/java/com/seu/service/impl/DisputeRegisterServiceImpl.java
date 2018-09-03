@@ -26,6 +26,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ import java.util.*;
  * @Version 1.0
  **/
 @Service
+
 public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Autowired
@@ -224,6 +226,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             applyOne.setIdCard(idCard);
             applyOne.setName(name);
             applyOne.setRole(role);
+            applyOne.setPhone(phone);
             /** 查看该手机是否已注册 */
             User user=userRepository.findByPhone(phone);
             if(user==null){
@@ -262,7 +265,8 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Override
     @Transactional
-    public ResultVO getBasicDivideInfo(String stageContent, String caseId, Integer mainRecStage, String require, Integer claimAmount) {
+    public void getBasicDivideInfo(String stageContent, String caseId, Integer mainRecStage, String require, Integer claimAmount) {
+
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         disputecase.setAppeal(require);
         disputecase.setMainRecStage(mainRecStage+"");
@@ -301,11 +305,6 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         var.put("paramProfesor",0);
         var.put("paramAuthenticate",0);
         disputeProgressService.startProcess(caseId,var);
-
-        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-        disputeProgressService.completeCurrentTask(currentTask.getId());
-
-        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+        System.out.println("point 1");
     }
 }
