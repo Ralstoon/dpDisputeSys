@@ -1,6 +1,7 @@
 package com.seu.utils;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class GetTitleAndAbstract {
 
         String personNames="";
         for (String applyPerson: applyPersons){
-            personNames=personNames+applyPerson;
+            personNames=personNames+applyPerson+"、";
         }
         personNames = personNames.substring(0,personNames.length() - 1);
         for(String hospital: hospitalList){
@@ -56,128 +57,165 @@ public class GetTitleAndAbstract {
             hospitals = hospitals.substring(0,hospitals.length() - 1);
             detail = detail + hospitals + "存在医疗纠纷。患者因存在";
             Object resultList = ((com.alibaba.fastjson.JSONObject) stage).get("ResultList");
+            if(resultList==null)
+                resultList="{}";
             Object diseasesymptomBefore = ((com.alibaba.fastjson.JSONObject) stage).get("DiseasesymptomBefore");
+            if(diseasesymptomBefore==null)
+                diseasesymptomBefore="";
             Object diseaseListBefore = ((com.alibaba.fastjson.JSONObject) stage).get("DiseaseListBefore");
+            if(diseaseListBefore==null)
+                diseaseListBefore="[]";
             JSONArray arrDLB=JSONArray.parseArray(diseaseListBefore.toString());
             String diseaseName="";
             for(int i=0;i<arrDLB.size();++i)
                 diseaseName+=arrDLB.getJSONObject(i).get("DiseaseName")+",";
-            diseaseName=diseaseName.substring(0,diseaseName.length()-1);
-            detail = detail + ((String)diseasesymptomBefore) + "症状，到" + hospitals + "就诊。诊断为" + (String)diseaseName + "。";
-
+            if(diseaseName!="")
+                diseaseName=diseaseName.substring(0,diseaseName.length()-1);
+            if(diseasesymptomBefore!="")
+                detail = detail + ((String)diseasesymptomBefore) + "症状，到" + hospitals + "就诊.";
+            if(diseaseName!="")
+                detail = detail + "诊断为" + (String)diseaseName + "。";
+            JSONObject resultListJsObj=JSONObject.parseObject(resultList.toString());
+            Object behavior=null;
             //ResultList
             //1.诊断
-            Object diagnosis = ((com.alibaba.fastjson.JSONObject) resultList).get("diagnosis");
-            Object behavior = ((com.alibaba.fastjson.JSONObject) diagnosis).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+            Object diagnosis=resultListJsObj.get("diagnosis");
+            if(diagnosis!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) diagnosis).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在诊断失误" + diagnosisFailure+"。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在诊断失误" + diagnosisFailure+"。";
             }
+
             //2.检查
-            Object verification = ((com.alibaba.fastjson.JSONObject) resultList).get("verification");
-            behavior = ((com.alibaba.fastjson.JSONObject) verification).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+            Object verification = resultListJsObj.get("verification");
+            if(verification!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) verification).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在检查失误" + diagnosisFailure+ "。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在检查失误" + diagnosisFailure+ "。";
+                Object test =((com.alibaba.fastjson.JSONObject) verification).get("test");
+                if((String)test != ""){
+                    detail = detail + "院方检查行为是"+test+"。";
+                }
             }
-            Object test =((com.alibaba.fastjson.JSONObject) verification).get("test");
-            if((String)test != ""){
-                detail = detail + "院方检查行为是"+test+"。";
-            }
+
             //3.shoushu
-            Object operator = ((com.alibaba.fastjson.JSONObject) resultList).get("operator");
-            behavior = ((com.alibaba.fastjson.JSONObject) operator).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+            Object operator = resultListJsObj.get("operator");
+            if(operator!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) operator).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在手术失误" + diagnosisFailure+ "。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在手术失误" + diagnosisFailure+ "。";
-            }
-            Object operation =((com.alibaba.fastjson.JSONObject) operator).get("operation");
-            if((String)operation != ""){
-                detail = detail + "院方手术行为是"+operation+"。";
-            }
-            Object syndrome =((com.alibaba.fastjson.JSONObject) operator).get("syndrome");
-            if((String)syndrome != ""){
-                detail = detail + "造成患者"+syndrome+"。";
+                Object operation =((com.alibaba.fastjson.JSONObject) operator).get("operation");
+                if((String)operation != ""){
+                    detail = detail + "院方手术行为是"+operation+"。";
+                }
+                Object syndrome =((com.alibaba.fastjson.JSONObject) operator).get("syndrome");
+                if((String)syndrome != ""){
+                    detail = detail + "造成患者"+syndrome+"。";
+                }
             }
 
-            //
-            Object treatment = ((com.alibaba.fastjson.JSONObject) resultList).get("treatment");
-            behavior = ((com.alibaba.fastjson.JSONObject) treatment).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+
+            // zhiliao
+            Object treatment = resultListJsObj.get("treatment");
+            if(treatment!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) treatment).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在治疗失误" + diagnosisFailure+"。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在治疗失误" + diagnosisFailure+"。";
             }
 
-            //
-            Object medcine = ((com.alibaba.fastjson.JSONObject) resultList).get("medcine");
-            behavior = ((com.alibaba.fastjson.JSONObject) medcine).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+
+            // yongyao
+            Object medcine = resultListJsObj.get("medcine");
+            if(medcine!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) medcine).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在用药失误" + diagnosisFailure+ "。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在用药失误" + diagnosisFailure+ "。";
-            }
-            Object medicine =((com.alibaba.fastjson.JSONObject) medcine).get("medicine");
-            if((String)medicine != ""){
-                detail = detail + "院方使用药品包括"+medicine+"。";
-            }
-            //
-            Object transfusion = ((com.alibaba.fastjson.JSONObject) resultList).get("transfusion");
-            behavior = ((com.alibaba.fastjson.JSONObject) transfusion).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+                Object medicine =((com.alibaba.fastjson.JSONObject) medcine).get("medicine");
+                if((String)medicine != ""){
+                    detail = detail + "院方使用药品包括"+medicine+"。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在输血失误" + diagnosisFailure+"。";
             }
 
-            //
-            Object anesthesia = ((com.alibaba.fastjson.JSONObject) resultList).get("anesthesia");
-            behavior = ((com.alibaba.fastjson.JSONObject) anesthesia).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+            // shuxue
+            Object transfusion = resultListJsObj.get("transfusion");
+            if(transfusion!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) transfusion).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在输血失误" + diagnosisFailure+"。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在麻醉失误" + diagnosisFailure+"。";
             }
 
-            Object management = ((com.alibaba.fastjson.JSONObject) resultList).get("management");
-            behavior = ((com.alibaba.fastjson.JSONObject) management).get("behavior");
-            if (((List<String>)behavior).size() != 0){
-                String diagnosisFailure= "";
-                for(String b: (List<String>)behavior){
-                    diagnosisFailure = diagnosisFailure + b +"、";
+
+            // mazui
+            Object anesthesia = resultListJsObj.get("anesthesia");
+            if(anesthesia!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) anesthesia).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在麻醉失误" + diagnosisFailure+"。";
                 }
-                diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
-                detail = detail + "院方可能存在管理失误" + diagnosisFailure+"。";
             }
+
+            // guanli
+            Object management = resultListJsObj.get("management");
+            if(management!=null){
+                behavior = ((com.alibaba.fastjson.JSONObject) management).get("behavior");
+                if (((List<String>)behavior).size() != 0){
+                    String diagnosisFailure= "";
+                    for(String b: (List<String>)behavior){
+                        diagnosisFailure = diagnosisFailure + b +"、";
+                    }
+                    diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
+                    detail = detail + "院方可能存在管理失误" + diagnosisFailure+"。";
+                }
+            }
+
 
             Object diseasesymptomAfter = ((com.alibaba.fastjson.JSONObject) stage).get("DiseasesymptomAfter");
-            detail = detail + "经过一系列医疗行为，患者出现" + (String)diseasesymptomAfter + "症状。";
+            if(diseasesymptomAfter!=null)
+                detail = detail + "经过一系列医疗行为，患者出现" + (String)diseasesymptomAfter + "症状。";
             Object resultOfDamage = ((com.alibaba.fastjson.JSONObject) stage).get("ResultOfDamage");
-            detail = detail + "造成" + (String)resultOfDamage + "损害结果。";
+            if(resultOfDamage!=null)
+                detail = detail + "造成" + (String)resultOfDamage + "损害结果。";
             hospitalList = new ArrayList<>();
         }
         Map map = new HashMap();
