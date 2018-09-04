@@ -16,6 +16,7 @@ import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
+import com.seu.util.MD5Util;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.KeyUtil;
 import org.activiti.engine.TaskService;
@@ -234,7 +235,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
                 String id=KeyUtil.genUniqueKey();
                 User newUser=new User();
                 newUser.setID(id);
-                newUser.setPassword("111111");
+                newUser.setPassword(MD5Util.MD5EncodeUtf8("111111"));
                 newUser.setPhone(phone);
                 newUser.setRole("0");
                 NormalUser newNU=new NormalUser();

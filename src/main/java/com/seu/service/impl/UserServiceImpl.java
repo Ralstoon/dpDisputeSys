@@ -91,6 +91,7 @@ public class UserServiceImpl implements UserService {
 //    }
 
     @Override
+    @Transactional
     public ResultVO loginout(String ID,String role) throws Exception{
 //        Object currentUser=redisTemplate.opsForValue().get(String.format(RedisConstant.USER_RREFIX,role,ID));
         if(redisTemplate.opsForValue().get(String.format(RedisConstant.USER_RREFIX,role,ID))==null){

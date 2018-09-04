@@ -13,6 +13,7 @@ import com.seu.form.VOForm.UserForm;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.UserService;
 import com.seu.service.NormalUserService;
+import com.seu.utils.Request2JSONobjUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class UserController {
             String ID=userForm.getId();
             String role=userForm.getRole();
             Integer expire=RedisConstant.EXPIRE;
-//            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
         }
         return response;
     }
@@ -113,10 +115,11 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "loginout",method = RequestMethod.GET)
-    public ResultVO loginout(@RequestBody Map<String,String> map) throws Exception {
-        String ID=map.get("ID");
-        String role=map.get("role");
+    @RequestMapping(value = "loginout",method = RequestMethod.POST)
+    public ResultVO loginout(HttpServletRequest request) throws Exception {
+        JSONObject map=Request2JSONobjUtil.convert(request);
+        String ID=map.getString("ID");
+        String role=map.getString("role");
         return userService.loginout(ID,role);
     }
 

@@ -378,6 +378,7 @@ public class DisputeProgressController {
 
     //发送问询医院数据
     @PostMapping(value = "/detail/InquireInstitute")
+    @Transactional
     public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
         String caseId = map.get("CaseId");
         String inquireText = map.get("InquireText");
@@ -387,7 +388,7 @@ public class DisputeProgressController {
         List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
         Task currentTask=null;
         for(Task task:tasks){
-            if(task.getName().equals("向院方调研")){
+            if(task.getName().trim().equals("问询医院")){
                 currentTask=task;
                 break;
             }
@@ -397,7 +398,7 @@ public class DisputeProgressController {
         return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
     }
 
-    //发送调解成功
+    //发送调解失败
     @PostMapping(value = "/mediator/MediationFailure")
     public ResultVO mediationFailure(@RequestBody Map<String, String> map){
 

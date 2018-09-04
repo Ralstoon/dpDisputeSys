@@ -1,5 +1,7 @@
 package com.seu.utils;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,15 +55,19 @@ public class GetTitleAndAbstract {
             }
             hospitals = hospitals.substring(0,hospitals.length() - 1);
             detail = detail + hospitals + "存在医疗纠纷。患者因存在";
-            Object possibleFailure = ((com.alibaba.fastjson.JSONObject) stage).get("PossibleFailure");
+            Object resultList = ((com.alibaba.fastjson.JSONObject) stage).get("ResultList");
             Object diseasesymptomBefore = ((com.alibaba.fastjson.JSONObject) stage).get("DiseasesymptomBefore");
             Object diseaseListBefore = ((com.alibaba.fastjson.JSONObject) stage).get("DiseaseListBefore");
-            Object diseaseName = ((com.alibaba.fastjson.JSONObject) diseaseListBefore).get("DiseaseName");
+            JSONArray arrDLB=JSONArray.parseArray(diseaseListBefore.toString());
+            String diseaseName="";
+            for(int i=0;i<arrDLB.size();++i)
+                diseaseName+=arrDLB.getJSONObject(i).get("DiseaseName")+",";
+            diseaseName=diseaseName.substring(0,diseaseName.length()-1);
             detail = detail + ((String)diseasesymptomBefore) + "症状，到" + hospitals + "就诊。诊断为" + (String)diseaseName + "。";
 
-            //PossibleFailure
+            //ResultList
             //1.诊断
-            Object diagnosis = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("diagnosis");
+            Object diagnosis = ((com.alibaba.fastjson.JSONObject) resultList).get("diagnosis");
             Object behavior = ((com.alibaba.fastjson.JSONObject) diagnosis).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -72,7 +78,7 @@ public class GetTitleAndAbstract {
                 detail = detail + "院方可能存在诊断失误" + diagnosisFailure+"。";
             }
             //2.检查
-            Object verification = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("verification");
+            Object verification = ((com.alibaba.fastjson.JSONObject) resultList).get("verification");
             behavior = ((com.alibaba.fastjson.JSONObject) verification).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -87,7 +93,7 @@ public class GetTitleAndAbstract {
                 detail = detail + "院方检查行为是"+test+"。";
             }
             //3.shoushu
-            Object operator = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("operator");
+            Object operator = ((com.alibaba.fastjson.JSONObject) resultList).get("operator");
             behavior = ((com.alibaba.fastjson.JSONObject) operator).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -107,7 +113,7 @@ public class GetTitleAndAbstract {
             }
 
             //
-            Object treatment = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("treatment");
+            Object treatment = ((com.alibaba.fastjson.JSONObject) resultList).get("treatment");
             behavior = ((com.alibaba.fastjson.JSONObject) treatment).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -119,7 +125,7 @@ public class GetTitleAndAbstract {
             }
 
             //
-            Object medcine = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("medcine");
+            Object medcine = ((com.alibaba.fastjson.JSONObject) resultList).get("medcine");
             behavior = ((com.alibaba.fastjson.JSONObject) medcine).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -134,7 +140,7 @@ public class GetTitleAndAbstract {
                 detail = detail + "院方使用药品包括"+medicine+"。";
             }
             //
-            Object transfusion = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("transfusion");
+            Object transfusion = ((com.alibaba.fastjson.JSONObject) resultList).get("transfusion");
             behavior = ((com.alibaba.fastjson.JSONObject) transfusion).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -146,7 +152,7 @@ public class GetTitleAndAbstract {
             }
 
             //
-            Object anesthesia = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("anesthesia");
+            Object anesthesia = ((com.alibaba.fastjson.JSONObject) resultList).get("anesthesia");
             behavior = ((com.alibaba.fastjson.JSONObject) anesthesia).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
@@ -157,7 +163,7 @@ public class GetTitleAndAbstract {
                 detail = detail + "院方可能存在麻醉失误" + diagnosisFailure+"。";
             }
 
-            Object management = ((com.alibaba.fastjson.JSONObject) possibleFailure).get("management");
+            Object management = ((com.alibaba.fastjson.JSONObject) resultList).get("management");
             behavior = ((com.alibaba.fastjson.JSONObject) management).get("behavior");
             if (((List<String>)behavior).size() != 0){
                 String diagnosisFailure= "";
