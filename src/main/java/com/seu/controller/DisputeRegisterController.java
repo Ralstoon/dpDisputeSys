@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 /**
  * @ClassName DisputeRegisterController
@@ -96,11 +98,13 @@ public class DisputeRegisterController {
 
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
-    public ResultVO getBasicDivideInfo(@RequestParam("stageContent") String stageContent,
-                                       @RequestParam("CaseId") String caseId,
-                                       @RequestParam("mainRecStage") Integer mainRecStage,
-                                       @RequestParam("Require") String require,
-                                       @RequestParam("claimAmount") Integer claimAmount){
+    public ResultVO getBasicDivideInfo(@RequestBody Map<String, Object> map){
+        String stageContent = (String)map.get("stageContent");
+        String caseId = (String)map.get("CaseId");
+        Integer mainRecStage = (Integer)map.get("mainRecStage");
+        String require = (String)map.get("Require");
+        Integer claimAmount = (Integer)map.get("claimAmount");
+
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
@@ -108,4 +112,6 @@ public class DisputeRegisterController {
 
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
+
+
 }
