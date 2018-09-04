@@ -25,10 +25,14 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping(value="/addComment")
-    public ResultVO temporaryConfirm(HttpSession session,
-                                     @RequestParam(value = "task_id") String taskId,
-                                     @RequestParam(value = "comment") String comment,
-                                     @RequestParam(value = "ID") String userId){
+    public ResultVO temporaryConfirm(@RequestBody Map<String,String> map
+//                                     @RequestParam(value = "task_id") String taskId,
+//                                     @RequestParam(value = "comment") String comment,
+//                                     @RequestParam(value = "ID") String userId
+    ){
+        String taskId=map.get("task_id");
+        String comment=map.get("comment");
+        String userId=map.get("ID");
         //todo 身份认证
 //        String userId=((NormalUser)session.getAttribute(Const.CURRENT_USER)).getUserId();
         commentService.addComment(taskId,comment,userId);

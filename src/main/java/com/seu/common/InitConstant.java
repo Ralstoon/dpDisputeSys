@@ -39,4 +39,6 @@ public interface InitConstant {
 
     String mediate_inform_email="%s 您好，请于[%s]到 %s 参加患方 %s 与院方 %s 的医患纠纷调解";
     String damageIdentify= " %s您好，针对案件%s 请尽快办理医疗损害鉴定并及时上传";
+
+
 }

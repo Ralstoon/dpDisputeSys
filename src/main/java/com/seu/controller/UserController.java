@@ -1,11 +1,13 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
+import com.seu.form.LoginForm;
 import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
 import com.seu.service.DisputeRegisterService;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,10 +46,11 @@ public class UserController {
      *@Param [phone, password, httpServletResponse]
      *@return com.seu.common.ServerResponse<com.seu.domian.NormalUser>
      **/
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ServerResponse<UserForm> login(@RequestParam("phone") String phone,
-                                          @RequestParam("password") String password) {
-        System.out.println(password+"  "+phone);
+    @RequestMapping(value = "login",method = RequestMethod.POST)
+    public ServerResponse<UserForm> login(@RequestBody JSONObject map) {
+        String phone=map.getString("phone");
+        String password=map.getString("password");
+//        System.out.println(password+"  "+phone);
         //TODO 没有处理用户反复登陆以及换账户登录,希望该功能由前端检查，若反复登陆和切换账户，则可以推荐用户先注销
 //        session.getAttribute("NormalUser");
         ServerResponse<UserForm> response = userService.login(phone, password);
@@ -72,8 +76,9 @@ public class UserController {
      *@return com.seu.ViewObject.ResultVO
      **/
     @RequestMapping(value = "register",method = RequestMethod.POST)
-    public ResultVO register(@RequestParam(value = "phone") String phone,
-                             @RequestParam(value = "password") String password){
+    public ResultVO register(@RequestBody Map<String,String> map){
+        String phone=map.get("phone");
+        String password=map.get("password");
 //        log.info("【注册phone为：】{}",phone);
         int resultNum=userService.register(phone,password);
         if(resultNum==1){
@@ -90,16 +95,17 @@ public class UserController {
      *@Param [normalUserDetailForm, bindingResult]
      *@return com.seu.ViewObject.ResultVO
      **/
+    // TODO
     @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
-    public ResultVO updateUserInfo(@Valid NormalUserForm normalUserForm,
-                                   BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            Map<String,Object> param=new HashMap<>();
-            param.put("data",bindingResult.getFieldError().getDefaultMessage());
-            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
-        }
+    public ResultVO updateUserInfo(@RequestBody Map<String,Object> map){
+//        if(bindingResult.hasErrors()){
+//            Map<String,Object> param=new HashMap<>();
+//            param.put("data",bindingResult.getFieldError().getDefaultMessage());
+//            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
+//        }
 //        NormalUser currentUser=(NormalUser)session.getAttribute("currentUser");
-        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm);
+        NormalUserForm normalUserForm1=new NormalUserForm();
+        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm1);
         if(result!=null)
             return ResultVOUtil.ReturnBack(result,UpdateInfoEnum.UPDATE_SUCCESS.getCode(),UpdateInfoEnum.UPDATE_SUCCESS.getMsg());
         else
@@ -108,9 +114,9 @@ public class UserController {
 
 
     @RequestMapping(value = "loginout",method = RequestMethod.GET)
-    public ResultVO loginout(@RequestParam("ID") String ID,
-                             @RequestParam("role") String role) throws Exception {
-
+    public ResultVO loginout(@RequestBody Map<String,String> map) throws Exception {
+        String ID=map.get("ID");
+        String role=map.get("role");
         return userService.loginout(ID,role);
     }
 

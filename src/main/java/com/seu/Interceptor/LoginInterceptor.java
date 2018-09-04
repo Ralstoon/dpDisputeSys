@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        System.out.println("拦截器进行验证：");
+//        System.out.println("拦截器进行验证：");
 //        HttpSession session=httpServletRequest.getSession();
 //
 //        if(session.getAttribute("ID")==null){

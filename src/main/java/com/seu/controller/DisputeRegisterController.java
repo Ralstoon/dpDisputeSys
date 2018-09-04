@@ -1,5 +1,6 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.elasticsearch.MyTransportClient;
@@ -10,12 +11,18 @@ import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
+import com.seu.utils.Request2JSONobjUtil;
 import com.sun.deploy.net.URLEncoder;
 import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Map;
 
 
 /**
@@ -63,21 +70,22 @@ public class DisputeRegisterController {
 
     /**
      *@Author 吴宇航
-     *@Description  //TODO仅考虑单个keyword和room，为加入redis缓存
+     *@Description  // TODO 仅考虑单个keyword和room，为加入redis缓存
      *@Date 20:40 2018/8/28
      *@Param [keywords, room]
      *@return com.seu.ViewObject.ResultVO
      **/
     @GetMapping(value="/getOperations")
-    public ResultVO getOperations(@RequestParam String keywords,
-                                  @RequestParam String room) throws Exception{
+    public ResultVO getOperations(@RequestBody Map<String ,String> map) throws Exception{
+        String keywords=map.get("keywords");
+        String room=map.get("room");
         return disputeRegisterService.getOperations(keywords,room);
     }
 
     //用户选择调解员时，获取调解员列表
     @GetMapping(value = "/getMediatorList")
-    public ResultVO getMediatorList(@RequestParam(value = "caseId") String id){
-
+    public ResultVO getMediatorList(@RequestBody Map<String,String> map){
+        String id=map.get("caseId");
         return disputeRegisterService.getMediatorList(id);
     }
 
@@ -89,18 +97,22 @@ public class DisputeRegisterController {
 
     /** 发送涉事人员信息 */
     @PostMapping(value = "/InvolvedPeopleInfo")
-    public ResultVO sendInvolvedPeopleInfo(@RequestParam("CaseId") String caseId,
-                                           @RequestParam("InvolvedPeople") String involvedPeople){
+    public ResultVO sendInvolvedPeopleInfo(@RequestBody Map<String,String> map){
+
+        String caseId=map.get("CaseId");
+        String involvedPeople=map.get("InvolvedPeople");
         return disputeRegisterService.sendInvolvedPeopleInfo(caseId,involvedPeople);
     }
 
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
-    public ResultVO getBasicDivideInfo(@RequestParam("stageContent") String stageContent,
-                                       @RequestParam("CaseId") String caseId,
-                                       @RequestParam("mainRecStage") Integer mainRecStage,
-                                       @RequestParam("Require") String require,
-                                       @RequestParam("claimAmount") Integer claimAmount){
+    public ResultVO getBasicDivideInfo(HttpServletRequest request){
+        JSONObject map=Request2JSONobjUtil.convert(request);
+        String stageContent=map.getString("stageContent");
+        String caseId=map.getString("CaseId");
+        Integer mainRecStage=map.getInteger("mainRecStage");
+        String require=map.getString("Require");
+        Integer claimAmount=map.getInteger("claimAmount");
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
