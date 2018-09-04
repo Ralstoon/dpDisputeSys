@@ -10,6 +10,7 @@ import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.LoginForm;
 import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
+import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.UserService;
 import com.seu.service.NormalUserService;
@@ -129,5 +130,13 @@ public class UserController {
 //        return result;
 //    }
 
+    @Autowired
+    DisputeProgressService disputeProgressService;
 
+    @PostMapping(value = "getUserCaseList")
+    public ResultVO getUserCaseList(@RequestBody Map<String, String> map){
+
+        String usrId = map.get("userId");
+        return disputeProgressService.getUserCaseList(usrId);
+    }
 }

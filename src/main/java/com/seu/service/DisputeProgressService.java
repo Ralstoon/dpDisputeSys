@@ -108,4 +108,7 @@ public interface DisputeProgressService {
 
     /** 获取专家库 */
     ResultVO getExpertsList();
+
+    //用户中心获取案件列表
+    ResultVO getUserCaseList(String userId);
 }
