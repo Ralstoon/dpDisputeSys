@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+import java.util.Map;
+
 
 /**
  * @ClassName DisputeRegisterController
@@ -70,22 +72,21 @@ public class DisputeRegisterController {
 
     /**
      *@Author 吴宇航
-     *@Description  // TODO 仅考虑单个keyword和room，为加入redis缓存
+     *@Description  //TODO仅考虑单个keyword和room，为加入redis缓存
      *@Date 20:40 2018/8/28
      *@Param [keywords, room]
      *@return com.seu.ViewObject.ResultVO
      **/
     @GetMapping(value="/getOperations")
-    public ResultVO getOperations(@RequestBody Map<String ,String> map) throws Exception{
-        String keywords=map.get("keywords");
-        String room=map.get("room");
+    public ResultVO getOperations(@RequestParam String keywords,
+                                  @RequestParam String room) throws Exception{
         return disputeRegisterService.getOperations(keywords,room);
     }
 
     //用户选择调解员时，获取调解员列表
     @GetMapping(value = "/getMediatorList")
-    public ResultVO getMediatorList(@RequestBody Map<String,String> map){
-        String id=map.get("caseId");
+    public ResultVO getMediatorList(@RequestParam(value = "caseId") String id){
+
         return disputeRegisterService.getMediatorList(id);
     }
 
@@ -113,6 +114,13 @@ public class DisputeRegisterController {
         Integer mainRecStage=map.getInteger("mainRecStage");
         String require=map.getString("Require");
         Integer claimAmount=map.getInteger("claimAmount");
+//    public ResultVO getBasicDivideInfo(@RequestBody Map<String, Object> map){
+//        String stageContent = (String)map.get("stageContent");
+//        String caseId = (String)map.get("CaseId");
+//        Integer mainRecStage = (Integer)map.get("mainRecStage");
+//        String require = (String)map.get("Require");
+//        Integer claimAmount = (Integer)map.get("claimAmount");
+
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
@@ -120,4 +128,6 @@ public class DisputeRegisterController {
 
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
+
+
 }
