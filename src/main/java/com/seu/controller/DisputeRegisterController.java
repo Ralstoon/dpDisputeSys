@@ -13,6 +13,7 @@ import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
 import com.seu.utils.Request2JSONobjUtil;
 import com.sun.deploy.net.URLEncoder;
+import com.sun.org.apache.regexp.internal.RE;
 import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +98,13 @@ public class DisputeRegisterController {
     }
 
     /** 发送涉事人员信息 */
-    @PostMapping(value = "/InvolvedPeopleInfo")
-    public ResultVO sendInvolvedPeopleInfo(@RequestBody Map<String,String> map){
+    @PostMapping(value = "/InvolvedPeopleInfo")  //@RequestBody Map<String,String> map
+    public ResultVO sendInvolvedPeopleInfo(HttpServletRequest request){
 
-        String caseId=map.get("CaseId");
-        String involvedPeople=map.get("InvolvedPeople");
+
+        JSONObject map=Request2JSONobjUtil.convert(request);
+        String caseId=map.getString("CaseId");
+        String involvedPeople=map.getString("InvolvedPeople");
         return disputeRegisterService.sendInvolvedPeopleInfo(caseId,involvedPeople);
     }
 

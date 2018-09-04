@@ -21,7 +21,6 @@ public class Request2JSONobjUtil {
             }
             jsonParam = JSONObject.parseObject(sb.toString());
             // 直接将json信息打印出来
-            System.out.println(jsonParam.toJSONString());
         } catch (Exception e) {
             e.printStackTrace();
         }
