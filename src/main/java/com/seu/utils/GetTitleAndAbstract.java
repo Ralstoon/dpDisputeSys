@@ -31,7 +31,7 @@ public class GetTitleAndAbstract {
 
         String personNames="";
         for (String applyPerson: applyPersons){
-            personNames=personNames+applyPerson;
+            personNames=personNames+applyPerson+"、";
         }
         personNames = personNames.substring(0,personNames.length() - 1);
         for(String hospital: hospitalList){
