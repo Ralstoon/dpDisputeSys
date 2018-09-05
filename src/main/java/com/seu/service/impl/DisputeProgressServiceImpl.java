@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -811,84 +813,41 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         JSONObject mediateStage=JSONObject.parseObject(disputecaseProcess.getMediateStage());
         /** 判断当前阶段做到哪了
-         * 有两种情况：
-         * 1、当前阶段的预约调解还未做
-         * 2、当前阶段的预约调解做了，正在调解没做
-         * 3、当前阶段的正在调解已经做了
+         * 有3种情况：
+         * 1、医疗鉴定
+         * 2、预约调解
+         * 3、正在调解
          * */
         Integer stage=mediateStage.getInteger("stage");
+        Integer currentStatus=mediateStage.getInteger("currentStatus");
+        JSONArray stageContent=mediateStage.getJSONArray("stageContent");
+        stageContent.remove(stage-1);
+        stageContent.add(JSONObject.parseObject(currentStageContent));
+        mediateStage.put("stageContent",stageContent);
+        disputecaseProcess.setMediateStage(mediateStage.toString());
+        disputecaseProcessRepository.save(disputecaseProcess);
 
-//        switch(stage){
-//            case 0:
-//                JSONArray stageContent=mediateStage.getJSONArray("stageContent");
-////                s
-//
-//                List<String> app=new ArrayList<>();
-//                List<String> res=new ArrayList<>();
-//                Disputecase disputecase=disputecaseRepository.getOne(caseId);
-//                for(String s:disputecase.getProposerId().trim().split(",")){
-//                    app.add(disputecaseApplyRepository.getOne(s).getName());
-//                }
-//
-//                res=GetHospitalUtil.extract(disputecase.getMedicalProcess());
-//
-//                js1.put("applicant",app);
-//                js1.put("respondent",res);
-//                js1.put("currentStageContent",currentStageContent);
-//                currentStage.put("预约调解",js1);
-//                jsArr.set(jsArr.size()-1,currentStage);
-//                disputecaseProcess.setMediateStage(jsArr.toString());
-//                disputecaseProcessRepository.save(disputecaseProcess);
-//                break;
-//            case 1:
-//                /** 覆盖旧的预约调解 */
-//                js1.put("currentStageContent",currentStageContent);
-//                currentStage.put("预约调解",js1);
-//                jsArr.set(jsArr.size()-1,currentStage);
-//                disputecaseProcess.setMediateStage(jsArr.toString());
-//                disputecaseProcessRepository.save(disputecaseProcess);
-//                break;
-//            case 2:
-//                /** 说明进行到新的一轮调解 */
-//                JSONObject newJs=JSONObject.parseObject(InitConstant.init_mediateStage);
-//                JSONObject newJs_js1=newJs.getJSONObject("预约调解");
-//                List<String> app2=new ArrayList<>();
-//                List<String> res2=new ArrayList<>();
-//                Disputecase disputecase2=disputecaseRepository.getOne(caseId);
-//                for(String s:disputecase2.getProposerId().trim().split(",")){
-//                    app2.add(disputecaseApplyRepository.getOne(s).getName());
-//                }
-//
-//                res2=GetHospitalUtil.extract(disputecase2.getMedicalProcess());
-//
-//                newJs_js1.put("applicant",app2);
-//                newJs_js1.put("respondent",res2);
-//                newJs_js1.put("currentStageContent",currentStageContent);
-//                newJs.put("预约调解",newJs_js1);
-//                jsArr.add(newJs);
-//                disputecaseProcess.setMediateStage(jsArr.toString());
-//                disputecaseProcessRepository.save(disputecaseProcess);
-//                break;
-//        }
-//
-//        /**
-//         * 当前步骤为 调解前处理
-//         * 1、设置paramBeforeMediate=1
-//         *         appointResult 参数 ： 0为三方 1为专家
-//         * 2、流程往下走一格
-//         * 3、自动发送预约消息
-//         */
-//        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-//        Integer result=0;
-//        if(JSONObject.parseObject(currentStageContent).getJSONArray("Experts").size()!=0)
-//            result=1;
-//        Map<String ,Object> var=new HashMap<>();
-//        var.put("paramBeforeMediate",1);
-//        var.put("appointResult",result);
-//        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
-//        taskService.complete(currentTask.getId(),var);
-//        // 3的流程看webServiceTask MediateInform
-//
+        /**
+         * 当前步骤为 调解前处理
+         * 1、设置paramBeforeMediate=1
+         *         appointResult 参数 ： 0为三方 1为专家
+         * 2、流程往下走一格
+         * 3、自动发送预约消息
+         */
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Integer result=0;
+        String particopate=JSONObject.parseObject(currentStageContent).getString("particopate");
+        Pattern pattern=Pattern.compile("专家");
+        Matcher matcher=pattern.matcher(particopate);
+        if(matcher.find())
+            result=1;
+        Map<String ,Object> var=new HashMap<>();
+        var.put("paramBeforeMediate",1);
+        var.put("appointResult",result);
+        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        taskService.complete(currentTask.getId(),var);
+        // 3的流程看webServiceTask MediateInform
+
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETAPPOINT_SUCCESS.getCode(),DisputeProgressEnum.SETAPPOINT_SUCCESS.getMsg());
 
 

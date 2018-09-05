@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @ClassName ESInsert
@@ -60,10 +62,14 @@ public class ESInsert {
 //        String index_type=index+"_type";
 //        String url="D:\\worksapce_python\\666\\data\\1.txt";
 //        new ESInsert().insertJSON(url,index,index_type);
-        String resultList="{}";
-        Object diagnosis = JSONObject.parseObject(resultList).get("diagnosis");
-        if(diagnosis==null)
-            return;
+        List<String> list=new ArrayList<>();
+        list.add("申请人");
+        list.add("专家");
+        String s=list.toString();
+        Pattern pattern=Pattern.compile("专家");
+        Matcher matcher=pattern.matcher(s);
+        if(matcher.find())
+            System.out.println(true);
 
     }
 
