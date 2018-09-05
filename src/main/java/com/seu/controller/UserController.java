@@ -44,8 +44,11 @@ public class UserController {
      *@return com.seu.common.ServerResponse<com.seu.domian.NormalUser>
      **/
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ServerResponse<UserForm> login(@RequestParam("phone") String phone,
-                                          @RequestParam("password") String password) {
+//    public ServerResponse<UserForm> login(@RequestParam("phone") String phone,
+//                                          @RequestParam("password") String password) {
+    public ServerResponse<UserForm> login(@RequestBody Map<String ,String> map) {
+        String phone =map.get("phone");
+        String password=map.get("password");
         System.out.println(password+"  "+phone);
         //TODO 没有处理用户反复登陆以及换账户登录,希望该功能由前端检查，若反复登陆和切换账户，则可以推荐用户先注销
 //        session.getAttribute("NormalUser");
@@ -59,7 +62,7 @@ public class UserController {
             String ID=userForm.getId();
             String role=userForm.getRole();
             Integer expire=RedisConstant.EXPIRE;
-//            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
         }
         return response;
     }

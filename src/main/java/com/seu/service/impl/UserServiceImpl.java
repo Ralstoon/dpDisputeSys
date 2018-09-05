@@ -43,20 +43,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServerResponse<UserForm> login(String phone, String password) {
-//        int resultCount = normalUserRepository.checkUser(phone);
         User user=userRepository.findByPhone(phone);
         if(user == null){
             return ServerResponse.createByErrorMessage("手机号未注册");
         }
         /** 加密 */
         String md5Password = MD5Util.MD5EncodeUtf8(password);
-
-//        NormalUser normalUser = normalUserRepository.selectLogin(phone, md5Password);
+//        md5Password=password;
         if(!user.getPassword().equals(md5Password)){
             return ServerResponse.createByErrorMessage("登录密码错误");
         }
-
-//        normalUser.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess("用户登录成功", User2UserForm.convert(user));
     }
 
