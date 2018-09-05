@@ -159,4 +159,9 @@ public class test {
         String date=sDateFormat.format(new Date());
 
     }
+
+    @Test
+    public void currentTask() {
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("00");
+    }
 }
