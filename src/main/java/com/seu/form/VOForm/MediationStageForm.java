@@ -40,7 +40,7 @@ public class MediationStageForm {
     private boolean identified=false;
 
     /** 鉴定结果 */
-    private String resultOfIdentify="";
+    private String resultOfIdentify;
 
     /** 可否预约专家 */
     private boolean expert;
@@ -51,7 +51,7 @@ public class MediationStageForm {
     /** 被申请人数组 */
     private List<unti> respondents=new ArrayList<>();
 
-    private String stageContent="[]";
+    private String currentStageContent="[]";
 
     public void addApplicants(String name,String phone,String email){
         if(applicants==null)
