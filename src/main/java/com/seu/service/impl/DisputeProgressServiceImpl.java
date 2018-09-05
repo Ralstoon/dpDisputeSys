@@ -900,4 +900,72 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<Experts> expertsList=expertsRepository.findAll();
         return ResultVOUtil.ReturnBack(expertsList,DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getCode(),DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getMsg());
     }
+
+    @Override
+    public ResultVO getUserCaseList(String userId) {
+        NormalUser normalUser = normalUserRepository.findByFatherId(userId);
+
+        List<DisputecaseApply> disputecaseApplyList = disputecaseApplyRepository.findAllByIdCard(normalUser.getIdCard());
+
+        List<UserCaseListForm> userCaseListFormList = new ArrayList<>();
+
+        for (DisputecaseApply disputecaseApply: disputecaseApplyList){
+            Disputecase disputecase = disputecaseRepository.findOne(disputecaseApply.getDisputecaseId());
+            UserCaseListForm userCaseListForm = new UserCaseListForm();
+
+            String[] temp=disputecase.getProposerId().trim().split(",");
+            String applicant="";
+            for(String s:temp){
+                applicant = (disputecaseApplyRepository.getOne(s).getName())+"、";
+            }
+
+            applicant = applicant.substring(0, applicant.length() - 1);
+            userCaseListForm.setApplicant(applicant);
+            if(disputecase.getMediatorId()!=null)
+            {
+                userCaseListForm.setCurrentMedator(mediatorRepository.findByFatherId(disputecase.getMediatorId()).getMediatorName());
+                userCaseListForm.setMediatorId(disputecase.getMediatorId());
+            }
+
+            else{
+                userCaseListForm.setCurrentMedator("未选择");
+                userCaseListForm.setMediatorId("");
+            }
+
+            userCaseListForm.setName(disputecase.getCaseName());
+            userCaseListForm.setDate(disputecase.getApplyTime());
+
+            userCaseListForm.setNameId(disputecase.getId());
+
+
+            com.alibaba.fastjson.JSONArray arr= com.alibaba.fastjson.JSONArray.parseArray(disputecase.getMedicalProcess());
+
+            List<String> hospitalList = new ArrayList<>();
+            String hospitals = "";
+
+            for (Object stage:arr){
+                Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
+
+                for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
+
+                    hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
+                }
+            }
+
+            for(String hospital: hospitalList){
+                hospitals = hospitals + hospital + "、";
+            }
+            hospitals = hospitals.substring(0,hospitals.length() - 1);
+
+            userCaseListForm.setRespondent(hospitals);
+            userCaseListForm.setStatus(disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus());
+            userCaseListFormList.add(userCaseListForm);
+        }
+
+
+        return ResultVOUtil.ReturnBack(userCaseListFormList, 111,"用户中心获取用户案件列表成功。");
+    }
+
+
+
 }

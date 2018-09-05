@@ -13,9 +13,12 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.seu.common.Component.SpringUtil;
 import com.seu.common.InitConstant;
+import com.seu.repository.DisputecaseApplyRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
+import com.seu.repository.NormalUserRepository;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +33,13 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
  **/
 public class MediateInform implements JavaDelegate {
 
-    @Autowired
-    private DisputecaseProcessRepository disputecaseProcessRepository;
 
     @Override
     public void execute(DelegateExecution delegateExecution){
+        DisputecaseProcessRepository disputecaseProcessRepository=SpringUtil.getBean(DisputecaseProcessRepository.class);
+
+
+
         // 调解通知对象包括 申请人、被申请人、专家(有的话)
         String caseId=delegateExecution.getVariable("disputeId").toString();
         String mediateStage=disputecaseProcessRepository.findByDisputecaseId(caseId).getMediateStage();

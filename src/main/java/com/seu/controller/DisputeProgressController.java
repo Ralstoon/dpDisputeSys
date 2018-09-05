@@ -208,8 +208,9 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     @PostMapping(value = "/mediator/forhandler")
-    public ResultVO mediatorSelectUser(@RequestParam("CaseId") String disputeId,
-                                       @RequestParam("id") String ID){
+    public ResultVO mediatorSelectUser(@RequestBody Map<String, String> map){
+        String disputeId = map.get("CaseId");
+        String ID = map.get("id");
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Task currentTask=null;
         for(Task task:tasks){
@@ -226,8 +227,10 @@ public class DisputeProgressController {
 
     /** 调解员申请回避 */
     @PostMapping(value = "/mediator/fordebarb")
-    public ResultVO mediatorFordebarb(@RequestParam("CaseId") String disputeId,
-                                       @RequestParam("id") String ID){
+    public ResultVO mediatorFordebarb(@RequestBody Map<String, String > map){
+
+        String disputeId = map.get("CaseId");
+        String ID = map.get("id");
 
         /** 为案件进程表添加调解员回避状态*/
         disputeProgressService.updateAvoidStatus(disputeId,ID);
@@ -237,8 +240,11 @@ public class DisputeProgressController {
 
     /** 用户选择调解员列表 */
     @PostMapping(value = "user/postMediatorList")
-    public ResultVO getUserChoose(@RequestParam("MediatorPickedlist") String pickedList,
-                                  @RequestParam("CaseId") String disputeId){
+    public ResultVO getUserChoose(@RequestBody Map<String, String > map){
+
+        String pickedList = map.get("MediatorPickedlist");
+        String disputeId = map.get("CaseId");
+
         String mediatorList="";
         pickedList=pickedList.substring(1,pickedList.length()-1);
         for(String s:pickedList.split(",")){
@@ -251,79 +257,112 @@ public class DisputeProgressController {
 
     /** 获取调解大厅中的数据 */
     @GetMapping(value = "/mediator/GetMediationHallData")
-    public ResultVO getMediationHallData(@RequestParam("id") String id){
+    public ResultVO getMediationHallData(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getMediationHallData(id);
     }
 
     /** 获取我的调节中的数据 */
     @GetMapping(value = "/mediator/GetMyMediationData")
-    public ResultVO getMyMediationData(@RequestParam("id") String id){
+    public ResultVO getMyMediationData(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getMyMediationData(id);
     }
 
     /** 管理者获取案件列表 */
     @GetMapping(value = "/manager/getCaseList")
-    public ResultVO getManagerCaseList(@RequestParam("id") String id){
+    public ResultVO getManagerCaseList(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getManagerCaseList(id);
     }
 
 
     /** 管理员获取统计管理页面列表 */
     @GetMapping(value = "/manager/getCase_judiciary")
-    public ResultVO getManagerCaseJudiciary(@RequestParam("id") String id){
+    public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getManagerCaseJudiciary(id);
     }
 
     /** 管理员获取调解员列表（用于给案件分配调解员） */
     @GetMapping(value = "/getMediatorList")
-    public ResultVO getMediatorList(@RequestParam("id") String id){
+    public ResultVO getMediatorList(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getMediatorList(id);
     }
 
     /** 管理员 获取所有调解员的授权信息 */
     @GetMapping(value = "/manager/getNameofAuthorityList")
-    public ResultVO getNameofAuthorityList(@RequestParam("id") String id){
+    public ResultVO getNameofAuthorityList(@RequestBody Map<String, String> map){
+
+        String id = map.get("id");
+
         return disputeProgressService.getNameofAuthorityList(id);
     }
 
     /**管理员发送授权调解员权限信息 */
     @PostMapping(value = "/manager/ChangeAuthorityNameList")
-    public ResultVO changeAuthorityNameList(@RequestParam("param") String changeAuthorityFormList){
+    public ResultVO changeAuthorityNameList(@RequestBody Map<String, String> map){
+
+        String changeAuthorityFormList = map.get("param");
         return disputeProgressService.changeAuthorityNameList(changeAuthorityFormList);
     }
 
     //添加具体任务的评价
     @PostMapping(value = "/addTaskComment")
-    public ResultVO addTaskComment(@RequestParam(value = "comment") String comment,
-                                   @RequestParam(value = "taskId") String taskId,
-                                   @RequestParam(value = "disputeId") String disputeId){
+    public ResultVO addTaskComment(@RequestBody Map<String, String> map){
+
+        String comment = map.get("comment");
+        String taskId = map.get("taskId");
+        String disputeId = map.get("disputeId");
+
         CommentForm commentForm = disputeProgressService.addCommentByTaskId(taskId, disputeId, comment);
         return ResultVOUtil.ReturnBack(commentForm,DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getCode(),DisputeProgressEnum.ADD_TASKCOMMIT_SUCCESS.getMsg());
     }
 
     /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
     @GetMapping(value = "/mediator/getMediationStage")
-    public ResultVO getMediationStage(@RequestParam("CaseId") String caseId){
+    public ResultVO getMediationStage(@RequestBody Map<String, String> map){
+
+        String caseId = map.get("CaseId");
+
         return disputeProgressService.getMediationStage(caseId);
     }
 
     /** 发送鉴定结果数据 */
     @PostMapping(value = "/mediator/resultOfIndent")
-    public ResultVO setResultOfIndent(@RequestParam("CaseId") String caseId,
-                                      @RequestParam("resultOfIndent") String resultOfIndent){
+    public ResultVO setResultOfIndent(@RequestBody Map<String, String> map){
+
+        String caseId = map.get("CaseId");
+        String resultOfIndent = map.get("resultOfIndent");
+
         return disputeProgressService.setResultOfIndent(caseId,resultOfIndent);
     }
 
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
-    public ResultVO setAppoint(@RequestParam("CaseId") String caseId,
-                               @RequestParam("currentStageContent") String currentStageContent){
+    public ResultVO setAppoint(@RequestBody Map<String, String> map){
+        String caseId = map.get("CaseId");
+        String currentStageContent = map.get("currentStageContent");
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }
     //管理员选择具体某个调解员调解某个案件   wj
     @PostMapping(value = "/manager/PostMediatorForCase")
-    public ResultVO decideMediatorDisputeCase(@RequestParam(value = "MediatorId") String mediatorId,
-                                              @RequestParam(value = "CaseId") String disputeId){
+    public ResultVO decideMediatorDisputeCase(@RequestBody Map<String, String> map){
+
+        String mediatorId = map.get("MediatorId");
+        String disputeId = map.get("CaseId");
+
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Task currentTask=null;
         for(Task task:tasks){
@@ -339,14 +378,17 @@ public class DisputeProgressController {
 
     //发送问询医院数据
     @PostMapping(value = "/detail/InquireInstitute")
-    public ResultVO inquireInstitute(@RequestParam(value = "CaseId") String caseId,
-                                     @RequestParam(value = "InquireText") String inquireText){
+    @Transactional
+    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
+        String caseId = map.get("CaseId");
+        String inquireText = map.get("InquireText");
+
 
         //todo activiti test
         List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
         Task currentTask=null;
         for(Task task:tasks){
-            if(task.getName().equals("向院方调研")){
+            if(task.getName().trim().equals("问询医院")){
                 currentTask=task;
                 break;
             }
@@ -356,36 +398,45 @@ public class DisputeProgressController {
         return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
     }
 
-    //发送调解成功
+    //发送调解失败
     @PostMapping(value = "/mediator/MediationFailure")
-    public ResultVO mediationFailure(@RequestParam(value = "CaseId") String caseId){
+    public ResultVO mediationFailure(@RequestBody Map<String, String> map){
+
+        String caseId = map.get("CaseId");
 
         return disputeProgressService.setMediationFailure(caseId);
     }
 
     //发送调解成功
     @PostMapping(value = "/user/CaseRepeal")
-    public ResultVO caseRepeal(@RequestParam(value = "CaseId") String caseId){
+    public ResultVO caseRepeal(@RequestBody Map<String, String> map){
+
+        String caseId = map.get("CaseId");
 
         return disputeProgressService.setCaseRepeal(caseId);
     }
 
     //发送调解成功
     @PostMapping(value = "/user/CaseLitigation")
-    public ResultVO caseLitigation(@RequestParam(value = "CaseId") String caseId){
+    public ResultVO caseLitigation(@RequestBody Map<String, String> map){
+
+        String caseId  = map.get("CaseId");
 
         return disputeProgressService.setCaseLitigation(caseId);
     }
 
     /** 申请再次调解*/
     @PostMapping(value = "/user/reMediation")
-    public ResultVO reMediation(@RequestParam("CaseId") String caseId){
+    public ResultVO reMediation(@RequestBody Map<String, String> map){
+        String caseId = map.get("CaseId");
+
         return disputeProgressService.reMediation(caseId);
     }
 
     /** 通知用户进行医疗鉴定 */
     @PostMapping(value = "/mediator/InformIndenty")
-    public  ResultVO informIndenty(@RequestParam("CaseId") String caseId){
+    public  ResultVO informIndenty(@RequestBody Map<String, String> map){
+        String caseId = map.get("CaseId");
         return disputeProgressService.informIndenty(caseId);
     }
 
@@ -394,5 +445,7 @@ public class DisputeProgressController {
     public ResultVO getExpertsList(){
         return disputeProgressService.getExpertsList();
     }
+
+
 
 }

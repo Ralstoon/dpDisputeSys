@@ -1,5 +1,6 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.elasticsearch.MyTransportClient;
@@ -10,12 +11,21 @@ import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
+import com.seu.utils.Request2JSONobjUtil;
 import com.sun.deploy.net.URLEncoder;
+import com.sun.org.apache.regexp.internal.RE;
 import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Map;
+
+import java.util.Map;
 
 
 /**
@@ -88,19 +98,32 @@ public class DisputeRegisterController {
     }
 
     /** 发送涉事人员信息 */
-    @PostMapping(value = "/InvolvedPeopleInfo")
-    public ResultVO sendInvolvedPeopleInfo(@RequestParam("CaseId") String caseId,
-                                           @RequestParam("InvolvedPeople") String involvedPeople){
+    @PostMapping(value = "/InvolvedPeopleInfo")  //@RequestBody Map<String,String> map
+    public ResultVO sendInvolvedPeopleInfo(HttpServletRequest request){
+
+
+        JSONObject map=Request2JSONobjUtil.convert(request);
+        String caseId=map.getString("CaseId");
+        String involvedPeople=map.getString("InvolvedPeople");
         return disputeRegisterService.sendInvolvedPeopleInfo(caseId,involvedPeople);
     }
 
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
-    public ResultVO getBasicDivideInfo(@RequestParam("stageContent") String stageContent,
-                                       @RequestParam("CaseId") String caseId,
-                                       @RequestParam("mainRecStage") Integer mainRecStage,
-                                       @RequestParam("Require") String require,
-                                       @RequestParam("claimAmount") Integer claimAmount){
+    public ResultVO getBasicDivideInfo(HttpServletRequest request){
+        JSONObject map=Request2JSONobjUtil.convert(request);
+        String stageContent=map.getString("stageContent");
+        String caseId=map.getString("CaseId");
+        Integer mainRecStage=map.getInteger("mainRecStage");
+        String require=map.getString("Require");
+        Integer claimAmount=map.getInteger("claimAmount");
+//    public ResultVO getBasicDivideInfo(@RequestBody Map<String, Object> map){
+//        String stageContent = (String)map.get("stageContent");
+//        String caseId = (String)map.get("CaseId");
+//        Integer mainRecStage = (Integer)map.get("mainRecStage");
+//        String require = (String)map.get("Require");
+//        Integer claimAmount = (Integer)map.get("claimAmount");
+
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
@@ -108,4 +131,6 @@ public class DisputeRegisterController {
 
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
+
+
 }

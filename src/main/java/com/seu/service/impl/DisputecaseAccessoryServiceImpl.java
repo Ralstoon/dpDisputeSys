@@ -114,14 +114,14 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             String id = KeyUtil.genUniqueKey();
             DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
             disputecaseAccessory.setId(id);
+            disputecaseAccessory.setDisputecaseId(disputeId);
             disputecaseAccessory.setInquireHospital(inquireHospital);
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
         }
         else {
-            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
-            disputecaseAccessory.setInquireHospital(inquireHospital);
-            disputecaseAccessoryRepository.save(disputecaseAccessory);
+            dA.setInquireHospital(inquireHospital);
+            disputecaseAccessoryRepository.save(dA);
             return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
 
         }

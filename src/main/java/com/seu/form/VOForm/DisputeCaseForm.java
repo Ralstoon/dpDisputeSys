@@ -27,4 +27,5 @@ public class DisputeCaseForm {
     /** 用户角色*/
     private String role;
 
+
 }

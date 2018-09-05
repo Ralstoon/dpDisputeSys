@@ -1,5 +1,6 @@
 package com.seu.service.webServiceTask;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
@@ -42,6 +43,7 @@ public class AutoInform implements JavaDelegate {
         DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
         DisputecaseApplyRepository disputecaseApplyRepository=SpringUtil.getBean(DisputecaseApplyRepository.class);
         NormalUserRepository normalUserRepository=SpringUtil.getBean(NormalUserRepository.class);
+
         String caseId=delegateExecution.getVariable("disputeId").toString();
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         String prosperId=disputecase.getProposerId();
@@ -49,10 +51,11 @@ public class AutoInform implements JavaDelegate {
         for(String s:temp){
             DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
             String phone=disputecaseApply.getPhone();
+            String name=disputecaseApply.getName();
             String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
             if(!(email==null ||email==""))
                 sendEmail(caseId,email);
-            sendSms(caseId,phone);
+            sendSms(caseId,phone,name);
         }
 
 
@@ -82,7 +85,7 @@ public class AutoInform implements JavaDelegate {
         }
     }
 
-    public void sendSms(String disputeId,String Phone) {
+    public void sendSms(String disputeId,String Phone,String name) {
         try {
             //设置超时时间-可自行调整
             System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -110,7 +113,9 @@ public class AutoInform implements JavaDelegate {
             request.setTemplateCode("SMS_140110193");
             //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
             //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
-            request.setTemplateParam("{\"name\":\"Tom\"}");
+            JSONObject temp=JSONObject.parseObject("{}");
+            temp.put("name",name);
+            request.setTemplateParam(temp.toString());
             //可选-上行短信扩展码(扩展码字段控制在7位或以下，无特殊需求用户请忽略此字段)
             //request.setSmsUpExtendCode("90997");
             //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者，短信查询等API需要用到这个参数
