@@ -24,7 +24,7 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
 //        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE,multipart/form-data");
         chain.doFilter(req, res);
     }
 

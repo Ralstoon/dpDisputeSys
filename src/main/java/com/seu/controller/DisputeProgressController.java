@@ -302,10 +302,9 @@ public class DisputeProgressController {
 
 
     /** 管理员获取统计管理页面列表 */
-    @GetMapping(value = "/manager/getCase_judiciary")
-    public ResultVO getManagerCaseJudiciary(@RequestParam("id") String id){
-//        @RequestBody Map<String, String> map
-//        String id = map.get("id");
+    @PostMapping(value = "/manager/getCase_judiciary")
+    public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
+        String id = map.get("id");
 
         return disputeProgressService.getManagerCaseJudiciary(id);
     }
@@ -370,7 +369,7 @@ public class DisputeProgressController {
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
     public ResultVO setAppoint(@RequestBody Map<String, String> map){
-        String caseId = map.get("CaseId");
+        String caseId = map.get("caseId");
         String currentStageContent = map.get("currentStageContent");
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }

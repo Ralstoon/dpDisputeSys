@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         String normalId=KeyUtil.genUniqueKey();
         String ID=KeyUtil.genUniqueKey();
         String md5Password = MD5Util.MD5EncodeUtf8(password);
-        User user=new User(ID,phone,md5Password,"普通用户",normalId);
+        User user=new User(ID,phone,md5Password,"0",normalId);
         User saveUser=userRepository.save(user);
         if(saveUser==null)
             return -1;

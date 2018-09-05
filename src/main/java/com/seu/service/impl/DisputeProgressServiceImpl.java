@@ -737,6 +737,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             /** 1、申请人 */
 //        List<String> app=new ArrayList<>();
         List<String> res=new ArrayList<>();
+        JSONArray apps=JSONArray.parseArray("[]");
         for(String s:disputecase.getProposerId().trim().split(",")){
             // name , phone ,email
             DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
@@ -745,20 +746,31 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
             if(email==null)
                 email="";
-            mediationStageForm.addApplicants(name,phone,email);
+            JSONObject obj=JSONObject.parseObject("{}");
+            obj.put("name",name);
+            obj.put("phone",phone);
+            obj.put("email",email);
+            apps.add(obj);
+//            mediationStageForm.addApplicants(name,phone,email);
         }
+        mediationStageForm.setApplicants(apps.toString());
             /** 2、院方 */
         res=GetHospitalUtil.extract(disputecase.getMedicalProcess());
         JSONObject hosJS=JSONObject.parseObject(constantDataRepository.findByName("hospital_list").getData());
+        JSONArray respo=JSONArray.parseArray("[]");
         for(String hos:res){
             JSONObject hosOne=hosJS.getJSONObject(hos.trim());
             String phone=hosOne.getString("phone");
             String email=hosOne.getString("email");
             if(email==null)
                 email="";
-            mediationStageForm.addRespondents(hos,phone,email);
+            JSONObject obj=JSONObject.parseObject("{}");
+            obj.put("name",hos);
+            obj.put("phone",phone);
+            obj.put("email",email);
+            respo.add(obj);
         }
-
+        mediationStageForm.setRespondents(respo.toString());
         // 直接取出来即可
         String currentStageContent=currentStage.toString();
         mediationStageForm.setCurrentStageContent(currentStageContent);
