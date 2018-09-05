@@ -375,7 +375,7 @@ public class DisputeProgressController {
                 currentTask=task;
                 break;
             }
-            if(task.getName().equals("调解员选用户")){
+            else if(task.getName().equals("调解员选用户")){
                 currentTask=task;
                 disputeProgressService.completeCurrentTask(currentTask.getId());
                 currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);

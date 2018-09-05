@@ -184,4 +184,19 @@ public class test {
     public void currentTask() {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("00");
     }
+
+
+    //调解前处理
+    @Test
+    @Deployment(resources = "processes/test.bpmn")
+    public void tiaojieqianchuli(){
+        //ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_pool1");
+        Task task = taskService.createTaskQuery().processInstanceId("550036").singleResult();
+        System.out.println(task.getName());
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramBeforeMediate",0);
+        disputeProgressService.completeCurrentTask(task.getId(),var);
+        task = taskService.createTaskQuery().processInstanceId("550036").singleResult();
+        System.out.println(task.getName());
+    }
 }

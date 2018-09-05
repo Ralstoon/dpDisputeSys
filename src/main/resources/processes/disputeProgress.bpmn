@@ -61,8 +61,8 @@
         <flowNodeRef>sid-813C4A38-427C-460C-8558-1FA14B74A0BB</flowNodeRef>
         <flowNodeRef>_7</flowNodeRef>
         <flowNodeRef>_8</flowNodeRef>
-        <flowNodeRef>_5</flowNodeRef>
-        <flowNodeRef>_10</flowNodeRef>
+        <!--<flowNodeRef>_5</flowNodeRef>-->
+        <!--<flowNodeRef>_10</flowNodeRef>-->
         <flowNodeRef>sid-86DE1F50-4D4A-4E02-8607-49C08D1A4E73</flowNodeRef>
         <flowNodeRef>sid-936DDDD2-DA5E-458B-81D3-58CF8260D7EF</flowNodeRef>
       </lane>
@@ -143,12 +143,8 @@
     <sequenceFlow id="flow5" sourceRef="usertask2" targetRef="exclusivegateway2"/>
     <sequenceFlow id="sid-0D4370A6-302C-4CA5-AE39-BAFAE5FC15B8" sourceRef="sid-B61E9558-1ACB-4F77-8A18-F3C1A1C13441" targetRef="usertask4"/>
     <sequenceFlow id="sid-5560DD1F-7F26-492D-B150-ED3D6237BEDC" sourceRef="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879" targetRef="usertask1"/>
-    <sequenceFlow id="sid-6457FF19-358D-43DA-B21F-92353BDC034D" name="不通过" sourceRef="exclusivegateway2" targetRef="sid-01815696-C738-453B-A88C-1FD1445E1F9F">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${caseAccept==0}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-39F4E892-6D05-4796-A52E-6E942BE3F305" name="通过" sourceRef="exclusivegateway2" targetRef="sid-1165F228-5B58-4C97-9063-5F6BA911DC82">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${caseAccept==1}]]></conditionExpression>
-    </sequenceFlow>
+    <sequenceFlow id="sid-6457FF19-358D-43DA-B21F-92353BDC034D" name="不通过" sourceRef="exclusivegateway2" targetRef="sid-01815696-C738-453B-A88C-1FD1445E1F9F"/>
+    <sequenceFlow id="sid-39F4E892-6D05-4796-A52E-6E942BE3F305" name="通过" sourceRef="exclusivegateway2" targetRef="sid-1165F228-5B58-4C97-9063-5F6BA911DC82"/>
     <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
     <sequenceFlow id="sid-86DE1F50-4D4A-4E02-8607-49C08D1A4E73" sourceRef="sid-ECE8AF82-BF1F-4D20-92D5-5E5F823C3F6B" targetRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01"/>
     <sequenceFlow id="sid-936DDDD2-DA5E-458B-81D3-58CF8260D7EF" name="走撤销" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E"/>
