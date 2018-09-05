@@ -204,64 +204,84 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Override
     @Transactional
-    public ResultVO sendInvolvedPeopleInfo(String caseId, String involvedPeople) {
-        /** disputecase表和disputecaseApply表 */
-        Disputecase disputecase=disputecaseRepository.getOne(caseId);
-        JSONArray array=JSONArray.parseArray(involvedPeople);
-        String proposerId="";
-        String agentId="";
-        for(int i=0;i<array.size();++i){
-            JSONObject obj=array.getJSONObject(i);
-            String name=obj.getString("name");
-            String idCard=obj.getString("cardID");
-            String role=(obj.getString("picked").trim().equals("申请人"))?"0":"1";
-            String phone=obj.getString("phone");
-            DisputecaseApply applyOne=new DisputecaseApply();
-            String applyId=KeyUtil.genUniqueKey();
-            if(role=="0")
-                proposerId+=applyId+",";
-            else
-                agentId+=applyId+",";
-            applyOne.setDisputecaseId(caseId);
-            applyOne.setId(applyId);
-            applyOne.setIdCard(idCard);
-            applyOne.setName(name);
-            applyOne.setRole(role);
-            applyOne.setPhone(phone);
-            /** 查看该手机是否已注册 */
-            User user=userRepository.findByPhone(phone);
-            if(user==null){
-                // 未注册,帮忙注册 密码初始为111111
-                String id=KeyUtil.genUniqueKey();
-                User newUser=new User();
-                newUser.setID(id);
-                newUser.setPassword(MD5Util.MD5EncodeUtf8("111111"));
-                newUser.setPhone(phone);
-                newUser.setRole("0");
-                NormalUser newNU=new NormalUser();
-                String nuId=KeyUtil.genUniqueKey();
-                newNU.setIdCard(idCard);
-                newNU.setNormalId(nuId);
-                newNU.setFatherId(id);
-                newUser.setSpecificId(nuId);
-                userRepository.save(newUser);
-                normalUserRepository.save(newNU);
-            }else {
-                // 更新信息表中身份证
-                NormalUser normalUser=normalUserRepository.findByFatherId(user.getID());
-                normalUser.setIdCard(idCard);
-                normalUserRepository.save(normalUser);
-            }
+    public ResultVO sendInvolvedPeopleInfo(String involvedPeople){
 
-            disputecaseApplyRepository.save(applyOne);
+        //生成caseid
+        try {
+            String caseId = KeyUtil.genUniqueKey();
+            Disputecase disputecase = new Disputecase();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            Date d = new Date();
+            String dateS = df.format(d);
+            disputecase.setApplyTime(df.parse(dateS));
+            disputecase.setId(caseId);
+
+            //disputecase=disputecaseRepository.save(disputecase);
+
+            /** disputecase表和disputecaseApply表 */
+            //Disputecase disputecase=disputecaseRepository.getOne(caseId);
+            JSONArray array = JSONArray.parseArray(involvedPeople);
+            String proposerId = "";
+            String agentId = "";
+            for (int i = 0; i < array.size(); ++i) {
+                JSONObject obj = array.getJSONObject(i);
+                String name = obj.getString("name");
+                String idCard = obj.getString("cardID");
+                String role = (obj.getString("picked").trim().equals("申请人")) ? "0" : "1";
+                String phone = obj.getString("phone");
+                DisputecaseApply applyOne = new DisputecaseApply();
+                String applyId = KeyUtil.genUniqueKey();
+                if (role == "0")
+                    proposerId += applyId + ",";
+                else
+                    agentId += applyId + ",";
+                applyOne.setDisputecaseId(caseId);
+                applyOne.setId(applyId);
+                applyOne.setIdCard(idCard);
+                applyOne.setName(name);
+                applyOne.setRole(role);
+                applyOne.setPhone(phone);
+                /** 查看该手机是否已注册 */
+                User user = userRepository.findByPhone(phone);
+                if (user == null) {
+                    // 未注册,帮忙注册 密码初始为111111
+                    String id = KeyUtil.genUniqueKey();
+                    User newUser = new User();
+                    newUser.setID(id);
+                    newUser.setPassword(MD5Util.MD5EncodeUtf8("111111"));
+                    newUser.setPhone(phone);
+                    newUser.setRole("0");
+                    NormalUser newNU = new NormalUser();
+                    String nuId = KeyUtil.genUniqueKey();
+                    newNU.setIdCard(idCard);
+                    newNU.setNormalId(nuId);
+                    newNU.setFatherId(id);
+                    newUser.setSpecificId(nuId);
+                    userRepository.save(newUser);
+                    normalUserRepository.save(newNU);
+                } else {
+                    // 更新信息表中身份证
+                    NormalUser normalUser = normalUserRepository.findByFatherId(user.getID());
+                    normalUser.setIdCard(idCard);
+                    normalUserRepository.save(normalUser);
+                }
+
+                disputecaseApplyRepository.save(applyOne);
+            }
+            disputecase.setProposerId(proposerId.substring(0, proposerId.length() - 1));
+            if (agentId == "")
+                disputecase.setAgnetId("");
+            else
+                disputecase.setAgnetId(agentId.substring(0, agentId.length() - 1));
+            disputecaseRepository.save(disputecase);
+
+            Map<String, Object> var = new HashMap<>();
+            var.put("CaseId", caseId);
+            return ResultVOUtil.ReturnBack(var, DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getCode(), DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getMsg());
+        } catch (ParseException pe){
+            pe.printStackTrace();
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETCASEID_FAIL.getCode(),DisputeRegisterEnum.GETCASEID_FAIL.getMsg());
         }
-        disputecase.setProposerId(proposerId.substring(0,proposerId.length()-1));
-        if(agentId=="")
-            disputecase.setAgnetId("");
-        else
-            disputecase.setAgnetId(agentId.substring(0,agentId.length()-1));
-        disputecaseRepository.save(disputecase);
-        return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETINVOLVEDPEOPLEINFO_SUCCESS.getMsg());
     }
 
     @Override
