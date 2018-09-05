@@ -139,7 +139,7 @@ public class UserController {
     @PostMapping(value = "getUserCaseList")
     public ResultVO getUserCaseList(@RequestBody Map<String, String> map){
 
-        String usrId = map.get("userId");
+        String usrId = map.get("id");
         return disputeProgressService.getUserCaseList(usrId);
     }
 }
