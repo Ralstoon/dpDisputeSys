@@ -4,12 +4,14 @@ package com.seu.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.DisputecaseProcess;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.ChangeAuthorityForm;
 import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
+import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
@@ -44,6 +46,8 @@ public class DisputeProgressController {
 
     @Autowired
     private DisputecaseAccessoryService disputecaseAccessoryService;
+    @Autowired
+    private DisputecaseProcessRepository disputecaseProcessRepository;
 
     /*
      *@Author 吴宇航
@@ -122,22 +126,31 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     // TODO 流程测试
-    @PostMapping(value="/PassApply")
+    @PostMapping(value="/DisposeApply")
     @Transactional
     public ResultVO caseAccept(@RequestBody JSONObject map){
         Integer result=map.getInteger("result");
-        String disputeId=map.getString("CaseId");
+        String disputeId=map.getString("caseId");
         String ID=map.getString("id");
         String name=userService.findNameById(ID);
 
         List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         Map<String,Object> var=new HashMap<>();
-        if(result==0)
+        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputeId);
+        if(result==0){
             var.put("caseAccept",0);  //不通过
-        else
+            disputecaseProcess.setStatus("8");
+        }
+
+        else{
             var.put("caseAccept",1);  //通过
+            disputecaseProcess.setStatus("1");
+        }
+
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
 
+
+        disputecaseProcessRepository.save(disputecaseProcess);
         Map<String,Object> param=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.CASEACCEPT_SUCCESS.getCode(),DisputeProgressEnum.CASEACCEPT_SUCCESS.getMsg());
     }
@@ -262,15 +275,15 @@ public class DisputeProgressController {
 
     /** 获取调解大厅中的数据 */
     @GetMapping(value = "/mediator/GetMediationHallData")
-    public ResultVO getMediationHallData(@RequestBody Map<String, String> map){
-
-        String id = map.get("id");
-
+    public ResultVO getMediationHallData(){
+//        @RequestBody Map<String, String> map
+//        String id = map.get("id");
+        String id="";
         return disputeProgressService.getMediationHallData(id);
     }
 
     /** 获取我的调节中的数据 */
-    @GetMapping(value = "/mediator/GetMyMediationData")
+    @PostMapping(value = "/mediator/GetMyMediationData")
     public ResultVO getMyMediationData(@RequestBody Map<String, String> map){
 
         String id = map.get("id");
@@ -280,30 +293,30 @@ public class DisputeProgressController {
 
     /** 管理者获取案件列表 */
     @GetMapping(value = "/manager/getCaseList")
-    public ResultVO getManagerCaseList(@RequestBody Map<String, String> map){
-
-        String id = map.get("id");
-
+    public ResultVO getManagerCaseList(){
+//        @RequestBody Map<String, String> map
+//        String id = map.get("id");
+        String id="";
         return disputeProgressService.getManagerCaseList(id);
     }
 
 
     /** 管理员获取统计管理页面列表 */
     @GetMapping(value = "/manager/getCase_judiciary")
-    public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
-
-        String id = map.get("id");
+    public ResultVO getManagerCaseJudiciary(@RequestParam("id") String id){
+//        @RequestBody Map<String, String> map
+//        String id = map.get("id");
 
         return disputeProgressService.getManagerCaseJudiciary(id);
     }
 
     /** 管理员获取调解员列表（用于给案件分配调解员） */
-    @GetMapping(value = "/getMediatorList")
+    @PostMapping(value = "/manager/getMediatorList")
     public ResultVO getMediatorList(@RequestBody Map<String, String> map){
 
-        String id = map.get("id");
-
-        return disputeProgressService.getMediatorList(id);
+//        String id = map.get("id");
+        String caseId=map.get("caseId");
+        return disputeProgressService.getMediatorList(caseId);
     }
 
     /** 管理员 获取所有调解员的授权信息 */
@@ -339,7 +352,7 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/getMediationStage")
     public ResultVO getMediationStage(@RequestBody Map<String, String> map){
 
-        String caseId = map.get("CaseId");
+        String caseId = map.get("caseId");
 
         return disputeProgressService.getMediationStage(caseId);
     }
@@ -363,6 +376,7 @@ public class DisputeProgressController {
     }
     //管理员选择具体某个调解员调解某个案件   wj
     @PostMapping(value = "/manager/PostMediatorForCase")
+    @Transactional
     public ResultVO decideMediatorDisputeCase(@RequestBody Map<String, String> map){
 
         String mediatorId = map.get("MediatorId");
@@ -375,7 +389,7 @@ public class DisputeProgressController {
                 currentTask=task;
                 break;
             }
-            if(task.getName().equals("调解员选用户")){
+            else if(task.getName().equals("调解员选用户")){
                 currentTask=task;
                 disputeProgressService.completeCurrentTask(currentTask.getId());
                 currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
@@ -384,6 +398,7 @@ public class DisputeProgressController {
         }
         disputeProgressService.completeCurrentTask(currentTask.getId());
 
+        disputeProgressService.updateCaseStatus(disputeId,"2");
         return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
     }
 
@@ -457,6 +472,12 @@ public class DisputeProgressController {
         return disputeProgressService.getExpertsList();
     }
 
+    /** 获取调解员权限 */
+    @PostMapping("/Mediator/getAuthority")
+    public ResultVO getAuthority(@RequestBody Map<String,String> map){
+        String id=map.get("id");
+        return disputeProgressService.getAuthority(id);
+    }
 
 
 }

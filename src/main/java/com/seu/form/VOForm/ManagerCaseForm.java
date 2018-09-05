@@ -37,13 +37,13 @@ public class ManagerCaseForm {
     /** 申请人 */
     private List<String> Applicant;
     /** 被申请人 */
-    private List<String> Respondent;
+    private List<String> Respondent=new ArrayList<>();
     /** 当前调解员 */
-    private String currentMediator;
+    private String currentMediator="";
     /** 当前调解员id */
     private String mediatorid;
     /** 用户意向调解员 */
-    private List<intentionOne> userIntention;
+    private List<intentionOne> userIntention=new ArrayList<>();
 
     public void addUserIntention(String mediatorName,String mediatorId,String mediatorIntention){
         if(userIntention==null)

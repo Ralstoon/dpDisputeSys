@@ -28,7 +28,9 @@ public enum DisputeProgressEnum {
     SETRESULTOFINDENT_SUCCESS(20,"添加医疗损害鉴定结果成功"),
     SETAPPOINT_SUCCESS(21,"添加预约数据成功"),
     INFORMINDENTY_SUCCESS(22,"通知用户损害医疗鉴定成功"),
-    GETEXPERTLIST_SUCCESS(23,"获取专家列表成功")
+    GETEXPERTLIST_SUCCESS(23,"获取专家列表成功"),
+    MEDIATORGETAUTHORITY_SUCCESS(24,"获取调解员权限成功")
+
 
     ;
     private String msg;
