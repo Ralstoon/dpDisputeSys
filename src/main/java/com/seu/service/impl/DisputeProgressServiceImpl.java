@@ -119,11 +119,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         ProcessInstance pi=runtimeService.startProcessInstanceById(pd.getId(),disputeId,vars);
         disputecaseActiviti.setDisputecaseId(disputeId);
         disputecaseActiviti.setProcessId(pi.getId());
-        if(pi==null)
-            return ;
-        else{
-            disputecaseActivitiRepository.save(disputecaseActiviti);
-        }
+        disputecaseActivitiRepository.save(disputecaseActiviti);
+
     }
 
 
@@ -133,7 +130,6 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
      */
     @Override
     public List<Task> searchCurrentTasks(String disputeId) {
-//        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(disputeId).singleResult();
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         return taskService.createTaskQuery().processInstanceId(pid).list();
     }
@@ -640,6 +636,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO getMediationStage(String caseId) {
         MediationStageForm mediationStageForm=new MediationStageForm();
         DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
@@ -661,12 +658,14 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         /** 是否具备鉴定资格以及是否做过鉴定,先从案件表的金额判断，后从流程图的参数判断 */
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
-        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(caseId).singleResult();
-        if(disputecase.getClaimMoney().trim()=="2") {  // 10w以上
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        String cm=disputecase.getClaimMoney().trim();
+//        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId(pid).singleResult();
+        if(cm=="2" || cm.equals("2")) {  // 10w以上
             mediationStageForm.setIdentiQualify(true);
 //            String temp=pi.getProcessVariables().get("paramAuthenticate").toString().trim();
-            String temp=taskService.getVariable(pi.getId(),"paramAuthenticate").toString().trim();
-            if(temp=="0") {  //尚未做过鉴定
+            String temp=runtimeService.getVariable(pid,"paramAuthenticate").toString().trim();
+            if(temp=="0" || temp.equals("0")) {  //尚未做过鉴定
                 mediationStageForm.setIdentified(false);
                 currentStatus=0;
             }
@@ -675,7 +674,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 currentStatus=1;
                 DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
                 JSONObject tempp=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
-                if(tempp.getString("文本")!="")
+                if(tempp.getString("文本").trim()!="" || !tempp.getString("文本").trim().equals(""))
                     mediationStageForm.setResultOfIdentify(tempp.getString("文本"));
                 else{
                     String url=tempp.getString("文件url");
@@ -691,7 +690,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         /** 能否预约专家  先看金额，后看是否已预约过*/
 
-        if(disputecase.getClaimMoney().trim()!="0" && taskService.getVariable(pi.getId(),"paramProfesor").toString().trim()=="0")
+        String pP=runtimeService.getVariable(pid,"paramProfesor").toString().trim();
+        if((cm!="0"|| !cm.equals("0")) && (pP=="0"||pP.equals("0")))
             mediationStageForm.setExpert(true);
         else
             mediationStageForm.setExpert(false);
@@ -713,8 +713,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         String currentStageContent=currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent").toString();
         mediationStageForm.setCurrentStageContent(currentStageContent);
         /** currentStageContent */
-
-        if(currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent").getString("MediationPlace")=="") // 说明页面2没有填
+        String tmp=currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent").getString("MediationPlace").trim();
+        if(tmp=="" || tmp.equals("")) // 说明页面2没有填
             currentStatus=1;
         else
             currentStatus=2;
@@ -725,9 +725,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO setResultOfIndent(String caseId, String resultOfIndent) {
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        if(disputecaseAccessory.getMedicaldamageAssessment()==null)
+            disputecaseAccessory.setMedicaldamageAssessment("{}");
         JSONObject md=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
         md.put("文本",resultOfIndent);
         disputecaseAccessory.setMedicaldamageAssessment(md.toString());
@@ -736,7 +739,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         // 防止进入子流程后无法用businesskey来查，这边用自定义的activiti表查找主流程实例
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId(pid).singleResult();
-        taskService.setVariable(pi.getId(),"paramAuthenticate","1");
+        runtimeService.setVariable(pi.getId(),"paramAuthenticate","1");
 
         /** 目前处于主流程:损害/医疗鉴定 */
         Task task=taskService.createTaskQuery().processInstanceId(pid).singleResult();
