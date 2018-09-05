@@ -25,7 +25,8 @@ public class GetHospitalUtil {
             for(int j=0;j<InvolvedInstitute.size();++j){
                 JSONObject subObj=InvolvedInstitute.getJSONObject(j);
                 String temp="";
-                temp+=subObj.getString("City")+"_"+subObj.getString("Zone")+"_"+subObj.getString("Hospital");
+//                temp+=subObj.getString("City")+"_"+subObj.getString("Zone")+"_"+subObj.getString("Hospital");
+                temp=subObj.getString("Hospital").trim();
                 respondent.add(temp);
             }
         }

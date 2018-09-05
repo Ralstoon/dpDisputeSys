@@ -42,56 +42,52 @@ public class MediateInform implements JavaDelegate {
 
         // 调解通知对象包括 申请人、被申请人、专家(有的话)
         String caseId=delegateExecution.getVariable("disputeId").toString();
-        String mediateStage=disputecaseProcessRepository.findByDisputecaseId(caseId).getMediateStage();
-        JSONArray array=JSONArray.parseArray(mediateStage);
-        JSONObject jsonObject=array.getJSONObject(array.size()-1);
-        jsonObject=jsonObject.getJSONObject("预约调解");
-        String temp=jsonObject.getString("applicant");
-        String[] applicant=temp.substring(1,temp.length()-1).split(",");
-        temp=jsonObject.getString("respondent");
-        String[] respondent=temp.substring(1,temp.length()-1).split(",");
-        String strApp=String.join(",",applicant);
-        String strRes=String.join(",",respondent);
+        String ms=disputecaseProcessRepository.findByDisputecaseId(caseId).getMediateStage();
+        JSONObject mediateStage=JSONObject.parseObject(ms);
+        JSONArray applicants=mediateStage.getJSONArray("applicants");
+        Integer stage=mediateStage.getInteger("stage");
+        JSONObject currentStageContent=mediateStage.getJSONArray("stageContent").getJSONObject(stage-1);
+        String MediationTime=currentStageContent.getJSONObject("particopateContact").getString("mediationTime");
+        String MediationPlace=currentStageContent.getJSONObject("particopateContact").getString("mediationPlace");
 
-        JSONObject csc=jsonObject.getJSONObject("currentStageContent");
-        String MediationPlace=csc.getString("MediationPlace");
-        String MediationTime=csc.getString("MediationTime");
-        JSONArray arr=csc.getJSONArray("Applicants");
-        for(int i=0;i<arr.size();++i){
-            String name=applicant[i].trim();
-            String phone=arr.getJSONObject(i).getString("phone").trim();
-            String email=arr.getJSONObject(i).getString("email").trim();
+
+        for(int i=0;i<applicants.size();++i){
+            JSONObject one=applicants.getJSONObject(i);
+            String name=one.getString("name");
+            String phone=one.getString("phone");
+            String email=one.getString("email");
             if(phone.trim()!="")
-                sendSms(caseId,name,phone,strApp,strRes,MediationTime,MediationPlace);
+                sendSms(caseId,name,phone,MediationTime,MediationPlace);
             if(email.trim()!="")
-                sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
+                sendEmail(caseId,name,email,MediationTime,MediationPlace);
         }
-        arr=csc.getJSONArray("Respondents");
-        for(int i=0;i<arr.size();++i){
-            String name=respondent[i].trim();
-            String phone=arr.getJSONObject(i).getString("phone").trim();
-            String email=arr.getJSONObject(i).getString("email").trim();
+
+        JSONArray respondents=mediateStage.getJSONArray("respondents");
+        for(int i=0;i<respondents.size();++i){
+            JSONObject one=respondents.getJSONObject(i);
+            String name=one.getString("name");
+            String phone=one.getString("phone");
+            String email=one.getString("email");
             if(phone.trim()!="")
-                sendSms(caseId,name,phone,strApp,strRes,MediationTime,MediationPlace);
+                sendSms(caseId,name,phone,MediationTime,MediationPlace);
             if(email.trim()!="")
-                sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
+                sendEmail(caseId,name,email,MediationTime,MediationPlace);
         }
-        arr=csc.getJSONArray("Experts");
-        if(arr.size()!=0){
-            for(int i=0;i<arr.size();++i){
-                String name=arr.getJSONObject(i).getString("name").trim();
-                String phone=arr.getJSONObject(i).getString("phone").trim();
-                String email=arr.getJSONObject(i).getString("email").trim();
-                if(phone.trim()!="")
-                    sendSms(caseId,name,phone,strApp,strRes,MediationTime,MediationPlace);
-                if(email.trim()!="")
-                    sendEmail(caseId,name,email,strApp,strRes,MediationTime,MediationPlace);
-            }
-        }
+
+        JSONObject expertChoosed=currentStageContent.getJSONObject("particopateContact").getJSONObject("expertChoosed");
+        String name=expertChoosed.getString("name");
+        String phone=expertChoosed.getString("phone");
+        String email=expertChoosed.getString("email");
+        if(phone.trim()!="")
+            sendSms(caseId,name,phone,MediationTime,MediationPlace);
+        if(email.trim()!="")
+            sendEmail(caseId,name,email,MediationTime,MediationPlace);
+
+
 
     }
 
-    public void sendEmail(String disputeId,String name,String Email,String applicant,String respondent,String MediationTime,String MediationPlace) {
+    public void sendEmail(String disputeId,String name,String Email,String MediationTime,String MediationPlace) {
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAIL1KePAlpKKvH", "0ROlCLO3RFb5gWN38s7giQMySrcsn4");
         IAcsClient client = new DefaultAcsClient(profile);
         SingleSendMailRequest request = new SingleSendMailRequest();
@@ -104,7 +100,7 @@ public class MediateInform implements JavaDelegate {
             request.setReplyToAddress(true);
             request.setToAddress(Email);
             request.setSubject("纠纷id为:"+disputeId+" 的案件已预约调解");
-            request.setHtmlBody(String.format(InitConstant.mediate_inform_email,name,MediationTime,MediationPlace,applicant,request));
+            request.setHtmlBody(String.format(InitConstant.mediate_inform_email,name,MediationTime,MediationPlace));
             SingleSendMailResponse httpResponse = client.getAcsResponse(request);
         } catch (ServerException e) {
             e.printStackTrace();
@@ -115,7 +111,7 @@ public class MediateInform implements JavaDelegate {
     }
 
 
-    public void sendSms(String disputeId,String name,String phone,String applicant,String respondent,String MediationTime,String MediationPlace) {
+    public void sendSms(String disputeId,String name,String phone,String MediationTime,String MediationPlace) {
         try{
             //设置超时时间-可自行调整
             System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -140,15 +136,15 @@ public class MediateInform implements JavaDelegate {
             //必填:短信签名-可在短信控制台中找到
             request.setSignName("王节");
             //必填:短信模板-可在短信控制台中找到
-            request.setTemplateCode("SMS_143718439");
+            request.setTemplateCode("SMS_143862617");
             //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
             //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
             JSONObject jsonObject=JSONObject.parseObject("{}");
             jsonObject.put("name",name);
             jsonObject.put("time",MediationTime);
             jsonObject.put("place",MediationPlace);
-            jsonObject.put("patient",applicant);
-            jsonObject.put("hospital",respondent);
+//            jsonObject.put("patient",applicant);
+//            jsonObject.put("hospital",respondent);
             request.setTemplateParam(jsonObject.toString());
             //可选-上行短信扩展码(扩展码字段控制在7位或以下，无特殊需求用户请忽略此字段)
             //request.setSmsUpExtendCode("90997");

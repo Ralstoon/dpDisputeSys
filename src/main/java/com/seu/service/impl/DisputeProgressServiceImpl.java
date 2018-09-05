@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.InitConstant;
-import com.seu.converter.CaseStatusnum2Statustr;
 import com.seu.converter.Disputecase2DisputeRegisterDetailForm;
 import com.seu.domian.*;
 import com.seu.enums.DisputeProgressEnum;
@@ -29,8 +28,11 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -60,6 +62,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     private DisputecaseActivitiRepository disputecaseActivitiRepository;
     @Autowired
     private ExpertsRepository expertsRepository;
+    @Autowired
+    private ConstantDataRepository constantDataRepository;
 
     private ProcessDefinition pd;
     private Deployment deployment;
@@ -119,11 +123,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         ProcessInstance pi=runtimeService.startProcessInstanceById(pd.getId(),disputeId,vars);
         disputecaseActiviti.setDisputecaseId(disputeId);
         disputecaseActiviti.setProcessId(pi.getId());
-        if(pi==null)
-            return ;
-        else{
-            disputecaseActivitiRepository.save(disputecaseActiviti);
-        }
+        disputecaseActivitiRepository.save(disputecaseActiviti);
+
     }
 
 
@@ -133,7 +134,6 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
      */
     @Override
     public List<Task> searchCurrentTasks(String disputeId) {
-//        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(disputeId).singleResult();
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         return taskService.createTaskQuery().processInstanceId(pid).list();
     }
@@ -201,7 +201,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             disputeCaseForm.setDate(disputecase.getApplyTime());
             disputeCaseForm.setName(disputecase.getCaseName());
             DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
-            disputeCaseForm.setStatus(CaseStatusnum2Statustr.convert(disputecaseProcess.getStatus()));
+            disputeCaseForm.setStatus(disputecaseProcess.getStatus());
 
             disputeCaseFormList.add(disputeCaseForm);
         }
@@ -366,13 +366,18 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<Disputecase> disputecaseList=disputecaseRepository.findAll();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
         for(Disputecase disputecase:disputecaseList){
+            String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
+            if(!(status.trim()=="0" || status.trim().equals("0")))
+                continue;
+            if(!(status.trim()=="1" || status.trim().equals("1")))
+                continue;
             MediationHallDataForm mediationHallDataForm=new MediationHallDataForm();
             mediationHallDataForm.setDate(disputecase.getApplyTime());
             mediationHallDataForm.setName(disputecase.getCaseName());
             mediationHallDataForm.setCaseId(disputecase.getId());
             /** 案件进程到process表中查询 */
-            String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
-            mediationHallDataForm.setStatus(CaseStatusnum2Statustr.convert(status));
+
+            mediationHallDataForm.setStatus(status);
             /** 申请人到apply表中查找 */
             String applerListStr=disputecase.getProposerId();
             String[] applyList=applerListStr.trim().split(",");
@@ -386,9 +391,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList=new HashSet<>();
             String medicalProcess=disputecase.getMedicalProcess();
             JSONArray processList=JSONArray.parseArray(medicalProcess);
-            for(int i=0;i<processList.size();++i){
-                JSONObject jsStr=processList.getJSONObject(i);
-                respondentList.add(jsStr.get("医院").toString());
+            for (int i = 0; i < processList.size(); ++i) {
+                JSONObject jsStr = processList.getJSONObject(i);
+                JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
+                for(int j=0;j<jsStr_arr.size();++j){
+                    JSONObject temppp=jsStr_arr.getJSONObject(j);
+                    respondentList.add(temppp.getString("Hospital"));
+                }
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
@@ -411,7 +420,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             mediationHallDataForm.setCaseId(disputecase.getId());
             /** 案件进程到process表中查询 */
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
-            mediationHallDataForm.setStatus(CaseStatusnum2Statustr.convert(status));
+            mediationHallDataForm.setStatus(status);
             /** 申请人到apply表中查找 */
             String applerListStr=disputecase.getProposerId();
             String[] applyList=applerListStr.trim().split(",");
@@ -425,9 +434,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList=new HashSet<>();
             String medicalProcess=disputecase.getMedicalProcess();
             JSONArray processList=JSONArray.parseArray(medicalProcess);
-            for(int i=0;i<processList.size();++i){
-                JSONObject jsStr=processList.getJSONObject(i);
-                respondentList.add(jsStr.get("医院").toString());
+            for (int i = 0; i < processList.size(); ++i) {
+                JSONObject jsStr = processList.getJSONObject(i);
+                JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
+                for(int j=0;j<jsStr_arr.size();++j){
+                    JSONObject temppp=jsStr_arr.getJSONObject(j);
+                    respondentList.add(temppp.getString("Hospital"));
+                }
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
@@ -438,6 +451,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO getManagerCaseList(String id) {
         List<Disputecase> disputecaseList=disputecaseRepository.findAll();
         List<ManagerCaseForm> managerCaseFormList=new ArrayList<>();
@@ -448,7 +462,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             managerCaseForm.setCaseId(disputecase.getId());
             /** 案件进程到process表中查询 */
             String status = disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
-            managerCaseForm.setStatus(CaseStatusnum2Statustr.convert(status));
+            managerCaseForm.setStatus(status);
             /** 申请人到apply表中查找 */
             String applerListStr = disputecase.getProposerId();
             String[] applyList = applerListStr.trim().split(",");
@@ -464,7 +478,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             JSONArray processList = JSONArray.parseArray(medicalProcess);
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
-                respondentList.add(jsStr.get("医院").toString());
+                JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
+                for(int j=0;j<jsStr_arr.size();++j){
+                    JSONObject temppp=jsStr_arr.getJSONObject(j);
+                    respondentList.add(temppp.getString("Hospital"));
+                }
+//                respondentList.add(jsStr.get("InvolvedInstitute").toString());
             }
             managerCaseForm.setRespondent(new ArrayList<>(respondentList));
             /** 当前调解员姓名和id，可能为空，通过调解员id号去mediator表中查找 */
@@ -485,29 +504,32 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             String userChoose=disputecaseProcess.getUserChoose();
             String mediatorApply = disputecaseProcess.getApplyStatus();
             String mediatorIntention;
-            for(String s:userChoose.trim().split(",")){
-                //s是每个用户选择的调解员id号
-                mediatorIntention = "no";
-                for(String m:mediatorApply.trim().split(",")){
-                    //m是每个调解员id号
-                    if(m == s){
-                        mediatorIntention = "yes";
+            if(!(userChoose.trim()=="" || userChoose.trim().equals(""))){
+                for(String s:userChoose.trim().split(",")){
+                    //s是每个用户选择的调解员id号
+                    mediatorIntention = "no";
+                    for(String m:mediatorApply.trim().split(",")){
+                        //m是每个调解员id号
+                        if(m == s){
+                            mediatorIntention = "yes";
+                        }
                     }
+                    Mediator mediator=mediatorRepository.findByFatherId(s);
+                    managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),mediatorIntention);
                 }
-                Mediator mediator=mediatorRepository.findByFatherId(s);
-                managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),mediatorIntention);
             }
-
             managerCaseFormList.add(managerCaseForm);
         }
-        return ResultVOUtil.ReturnBack(managerCaseFormList,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
+        Map<String,Object> var=new HashMap<>();
+        var.put("CaseList",managerCaseFormList);
+        return ResultVOUtil.ReturnBack(var,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
     }
 
     @Override
     public ResultVO decideMediatorDisputeCase(String mediator, String caseId) {
         Disputecase disputecase = disputecaseRepository.findOne(caseId);
         disputecase.setMediatorId(mediator);
-        Map map=new HashMap();
+        Map<String,String> map=new HashMap<>();
         map.put("meditorId", mediator);
         map.put("caseID", caseId);
         disputecaseRepository.save(disputecase);
@@ -548,7 +570,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             managerCaseForm.setCaseId(disputecase.getId());
             /** 案件进程到process表中查询 */
             String status = disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
-            managerCaseForm.setStatus(CaseStatusnum2Statustr.convert(status));
+            managerCaseForm.setStatus(status);
             /** 申请人到apply表中查找 */
             String applerListStr = disputecase.getProposerId();
             String[] applyList = applerListStr.trim().split(",");
@@ -564,7 +586,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             JSONArray processList = JSONArray.parseArray(medicalProcess);
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
-                respondentList.add(jsStr.get("医院").toString());
+                JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
+                for(int j=0;j<jsStr_arr.size();++j){
+                    JSONObject temppp=jsStr_arr.getJSONObject(j);
+                    respondentList.add(temppp.getString("Hospital"));
+                }
             }
             managerCaseForm.setRespondent(new ArrayList<>(respondentList));
             /** 当前调解员姓名和id，可能为空，通过调解员id号去mediator表中查找 */
@@ -588,12 +614,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Override
     public ResultVO getMediatorList(String id) {
         List<Mediator> mediatorList=mediatorRepository.findAll();
-        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(id);
-        String mediatorAvoid = disputecaseProcess.getAvoidStatus();
-
-        for(String s:mediatorAvoid.trim().split(",")){
-            mediatorList.stream().filter((Mediator mediator) -> mediator.getMediatorId() == s);
-        }
+        // TODO 过滤
+//        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(id);
+//        String mediatorAvoid = disputecaseProcess.getAvoidStatus();
+//
+//        for(String s:mediatorAvoid.trim().split(",")){
+//            mediatorList.stream().filter((Mediator mediator) -> mediator.getMediatorId() == s);
+//        }
 
         List<OneMediatorForm> mediatorFormList=new ArrayList<>();
         for(Mediator mediator:mediatorList){
@@ -640,10 +667,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO getMediationStage(String caseId) {
         MediationStageForm mediationStageForm=new MediationStageForm();
         DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         /** 防止该json字段初始化的时候没有值 */
+
         if(currentProcess.getMediateStage()==null ||currentProcess.getMediateStage()=="") {
             currentProcess.setMediateStage(InitConstant.init_mediateStage);
             currentProcess=disputecaseProcessRepository.save(currentProcess);
@@ -651,9 +680,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
         /** 获取当前调解阶段 */
-        JSONArray stage=JSONArray.parseArray(currentProcess.getMediateStage());
-        mediationStageForm.setStage(stage.size());
-        JSONObject currentStage=stage.getJSONObject(stage.size()-1);
+        JSONObject mediateStage=JSONObject.parseObject(currentProcess.getMediateStage());
+        JSONArray stageContent=mediateStage.getJSONArray("stageContent");
+        Integer stage=stageContent.size();
+        mediationStageForm.setStage(stage);
+        JSONObject currentStage=stageContent.getJSONObject(stage-1);
         /** 获取当前步骤0 鉴定中  1 预约中  2调解中，并决定下面那些操作不要做 */
         Integer currentStatus=null;
         /** accessory表查询鉴定结果 */
@@ -661,12 +692,14 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         /** 是否具备鉴定资格以及是否做过鉴定,先从案件表的金额判断，后从流程图的参数判断 */
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
-        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(caseId).singleResult();
-        if(disputecase.getClaimMoney().trim()=="2") {  // 10w以上
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        String cm=disputecase.getClaimMoney().trim();
+//        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId(pid).singleResult();
+        if(cm=="2" || cm.equals("2")) {  // 10w以上
             mediationStageForm.setIdentiQualify(true);
 //            String temp=pi.getProcessVariables().get("paramAuthenticate").toString().trim();
-            String temp=taskService.getVariable(pi.getId(),"paramAuthenticate").toString().trim();
-            if(temp=="0") {  //尚未做过鉴定
+            String temp=runtimeService.getVariable(pid,"paramAuthenticate").toString().trim();
+            if(temp=="0" || temp.equals("0")) {  //尚未做过鉴定
                 mediationStageForm.setIdentified(false);
                 currentStatus=0;
             }
@@ -675,11 +708,14 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 currentStatus=1;
                 DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
                 JSONObject tempp=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
-                if(tempp.getString("文本")!="")
-                    mediationStageForm.setResultOfIdentify(tempp.getString("文本"));
-                else{
-                    String url=tempp.getString("文件url");
-                    mediationStageForm.setResultOfIdentify(url);
+                if(tempp.get("文本")==null){
+                    mediationStageForm.setResultOfIdentify("");
+                }else{
+                    if(!(tempp.getString("文本").trim()=="" || tempp.getString("文本").trim().equals("")))
+                        mediationStageForm.setResultOfIdentify(tempp.getString("文本"));
+                    else
+                        mediationStageForm.setResultOfIdentify(tempp.getString("文件url"));
+
                 }
 
             }
@@ -691,30 +727,44 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         /** 能否预约专家  先看金额，后看是否已预约过*/
 
-        if(disputecase.getClaimMoney().trim()!="0" && taskService.getVariable(pi.getId(),"paramProfesor").toString().trim()=="0")
+        String pP=runtimeService.getVariable(pid,"paramProfesor").toString().trim();
+        if((cm!="0"|| !cm.equals("0")) && (pP=="0"||pP.equals("0")))
             mediationStageForm.setExpert(true);
         else
             mediationStageForm.setExpert(false);
 
         /** applicant`respondent数组 */
             /** 1、申请人 */
-        List<String> app=new ArrayList<>();
+//        List<String> app=new ArrayList<>();
         List<String> res=new ArrayList<>();
         for(String s:disputecase.getProposerId().trim().split(",")){
-            app.add(disputecaseApplyRepository.getOne(s).getName());
+            // name , phone ,email
+            DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
+            String name=disputecaseApply.getName();
+            String phone=disputecaseApply.getPhone();
+            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
+            if(email==null)
+                email="";
+            mediationStageForm.addApplicants(name,phone,email);
         }
             /** 2、院方 */
         res=GetHospitalUtil.extract(disputecase.getMedicalProcess());
-
-        mediationStageForm.setApplicant(app);
-        mediationStageForm.setRespondent(res);
+        JSONObject hosJS=JSONObject.parseObject(constantDataRepository.findByName("hospital_list").getData());
+        for(String hos:res){
+            JSONObject hosOne=hosJS.getJSONObject(hos.trim());
+            String phone=hosOne.getString("phone");
+            String email=hosOne.getString("email");
+            if(email==null)
+                email="";
+            mediationStageForm.addRespondents(hos,phone,email);
+        }
 
         // 直接取出来即可
-        String currentStageContent=currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent").toString();
+        String currentStageContent=currentStage.toString();
         mediationStageForm.setCurrentStageContent(currentStageContent);
         /** currentStageContent */
-
-        if(currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent").getString("MediationPlace")=="") // 说明页面2没有填
+        String tmp=currentStage.getJSONObject("particopateContact").getString("mediationPlace").trim();
+        if(tmp=="" || tmp.equals("")) // 说明页面2没有填
             currentStatus=1;
         else
             currentStatus=2;
@@ -725,9 +775,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO setResultOfIndent(String caseId, String resultOfIndent) {
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        if(disputecaseAccessory.getMedicaldamageAssessment()==null)
+            disputecaseAccessory.setMedicaldamageAssessment("{}");
         JSONObject md=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
         md.put("文本",resultOfIndent);
         disputecaseAccessory.setMedicaldamageAssessment(md.toString());
@@ -736,7 +789,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         // 防止进入子流程后无法用businesskey来查，这边用自定义的activiti表查找主流程实例
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId(pid).singleResult();
-        taskService.setVariable(pi.getId(),"paramAuthenticate","1");
+        runtimeService.setVariable(pi.getId(),"paramAuthenticate","1");
 
         /** 目前处于主流程:损害/医疗鉴定 */
         Task task=taskService.createTaskQuery().processInstanceId(pid).singleResult();
@@ -755,87 +808,41 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO setAppoint(String caseId, String currentStageContent) {
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
-        JSONArray jsArr=JSONArray.parseArray(disputecaseProcess.getMediateStage());
+        JSONObject mediateStage=JSONObject.parseObject(disputecaseProcess.getMediateStage());
         /** 判断当前阶段做到哪了
-         * 有两种情况：
-         * 1、当前阶段的预约调解还未做
-         * 2、当前阶段的预约调解做了，正在调解没做
-         * 3、当前阶段的正在调解已经做了
+         * 有3种情况：
+         * 1、医疗鉴定
+         * 2、预约调解
+         * 3、正在调解
          * */
-        JSONObject currentStage=jsArr.getJSONObject(jsArr.size()-1);
-        JSONObject js1=currentStage.getJSONObject("预约调解");
-        JSONObject csc=currentStage.getJSONObject("预约调解").getJSONObject("currentStageContent");
-        Integer temp=null;
-        if(csc.getString("MediationPlace")=="")
-            temp=1;
-        else if(currentStage.getJSONObject("正在调解").isEmpty())
-            temp=2;
-        else
-            temp=3;
-
-        switch(temp){
-            case 1:
-                List<String> app=new ArrayList<>();
-                List<String> res=new ArrayList<>();
-                Disputecase disputecase=disputecaseRepository.getOne(caseId);
-                for(String s:disputecase.getProposerId().trim().split(",")){
-                    app.add(disputecaseApplyRepository.getOne(s).getName());
-                }
-
-                res=GetHospitalUtil.extract(disputecase.getMedicalProcess());
-
-                js1.put("applicant",app);
-                js1.put("respondent",res);
-                js1.put("currentStageContent",currentStageContent);
-                currentStage.put("预约调解",js1);
-                jsArr.set(jsArr.size()-1,currentStage);
-                disputecaseProcess.setMediateStage(jsArr.toString());
-                disputecaseProcessRepository.save(disputecaseProcess);
-                break;
-            case 2:
-                /** 覆盖旧的预约调解 */
-                js1.put("currentStageContent",currentStageContent);
-                currentStage.put("预约调解",js1);
-                jsArr.set(jsArr.size()-1,currentStage);
-                disputecaseProcess.setMediateStage(jsArr.toString());
-                disputecaseProcessRepository.save(disputecaseProcess);
-                break;
-            case 3:
-                /** 说明进行到新的一轮调解 */
-                JSONObject newJs=JSONObject.parseObject(InitConstant.init_mediateStage);
-                JSONObject newJs_js1=newJs.getJSONObject("预约调解");
-                List<String> app2=new ArrayList<>();
-                List<String> res2=new ArrayList<>();
-                Disputecase disputecase2=disputecaseRepository.getOne(caseId);
-                for(String s:disputecase2.getProposerId().trim().split(",")){
-                    app2.add(disputecaseApplyRepository.getOne(s).getName());
-                }
-
-                res2=GetHospitalUtil.extract(disputecase2.getMedicalProcess());
-
-                newJs_js1.put("applicant",app2);
-                newJs_js1.put("respondent",res2);
-                newJs_js1.put("currentStageContent",currentStageContent);
-                newJs.put("预约调解",newJs_js1);
-                jsArr.add(newJs);
-                disputecaseProcess.setMediateStage(jsArr.toString());
-                disputecaseProcessRepository.save(disputecaseProcess);
-                break;
-        }
+        Integer stage=mediateStage.getInteger("stage");
+        Integer currentStatus=mediateStage.getInteger("currentStatus");
+        JSONArray stageContent=mediateStage.getJSONArray("stageContent");
+        stageContent.remove(stage-1);
+        stageContent.add(JSONObject.parseObject(currentStageContent));
+        mediateStage.put("stageContent",stageContent);
+        disputecaseProcess.setMediateStage(mediateStage.toString());
+        disputecaseProcessRepository.save(disputecaseProcess);
 
         /**
-         * 当前步骤为 调解前预约
-         * 1、设置appointResult 参数 ： 0为三方 1为专家
+         * 当前步骤为 调解前处理
+         * 1、设置paramBeforeMediate=1
+         *         appointResult 参数 ： 0为三方 1为专家
          * 2、流程往下走一格
          * 3、自动发送预约消息
          */
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Integer result=0;
-        if(JSONObject.parseObject(currentStageContent).getJSONArray("Experts").size()!=0)
+        String particopate=JSONObject.parseObject(currentStageContent).getString("particopate");
+        Pattern pattern=Pattern.compile("专家");
+        Matcher matcher=pattern.matcher(particopate);
+        if(matcher.find())
             result=1;
         Map<String ,Object> var=new HashMap<>();
+        var.put("paramBeforeMediate",1);
         var.put("appointResult",result);
         Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
         taskService.complete(currentTask.getId(),var);
@@ -966,6 +973,22 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         return ResultVOUtil.ReturnBack(userCaseListFormList, 111,"用户中心获取用户案件列表成功。");
     }
 
+    @Override
+    public ResultVO getAuthority(String id) {
+        Mediator mediator=mediatorRepository.findByFatherId(id);
+        String authorityConfirm=mediator.getAuthorityConfirm();
+        String authorityJudiciary=mediator.getAuthorityJudiciary();
+        Map<String,Object> var=new HashMap<>();
+        var.put("authorityConfirm",authorityConfirm);
+        var.put("authorityJudiciary",authorityJudiciary);
+        return  ResultVOUtil.ReturnBack(var,DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getMsg());
 
+    }
 
+    @Override
+    public void updateCaseStatus(String caseId, String status) {
+        DisputecaseProcess dp=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        dp.setStatus(status);
+        disputecaseProcessRepository.save(dp);
+    }
 }

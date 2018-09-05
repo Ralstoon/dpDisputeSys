@@ -15,10 +15,22 @@ import java.util.List;
  **/
 @Data
 public class MediationStageForm {
+    class unti{
+        private String name;
+        private String phone;
+        private String email;
+
+        public unti(String name, String phone, String email) {
+            this.name = name;
+            this.phone = phone;
+            this.email = email;
+        }
+    }
+
     /** 当前阶段，从1开始 */
     private Integer stage;
 
-    /** 当前步骤 */
+    /** 当前步骤 0 1 2 */
     private Integer currentStatus;
 
     /** 是否具有鉴定资格 */
@@ -28,18 +40,30 @@ public class MediationStageForm {
     private boolean identified=false;
 
     /** 鉴定结果 */
-    private String resultOfIdentify="";
+    private String resultOfIdentify;
 
     /** 可否预约专家 */
     private boolean expert;
 
     /** 申请人数组 */
-    private List<String> applicant;
+    private List<unti> applicants;
 
     /** 被申请人数组 */
-    private List<String> respondent;
+    private List<unti> respondents=new ArrayList<>();
 
-    private String currentStageContent;
+    private String currentStageContent="[]";
+
+    public void addApplicants(String name,String phone,String email){
+        if(applicants==null)
+            applicants=new ArrayList<>();
+        applicants.add(new unti(name,phone,email));
+    }
+    public void addRespondents(String name,String phone,String email){
+        if(respondents==null)
+            respondents=new ArrayList<>();
+        respondents.add(new unti(name,phone,email));
+    }
+
 
 //    private CurrentStageContent currentStageContent;
 

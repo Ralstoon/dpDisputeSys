@@ -13,6 +13,6 @@ import org.activiti.engine.delegate.JavaDelegate;
 public class UserChooseMediator implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
-
+        System.out.println("进入用户选调解员的自动任务");
     }
 }

@@ -112,13 +112,13 @@ public class UserServiceImpl implements UserService {
     public String findNameById(String ID) {
         User user=userRepository.getOne(ID);
         String name=null;
-        if(user.getRole()=="0"){
+        if(user.getRole().trim()=="0" || user.getRole().trim().equals("0")){
             NormalUser currentUser=normalUserRepository.getOne(user.getSpecificId());
             name=currentUser.getName();
-        }else if(user.getRole()=="1"){
+        }else if(user.getRole().trim()=="1" || user.getRole().trim().equals("1")){
             Mediator currentUser=mediatorRepository.getOne(user.getSpecificId());
             name=currentUser.getMediatorName();
-        }else if(user.getRole()=="2"){
+        }else if(user.getRole().trim()=="2" || user.getRole().trim().equals("2")){
             Admin currentUser=adminRepository.getOne(user.getSpecificId());
             name=currentUser.getAdminName();
         }

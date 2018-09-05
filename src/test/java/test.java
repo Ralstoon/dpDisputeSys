@@ -6,6 +6,7 @@ import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -18,9 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DpdisputesysApplication.class)
@@ -45,6 +44,27 @@ public class test {
 
     @Autowired
     private DiseaseListRepository diseaseListRepository;
+
+    @Autowired
+    private RuntimeService runtimeService;
+    @Autowired
+    private RepositoryService repositoryService;
+
+
+
+    @Test
+    @Deployment(resources = "processes/test.bpmn")
+    public void test11(){
+        ProcessInstance pi=runtimeService.startProcessInstanceByKey("test_1");
+        Task curTask=taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
+        Map<String,Object> map=new HashMap();
+        map.put("caseAccept",1);
+        taskService.complete(curTask.getId(),map);
+        curTask=taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
+        System.out.println(curTask.getName());
+    }
+
+
 
     @Test
     @Deployment(resources = "processes/disputeProgress.bpmn")
@@ -135,8 +155,7 @@ public class test {
         disputecaseAccessoryRepository.save(disputecaseAccessory);
     }
 
-    @Autowired
-    RuntimeService runtimeService;
+
 
     @Test
     public void activitiTest(){
@@ -158,5 +177,25 @@ public class test {
         SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date=sDateFormat.format(new Date());
 
+    }
+
+    @Test
+    public void currentTask() {
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("00");
+    }
+
+
+    //调解前处理
+    @Test
+    @Deployment(resources = "processes/test.bpmn")
+    public void tiaojieqianchuli(){
+        //ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_pool1");
+        Task task = taskService.createTaskQuery().processInstanceId("550036").singleResult();
+        System.out.println(task.getName());
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramBeforeMediate",0);
+        disputeProgressService.completeCurrentTask(task.getId(),var);
+        task = taskService.createTaskQuery().processInstanceId("550036").singleResult();
+        System.out.println(task.getName());
     }
 }

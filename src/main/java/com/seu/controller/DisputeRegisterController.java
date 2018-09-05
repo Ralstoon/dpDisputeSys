@@ -103,9 +103,9 @@ public class DisputeRegisterController {
 
 
         JSONObject map=Request2JSONobjUtil.convert(request);
-        String caseId=map.getString("CaseId");
+        //String caseId=map.getString("CaseId");
         String involvedPeople=map.getString("InvolvedPeople");
-        return disputeRegisterService.sendInvolvedPeopleInfo(caseId,involvedPeople);
+        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
     }
 
     /** 发送医疗过程数据 */
