@@ -3,6 +3,7 @@ package com.seu.form.VOForm;
 import com.seu.common.RedisConstant;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,8 @@ import java.util.List;
  * @Version 1.0
  **/
 @Data
-public class MediationStageForm {
+public class MediationStageForm implements Serializable {
+    
     class unti{
         private String name;
         private String phone;
