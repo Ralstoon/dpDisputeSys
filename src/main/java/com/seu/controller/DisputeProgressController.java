@@ -304,6 +304,7 @@ public class DisputeProgressController {
     /** 管理员获取统计管理页面列表 */
     @PostMapping(value = "/manager/getCase_judiciary")
     public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
+//
         String id = map.get("id");
 
         return disputeProgressService.getManagerCaseJudiciary(id);
@@ -319,7 +320,7 @@ public class DisputeProgressController {
     }
 
     /** 管理员 获取所有调解员的授权信息 */
-    @GetMapping(value = "/manager/getNameofAuthorityList")
+    @PostMapping(value = "/manager/getNameofAuthorityList")
     public ResultVO getNameofAuthorityList(@RequestBody Map<String, String> map){
 
         String id = map.get("id");
