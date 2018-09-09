@@ -17,10 +17,14 @@ import com.seu.domian.NormalUserUpload;
 import com.seu.enums.DisputecaseAccessoryEnum;
 import com.seu.repository.DiseaseListRepository;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
+import com.seu.utils.VerifyProcessUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.activiti.engine.task.Task;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +40,12 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Autowired
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
+
+    @Autowired
+    private DisputeProgressService disputeProgressService;
+
+    @Autowired
+    private VerifyProcessUtil verifyProcessUtil;
 
     @Override
     public String uploadFile(FileInputStream file, String fileName){
@@ -108,13 +118,25 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     }
 
     @Override
-    public ResultVO addInquireHospital(String disputeId, String inquireHospital) {
-        DisputecaseAccessory dA = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+    public ResultVO addInquireHospital(String caseId, String inquireHospital){
+        //todo activiti test
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"问询医院");
+        Task currentTask=null;
+        for(Task task:tasks){
+            if(task.getName().trim().equals("问询医院")){
+                currentTask=task;
+                break;
+            }
+        }
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+
+        DisputecaseAccessory dA = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
         if(dA == null){
             String id = KeyUtil.genUniqueKey();
             DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
             disputecaseAccessory.setId(id);
-            disputecaseAccessory.setDisputecaseId(disputeId);
+            disputecaseAccessory.setDisputecaseId(caseId);
             disputecaseAccessory.setInquireHospital(inquireHospital);
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());

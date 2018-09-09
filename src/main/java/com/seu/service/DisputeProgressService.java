@@ -99,7 +99,7 @@ public interface DisputeProgressService {
 
     ResultVO setMediationFailure(String caseId);
 
-    ResultVO setCaseRepeal(String caseId);
+    ResultVO setCaseSuccess(String caseId);
 
     ResultVO setCaseLitigation(String caseId);
 
@@ -121,4 +121,5 @@ public interface DisputeProgressService {
 
     /** 修改案件状态 */
     void updateCaseStatus(String caseId,String status);
+
 }

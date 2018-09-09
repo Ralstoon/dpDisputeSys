@@ -367,9 +367,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
         for(Disputecase disputecase:disputecaseList){
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
-            if(!(status.trim()=="0" || status.trim().equals("0")))
-                continue;
-            if(!(status.trim()=="1" || status.trim().equals("1")))
+            boolean f1=!(status.trim()=="0" || status.trim().equals("0"));
+            boolean f2=!(status.trim()=="1" || status.trim().equals("1"));
+            if(f1 && f2)
                 continue;
             MediationHallDataForm mediationHallDataForm=new MediationHallDataForm();
             mediationHallDataForm.setDate(disputecase.getApplyTime());
@@ -552,10 +552,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO setCaseRepeal(String caseId) {
+    public ResultVO setCaseSuccess(String caseId) {
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
-        disputecaseProcess.setStatus("7");
-        return ResultVOUtil.ReturnBack(114,"撤销案件");
+        disputecaseProcess.setStatus("4");
+        return ResultVOUtil.ReturnBack(114,"调解成功");
     }
 
 
@@ -743,7 +743,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
             String name=disputecaseApply.getName();
             String phone=disputecaseApply.getPhone();
-            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
+            String specificId=userRepository.findByPhone(phone).getSpecificId();
+            String email=normalUserRepository.getOne(specificId).getEmail();
+//            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).get(0).getEmail();
             if(email==null)
                 email="";
             JSONObject obj=JSONObject.parseObject("{}");
@@ -905,8 +907,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
             String name=disputecaseApply.getName();
             String phone=disputecaseApply.getPhone();
+            String specificId=userRepository.findByPhone(phone).getSpecificId();
             AutoSendUtil.sendSms(caseId,phone,name);
-            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
+            String email=normalUserRepository.getOne(specificId).getEmail();
+//            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).get(0).getEmail();
             if(!(email==null || email==""))
                 AutoSendUtil.sendEmail(name,email,caseId);
         }
@@ -920,11 +924,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         return ResultVOUtil.ReturnBack(expertsList,DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getCode(),DisputeProgressEnum.GETEXPERTLIST_SUCCESS.getMsg());
     }
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public ResultVO getUserCaseList(String userId) {
         NormalUser normalUser = normalUserRepository.findByFatherId(userId);
-
-        List<DisputecaseApply> disputecaseApplyList = disputecaseApplyRepository.findAllByIdCard(normalUser.getIdCard());
+        User user=userRepository.getOne(userId);
+        List<DisputecaseApply> disputecaseApplyList = disputecaseApplyRepository.findAllByPhone(user.getPhone());
+//        List<DisputecaseApply> disputecaseApplyList = disputecaseApplyRepository.findAllByIdCard(normalUser.getIdCard());
 
         List<UserCaseListForm> userCaseListFormList = new ArrayList<>();
 
@@ -1003,4 +1011,6 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         dp.setStatus(status);
         disputecaseProcessRepository.save(dp);
     }
+
+
 }

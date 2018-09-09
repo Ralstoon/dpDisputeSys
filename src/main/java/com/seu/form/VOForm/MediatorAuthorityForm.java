@@ -25,7 +25,14 @@ public class MediatorAuthorityForm {
     public MediatorAuthorityForm(String name, String id, String authority1, String authority2) {
         this.name = name;
         this.id = id;
-        this.authority1 = (authority1=="1")?true:false;
-        this.authority2 = (authority1=="1")?true:false;
+        if(authority1.trim()=="1" || authority1.trim().equals("1"))
+            this.authority1=true;
+        else
+            this.authority1=false;
+        if(authority2.trim()=="1" || authority2.trim().equals("1"))
+            this.authority2=true;
+        else
+            this.authority2=false;
+
     }
 }

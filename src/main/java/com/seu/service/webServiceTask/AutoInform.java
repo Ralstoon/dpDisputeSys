@@ -16,10 +16,8 @@ import com.seu.common.Component.SpringUtil;
 import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseApply;
 import com.seu.domian.NormalUser;
-import com.seu.repository.DisputecaseApplyRepository;
-import com.seu.repository.DisputecaseProcessRepository;
-import com.seu.repository.DisputecaseRepository;
-import com.seu.repository.NormalUserRepository;
+import com.seu.domian.User;
+import com.seu.repository.*;
 import com.seu.service.CommentService;
 import com.seu.service.DisputeRegisterService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -38,21 +36,26 @@ public class AutoInform implements JavaDelegate {
 
 
 
+
+
     @Override
     public void execute(DelegateExecution delegateExecution) {
         DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
         DisputecaseApplyRepository disputecaseApplyRepository=SpringUtil.getBean(DisputecaseApplyRepository.class);
         NormalUserRepository normalUserRepository=SpringUtil.getBean(NormalUserRepository.class);
+        UserRepository userRepository=SpringUtil.getBean(UserRepository.class);
 
         String caseId=delegateExecution.getVariable("disputeId").toString();
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         String prosperId=disputecase.getProposerId();
         String[] temp=prosperId.trim().split(",");
         for(String s:temp){
-            DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
+            DisputecaseApply disputecaseApply=disputecaseApplyRepository.findAllById(s).get(0);
             String phone=disputecaseApply.getPhone();
             String name=disputecaseApply.getName();
-            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).getEmail();
+            String specificId=userRepository.findByPhone(phone).getSpecificId();
+            String email=normalUserRepository.getOne(specificId).getEmail();
+//            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).get(0).getEmail();
             if(!(email==null ||email==""))
                 sendEmail(caseId,email);
             sendSms(caseId,phone,name);

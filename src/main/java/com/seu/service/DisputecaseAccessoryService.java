@@ -13,5 +13,6 @@ public interface DisputecaseAccessoryService {
 
     ResultVO normalFileList(String disputeId);
 
-    ResultVO addInquireHospital(String disputeId, String inquireHospital);
+    /** 问询医院 */
+    ResultVO addInquireHospital(String caseId, String inquireHospital);
 }

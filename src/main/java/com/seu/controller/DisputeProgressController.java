@@ -15,6 +15,7 @@ import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
+import com.seu.utils.VerifyProcessUtil;
 import javafx.geometry.Pos;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -49,6 +50,8 @@ public class DisputeProgressController {
     @Autowired
     private DisputecaseProcessRepository disputecaseProcessRepository;
 
+    @Autowired
+    private VerifyProcessUtil verifyProcessUtil;
     /*
      *@Author 吴宇航
      *@Description  纠纷登记功能，由当前用户操作;
@@ -382,7 +385,7 @@ public class DisputeProgressController {
         String mediatorId = map.get("MediatorId");
         String disputeId = map.get("CaseId");
 
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定,调解员选用户");
         Task currentTask=null;
         for(Task task:tasks){
             if(task.getName().equals("管理员做决定")){
@@ -406,20 +409,8 @@ public class DisputeProgressController {
     @PostMapping(value = "/detail/InquireInstitute")
     @Transactional
     public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
-        String caseId = map.get("CaseId");
-        String inquireText = map.get("InquireText");
-
-
-        //todo activiti test
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
-        Task currentTask=null;
-        for(Task task:tasks){
-            if(task.getName().trim().equals("问询医院")){
-                currentTask=task;
-                break;
-            }
-        }
-        disputeProgressService.completeCurrentTask(currentTask.getId());
+        String caseId = map.get("caseId");
+        String inquireText = map.get("inquireText");
 
         return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
     }
@@ -428,27 +419,24 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/MediationFailure")
     public ResultVO mediationFailure(@RequestBody Map<String, String> map){
 
-        String caseId = map.get("CaseId");
-
+        String caseId = map.get("caseId");
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
+//        Map<String,Object> var=new HashMap<>();
+//        var.put("paramMediateResult",)
+//        disputeProgressService.completeCurrentTask(tasks.get(0).getId());
         return disputeProgressService.setMediationFailure(caseId);
     }
 
     //发送调解成功
-    @PostMapping(value = "/user/CaseRepeal")
+    @PostMapping(value = "mediator/MediationSuccess")
     public ResultVO caseRepeal(@RequestBody Map<String, String> map){
 
-        String caseId = map.get("CaseId");
-
-        return disputeProgressService.setCaseRepeal(caseId);
-    }
-
-    //发送调解成功
-    @PostMapping(value = "/user/CaseLitigation")
-    public ResultVO caseLitigation(@RequestBody Map<String, String> map){
-
-        String caseId  = map.get("CaseId");
-
-        return disputeProgressService.setCaseLitigation(caseId);
+        String caseId = map.get("caseId");
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(caseId);
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramMediateResult",0);
+//        disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
+        return disputeProgressService.setCaseSuccess(caseId);
     }
 
     /** 申请再次调解*/

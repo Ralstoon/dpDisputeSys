@@ -3,6 +3,7 @@ package com.seu.handle;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.exception.NormalUserException;
+import com.seu.exception.SetActivitiProcessException;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -36,6 +37,8 @@ public class ExceptionHandle {
             return ResultVOUtil.ReturnBack(-200,"Redis缓存服务器连接错误");
         }else if(e instanceof HttpRequestMethodNotSupportedException){
             return ResultVOUtil.ReturnBack(-300,"请求方法不支持");
+        }else if(e instanceof SetActivitiProcessException){
+            return ResultVOUtil.ReturnBack(((SetActivitiProcessException) e).getCode(),e.getMessage());
         }
 
         else{
