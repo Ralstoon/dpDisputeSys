@@ -232,7 +232,8 @@ public class DisputeProgressController {
     public ResultVO mediatorSelectUser(@RequestBody Map<String, String> map){
         String disputeId = map.get("CaseId");
         String ID = map.get("id");
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"调解员选用户");
         Task currentTask=null;
         for(Task task:tasks){
             if(task.getName().equals("调解员选用户")){
