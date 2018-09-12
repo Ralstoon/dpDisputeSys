@@ -1,11 +1,14 @@
 package com.seu.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
+import net.sf.json.JSON;
 import org.activiti.engine.task.Task;
+import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
 import java.util.List;
@@ -60,22 +63,22 @@ public interface DisputeProgressService {
     void updateUserChoose(String disputeId,String mediatorList);
 
     /** 获取调解大厅中的数据 */
-    ResultVO getMediationHallData(String id);
+    ResultVO getMediationHallData(JSONObject map);
 
     /** 获取我的调节中的数据 */
     ResultVO getMyMediationData(String id);
 
     /** 管理员获得案件列表 */
-    ResultVO getManagerCaseList(String id);
+    ResultVO getManagerCaseList(JSONObject map) throws Exception;
 
     /** 管理员获取统计管理页面列表 */
     ResultVO getManagerCaseJudiciary(String id);
 
     /** 管理员获取调解员列表（用于给案件分配调解员） */
-    ResultVO getMediatorList(String id);
+    ResultVO getMediatorList(String id,Pageable pageable);
 
     /** 管理员 获取所有调解员的授权信息 */
-    ResultVO getNameofAuthorityList(String id);
+    ResultVO getNameofAuthorityList(String id, Pageable pageable);
 
     /** 管理员发送授权调解员权限改变信息 */
     ResultVO changeAuthorityNameList(String changeAuthorityFormList);
@@ -122,4 +125,12 @@ public interface DisputeProgressService {
     /** 修改案件状态 */
     void updateCaseStatus(String caseId,String status);
 
+    /** 管理者获取该案件 的用户意向调解员 */
+    ResultVO getUserChooseMediator(JSONObject map);
+
+    /** 管理者获取该案件的 另外分配：剔除 用户意向和申请回避 */
+    ResultVO getAdditionalAllocation(String caseId,Pageable pageRequest);
+
+    /** 下拉框：管理员页面获取所有调解员(不分页) */
+    ResultVO getAllMediator();
 }

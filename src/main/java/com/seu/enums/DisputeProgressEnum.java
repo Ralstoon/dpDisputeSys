@@ -30,7 +30,10 @@ public enum DisputeProgressEnum {
     SETAPPOINT_SUCCESS(21,"添加预约数据成功"),
     INFORMINDENTY_SUCCESS(22,"通知用户损害医疗鉴定成功"),
     GETEXPERTLIST_SUCCESS(23,"获取专家列表成功"),
-    MEDIATORGETAUTHORITY_SUCCESS(24,"获取调解员权限成功")
+    MEDIATORGETAUTHORITY_SUCCESS(24,"获取调解员权限成功"),
+    GETUSERCHOOSE_SUCCESS(25,"获取案件的意向调解员成功"),
+    GETUSERCHOOSE_NONE(26,"该案件未选择意向调解员"),
+    GETADDITIONALALLOCATION_SUCCESS(27,"获取另外分配调解员成功")
 
 
     ;

@@ -1,6 +1,7 @@
 package com.seu.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -21,6 +22,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -278,12 +280,10 @@ public class DisputeProgressController {
     }
 
     /** 获取调解大厅中的数据 */
-    @GetMapping(value = "/mediator/GetMediationHallData")
-    public ResultVO getMediationHallData(){
-//        @RequestBody Map<String, String> map
-//        String id = map.get("id");
-        String id="";
-        return disputeProgressService.getMediationHallData(id);
+    @PostMapping(value = "/mediator/GetMediationHallData")
+    public ResultVO getMediationHallData(@RequestBody JSONObject map){
+
+        return disputeProgressService.getMediationHallData(map);
     }
 
     /** 获取我的调节中的数据 */
@@ -296,12 +296,9 @@ public class DisputeProgressController {
     }
 
     /** 管理者获取案件列表 */
-    @GetMapping(value = "/manager/getCaseList")
-    public ResultVO getManagerCaseList(){
-//        @RequestBody Map<String, String> map
-//        String id = map.get("id");
-        String id="";
-        return disputeProgressService.getManagerCaseList(id);
+    @PostMapping(value = "/manager/getCaseList")
+    public ResultVO getManagerCaseList(@RequestBody JSONObject map) throws Exception{
+        return disputeProgressService.getManagerCaseList(map);
     }
 
 
@@ -314,22 +311,27 @@ public class DisputeProgressController {
         return disputeProgressService.getManagerCaseJudiciary(id);
     }
 
-    /** 管理员获取调解员列表（用于给案件分配调解员） */
-    @PostMapping(value = "/manager/getMediatorList")
-    public ResultVO getMediatorList(@RequestBody Map<String, String> map){
+    /** 管理员获取所有的调解员列表(分页) */
+    @PostMapping(value = "/manager/getMediatorListWithPage")
+    public ResultVO getMediatorListWithPage(@RequestBody JSONObject map){
 
-//        String id = map.get("id");
-        String caseId=map.get("caseId");
-        return disputeProgressService.getMediatorList(caseId);
+        String caseId=map.getString("caseId");
+        Integer page=map.getInteger("page")-1;  // 前端从一开始，后台从0开始
+        Integer size=map.getInteger("size");
+        PageRequest pageRequest=new PageRequest(page,size);
+        return disputeProgressService.getMediatorList(caseId,pageRequest);
     }
 
     /** 管理员 获取所有调解员的授权信息 */
     @PostMapping(value = "/manager/getNameofAuthorityList")
-    public ResultVO getNameofAuthorityList(@RequestBody Map<String, String> map){
+    public ResultVO getNameofAuthorityList(@RequestBody JSONObject map){
 
-        String id = map.get("id");
+        String id = map.getString("id");
+        Integer page=map.getInteger("page")-1;  // 前端从一开始，后台从0开始
+        Integer size=map.getInteger("size");
+        PageRequest pageRequest=new PageRequest(page,size);
 
-        return disputeProgressService.getNameofAuthorityList(id);
+        return disputeProgressService.getNameofAuthorityList(id,pageRequest);
     }
 
     /**管理员发送授权调解员权限信息 */
@@ -385,18 +387,14 @@ public class DisputeProgressController {
 
         String mediatorId = map.get("MediatorId");
         String disputeId = map.get("CaseId");
-
-        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定,调解员选用户");
+        if(mediatorId==null||mediatorId.trim()=="" ||mediatorId.trim().equals("")){
+            return ResultVOUtil.ReturnBack(-105,"调解员id未获取到");
+        }
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定");
         Task currentTask=null;
         for(Task task:tasks){
             if(task.getName().equals("管理员做决定")){
                 currentTask=task;
-                break;
-            }
-            else if(task.getName().equals("调解员选用户")){
-                currentTask=task;
-                disputeProgressService.completeCurrentTask(currentTask.getId());
-                currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
                 break;
             }
         }
@@ -406,6 +404,8 @@ public class DisputeProgressController {
         return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
     }
 
+
+    // TODO 要改
     //发送问询医院数据
     @PostMapping(value = "/detail/InquireInstitute")
     @Transactional
@@ -469,4 +469,26 @@ public class DisputeProgressController {
     }
 
 
+
+    /** 管理者获取该案件 的用户意向调解员 */
+    public ResultVO getUserChoose(@RequestBody JSONObject map){
+        return disputeProgressService.getUserChooseMediator(map);
+    }
+
+    /** 管理者获取该案件的 另外分配：剔除 用户意向和申请回避 */
+    @PostMapping("/manager/getMediatorList")
+    public ResultVO additionalAllocation(@RequestBody JSONObject map){
+        String caseId=map.getString("caseId");
+        Integer page=map.getInteger("page")-1;
+        Integer size=map.getInteger("size");
+
+        PageRequest pageRequest=new PageRequest(page,size);
+        return disputeProgressService.getAdditionalAllocation(caseId,pageRequest);
+    }
+
+    /** 下拉框：管理员页面获取所有调解员(不分页) */
+    @GetMapping("/manager/getAllMediator")
+    public ResultVO getAllMediator(){
+        return disputeProgressService.getAllMediator();
+    }
 }

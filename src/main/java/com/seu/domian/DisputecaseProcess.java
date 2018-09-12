@@ -4,7 +4,9 @@ import com.seu.common.InitConstant;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * @ClassName DisputecaseProcess
@@ -19,6 +21,7 @@ import javax.persistence.Id;
 public class DisputecaseProcess {
     @Id
     private String id;
+
     private String disputecaseId;
     private String status="0";
     private String param="{\"paramProfesor\": \"0\",\"paramAuthen\": \"0\"}";

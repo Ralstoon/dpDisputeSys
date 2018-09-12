@@ -2,8 +2,7 @@ package com.seu.domian;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @ClassName Mediator
@@ -18,12 +17,26 @@ import javax.persistence.Id;
 public class Mediator {
     @Id
     private String mediatorId;
+
+//    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+////    @JoinColumn(name = "user_ID")
     private String fatherId;
     private String mediatorName;
     private String idCard;
     private String mediateCenter;
-    private String authorityConfirm;
-    private String authorityJudiciary;
+    private String authorityConfirm="0";
+    private String authorityJudiciary="0";
 
+    public Mediator() {
+    }
 
+    public Mediator(String mediatorId, String fatherId, String mediatorName, String idCard, String mediateCenter, String authorityConfirm, String authorityJudiciary) {
+        this.mediatorId = mediatorId;
+        this.fatherId = fatherId;
+        this.mediatorName = mediatorName;
+        this.idCard = idCard;
+        this.mediateCenter = mediateCenter;
+        this.authorityConfirm = authorityConfirm;
+        this.authorityJudiciary = authorityJudiciary;
+    }
 }

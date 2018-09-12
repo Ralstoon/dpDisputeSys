@@ -9,5 +9,5 @@ package com.seu.elasticsearch;
  **/
 public interface ESConstants {
     String clusterName="disputebigdata";
-    String IP="223.3.93.146";  // 目前是这个
+    String IP="223.3.83.239";  // 目前是这个
 }

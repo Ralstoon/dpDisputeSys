@@ -1,5 +1,6 @@
 package com.seu.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
@@ -10,7 +11,9 @@ import com.seu.domian.Mediator;
 import com.seu.domian.NormalUser;
 import com.seu.domian.User;
 import com.seu.enums.LoginEnum;
+import com.seu.enums.RegisterEnum;
 import com.seu.exception.NormalUserException;
+import com.seu.form.VOForm.RegisterMediatorForm;
 import com.seu.form.VOForm.UserForm;
 import com.seu.repository.AdminRepository;
 import com.seu.repository.MediatorRepository;
@@ -123,6 +126,37 @@ public class UserServiceImpl implements UserService {
             name=currentUser.getAdminName();
         }
         return name;
+
+    }
+
+    @Override
+    @Transactional
+    public ResultVO registerMediator(JSONObject map) {
+        String phone=map.getString("phone");
+        User user=userRepository.findByPhone(phone);
+        if(user!=null)
+            return ResultVOUtil.ReturnBack(RegisterEnum.REGISTERMEDIATOR_FAIL.getCode(),RegisterEnum.REGISTERMEDIATOR_FAIL.getMsg());
+        String password=map.getString("password");
+        String md5Password=MD5Util.MD5EncodeUtf8(password);
+        String mediatorName=map.getString("mediatorName");
+        String idCard=map.getString("idCard");
+        String mediateCenter=map.getString("mediateCenter");
+        String authorityConfirm=map.getString("authorityConfirm");
+        String authorityJudiciary=map.getString("authorityJudiciary");
+
+        String id=KeyUtil.genUniqueKey();
+        String specificId=KeyUtil.genUniqueKey();
+        String role="1";
+        User registerUser=new User(id,phone,md5Password,role,specificId);
+        Mediator registerMediator=new Mediator(specificId,id,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
+        registerUser=userRepository.save(registerUser);
+        registerMediator=mediatorRepository.save(registerMediator);
+        if(registerUser!=null && registerMediator!=null){
+            RegisterMediatorForm registerMediatorForm=new RegisterMediatorForm(phone,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
+            return ResultVOUtil.ReturnBack(registerMediatorForm,RegisterEnum.REGISTERMEDIATOR_SUCCESS.getCode(),RegisterEnum.REGISTERMEDIATOR_SUCCESS.getMsg());
+        }else {
+            return ResultVOUtil.ReturnBack(RegisterEnum.BACKGROUNDSERVER_EXCEPTION.getCode(),RegisterEnum.BACKGROUNDSERVER_EXCEPTION.getMsg());
+        }
 
     }
 }

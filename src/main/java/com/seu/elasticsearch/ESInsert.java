@@ -10,8 +10,10 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -63,11 +65,17 @@ public class ESInsert {
 
 
     public static void main(String[] args) throws Exception {
-        String index="手术_index";
-        String index_type=index+"_type";
-        String url="D:\\Documents\\WorkSpace\\worksapce_python\\666\\data\\纯手术.txt";
-        new ESInsert().insertJSON(url,index,index_type);
+//        String index="手术_index";
+//        String index_type=index+"_type";
+//        String url="D:\\Documents\\WorkSpace\\worksapce_python\\666\\data\\operators_all.txt";
+//        new ESInsert().insertJSON(url,index,index_type);
 
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(new Date());
+        String s=sdf.format(new Date());
+        System.out.println(s);
+        Date cur=sdf.parse(s);
+        System.out.println(cur);
     }
 
 }

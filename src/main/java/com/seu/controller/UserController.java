@@ -142,4 +142,10 @@ public class UserController {
         String usrId = map.get("id");
         return disputeProgressService.getUserCaseList(usrId);
     }
+
+    /** 注册调解员 */
+    @PostMapping(value = "registerMediator")
+    public ResultVO registerMediator(@RequestBody JSONObject map){
+        return userService.registerMediator(map);
+    }
 }

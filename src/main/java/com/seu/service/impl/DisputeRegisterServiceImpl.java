@@ -186,7 +186,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         try {
             String caseId=KeyUtil.genUniqueKey();
             Disputecase disputecase=new Disputecase();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
             Date d=new Date();
             String dateS = df.format(d);
             disputecase.setApplyTime(df.parse(dateS));
@@ -210,7 +210,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         try {
             String caseId = KeyUtil.genUniqueKey();
             Disputecase disputecase = new Disputecase();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
             Date d = new Date();
             String dateS = df.format(d);
             disputecase.setApplyTime(df.parse(dateS));
