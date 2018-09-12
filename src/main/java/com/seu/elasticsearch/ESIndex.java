@@ -40,9 +40,12 @@ public class ESIndex {
             client.admin().indices().prepareDelete(indexName).get();
         }
         // 创建映射
+//        String mapping="{"+mappingName+":{\"properties\":"
+//                + "{\"keyword\" : { \"type\" : \"string\", \"index\" : \"analyzed\",\"analyzer\" : \"ik_max_word\", \"store\" : \"true\" },"
+//                + "\"operations\" : { \"type\" : \"string\", \"index\" : \"no\", \"store\" : \"true\"}}}}";
         String mapping="{"+mappingName+":{\"properties\":"
-                + "{\"keyword\" : { \"type\" : \"string\", \"index\" : \"analyzed\",\"analyzer\" : \"ik_max_word\", \"store\" : \"true\" },"
-                + "\"operations\" : { \"type\" : \"string\", \"index\" : \"no\", \"store\" : \"true\"}}}}";
+                + "{\"keyword\" : { \"type\" : \"string\", \"index\" : \"analyzed\",\"analyzer\" : \"jieba_index\",\"search_analyzer\" : \"jieba_search\", \"store\" : \"true\" }}}}";
+
         // 向ES添加索引和对应的映射
         client.admin().indices().prepareCreate(indexName).addMapping(mappingName,mapping).get();
         client.close();
@@ -50,7 +53,7 @@ public class ESIndex {
 
     public static void main(String[] args){
         try{
-            new ESIndex().createESIndex("其他科_index");
+            new ESIndex().createESIndex("手术2_index");
 //            new ESIndex().searchESIndex("operation_index","operation_index_type");
         }catch (Exception e){
             e.printStackTrace();

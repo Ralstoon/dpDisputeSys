@@ -12,10 +12,14 @@ import lombok.Data;
 @Data
 public class Operation {
     private String keyword;
-    private String operations;
+//    private String operations;
 
-    public Operation(String keyword,String operations){
+//    public Operation(String keyword,String operations){
+//        this.keyword=keyword;
+//        this.operations=operations;
+//    }
+
+    public Operation(String keyword){
         this.keyword=keyword;
-        this.operations=operations;
     }
 }

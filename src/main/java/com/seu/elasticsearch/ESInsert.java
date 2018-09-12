@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.seu.common.InitConstant;
 import com.seu.domian.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
@@ -23,6 +24,8 @@ import java.util.regex.Pattern;
  * @Date 2018/8/28 14:21
  * @Version 1.0
  **/
+
+@Slf4j
 public class ESInsert {
 
 
@@ -45,11 +48,13 @@ public class ESInsert {
         bufferedReader=new BufferedReader(read);
         String readLine=null;
         while((readLine=bufferedReader.readLine())!=null){
-            String[] line=readLine.trim().split("\t");
-            String keyword=line[0];
-            String operations=line[1].trim();
-            Operation oper=new Operation(keyword,operations);
-            doInsert(oper,client,index,index_type);
+            readLine=readLine.trim();
+//            String[] line=readLine.trim().split("\t");
+//            String keyword=line[0];
+//            String operations=line[1].trim();
+            Operation oper=new Operation(readLine);
+            boolean flag=doInsert(oper,client,index,index_type);
+            log.info(flag+"");
         }
         bufferedReader.close();
         read.close();
@@ -58,18 +63,10 @@ public class ESInsert {
 
 
     public static void main(String[] args) throws Exception {
-//        String index="神经外科_index";
-//        String index_type=index+"_type";
-//        String url="D:\\worksapce_python\\666\\data\\1.txt";
-//        new ESInsert().insertJSON(url,index,index_type);
-        List<String> list=new ArrayList<>();
-        list.add("申请人");
-        list.add("专家");
-        String s=list.toString();
-        Pattern pattern=Pattern.compile("专家");
-        Matcher matcher=pattern.matcher(s);
-        if(matcher.find())
-            System.out.println(true);
+        String index="手术_index";
+        String index_type=index+"_type";
+        String url="D:\\Documents\\WorkSpace\\worksapce_python\\666\\data\\纯手术.txt";
+        new ESInsert().insertJSON(url,index,index_type);
 
     }
 
