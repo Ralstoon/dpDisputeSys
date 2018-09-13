@@ -152,7 +152,6 @@ public class DisputeProgressController {
         else{
             var.put("caseAccept",1);  //通过
             disputecaseProcess.setStatus("1");
-            disputeProgressService.setStartTimeAndEndTime(disputeId);
         }
 
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);

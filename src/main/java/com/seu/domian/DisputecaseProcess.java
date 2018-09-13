@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import java.util.Date;
 import javax.persistence.OneToOne;
 import java.util.Date;
 

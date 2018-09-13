@@ -1,11 +1,14 @@
-
 package com.seu.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.seu.common.InitConstant;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
