@@ -19,23 +19,29 @@ import com.seu.domian.NormalUserUpload;
 import com.seu.enums.DisputecaseAccessoryEnum;
 import com.seu.repository.DiseaseListRepository;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.repository.DisputecaseActivitiRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.VerifyProcessUtil;
 import net.sf.json.JSONArray;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryService {
@@ -57,6 +63,10 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Autowired
     private DisputecaseRepository disputecaseRepository;
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Override
     public String uploadFile(FileInputStream file, String fileName){
@@ -132,11 +142,18 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     }
 
     @Override
+    @Transactional
     public ResultVO addInquireHospital(MultipartFile[] multipartFiles,
                                        String text,
                                        String disputeID,
                                        String isFinished) throws IOException {
-        //todo activiti test
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeID,"问询医院");
+        Task currentTask=null;
+        for(Task one :tasks)
+            if(one.getName().equals("问询医院")){
+                currentTask=one;
+                break;
+            }
 
         Disputecase disputecase = disputecaseRepository.findOne(disputeID);
 
@@ -157,17 +174,17 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
             for (MultipartFile multipartFile: multipartFiles){
                 com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-//                try {
+                try {
                     FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
                     String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
                     obj.put("url","http://"+url);
                     obj.put("name",multipartFile.getOriginalFilename());
                     files.add(obj);
-//                }catch (Exception e){
-//                    obj.put("url","");
-//                    obj.put("name","");
-//                    files.add(obj);
-//                }
+                }catch (Exception e){
+                    obj.put("url","");
+                    obj.put("name","");
+                    files.add(obj);
+                }
 
             }
 
@@ -187,8 +204,12 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         disputecaseAccessoryRepository.save(disputecaseAccessory);
 
         /** 完成流程 */
-
-
+        String pid=disputecaseActivitiRepository.getOne(disputeID).getProcessId();
+        Integer paramInquireHospital=0;
+        if(isFinished.trim()=="1" || isFinished.trim().equals("1"))
+            paramInquireHospital=1;
+        runtimeService.setVariable(pid,"paramInquireHospital",paramInquireHospital);
+        disputeProgressService.completeCurrentTask(currentTask.getId());
 
         return ResultVOUtil.ReturnBack(112,"问询医院成功");
     }

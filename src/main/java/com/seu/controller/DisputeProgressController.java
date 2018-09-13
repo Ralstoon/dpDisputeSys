@@ -17,11 +17,9 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.form.VOForm.NormalUserUploadListForm;
 import com.seu.repository.DisputecaseAccessoryRepository;
 import com.seu.repository.DisputecaseProcessRepository;
-import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
 import com.seu.utils.VerifyProcessUtil;
-import javafx.geometry.Pos;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -369,7 +367,7 @@ public class DisputeProgressController {
     @Autowired
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
-    // 闻讯医院 todo only update accessory
+    // 闻讯医院
     @PostMapping(value = "/inqueryHospital")
     public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
                                     @RequestParam("text") String text,
