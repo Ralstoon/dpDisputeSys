@@ -1,9 +1,11 @@
 package com.seu.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.ChangeAuthorityForm;
@@ -11,6 +13,8 @@ import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
+import com.seu.form.VOForm.NormalUserUploadListForm;
+import com.seu.repository.DisputecaseAccessoryRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
@@ -24,8 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,6 +136,7 @@ public class DisputeProgressController {
      *@return com.seu.ViewObject.ResultVO
      **/
     // TODO 流程测试
+    //TODO 添加受理通知书 供用户下载
     @PostMapping(value="/DisposeApply")
     @Transactional
     public ResultVO caseAccept(@RequestBody JSONObject map){
@@ -406,15 +414,15 @@ public class DisputeProgressController {
         return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
     }
 
-    //发送问询医院数据
-    @PostMapping(value = "/detail/InquireInstitute")
-    @Transactional
-    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
-        String caseId = map.get("caseId");
-        String inquireText = map.get("inquireText");
-
-        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
-    }
+//    //发送问询医院数据
+//    @PostMapping(value = "/detail/InquireInstitute")
+//    @Transactional
+//    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
+//        String caseId = map.get("caseId");
+//        String inquireText = map.get("inquireText");
+//
+//        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
+//    }
 
     //发送调解失败
     @PostMapping(value = "/mediator/MediationFailure")
@@ -468,5 +476,53 @@ public class DisputeProgressController {
         return disputeProgressService.getAuthority(id);
     }
 
+    @Autowired
+    private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
+    // 闻讯医院 todo only update accessory
+    @PostMapping(value = "/inqueryHospital")
+    public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
+                                    @RequestParam("text") String text,
+                                    @RequestParam("caseId") String disputeID,
+                                    @RequestParam("isFinisihed") String isFinished) throws IOException {
+
+        return disputecaseAccessoryService.addInquireHospital(multipartFiles, text, disputeID, isFinished);
+    }
+
+    // 获取闻讯医院结果
+    @PostMapping(value = "/getInqueryHospitalList")
+    public ResultVO getInqueryHospitalList(@RequestBody Map<String, String> map){
+
+        String disputeId = map.get("caseId");
+
+        ;
+
+        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
+    }
+
+    // 提交告知书确认函
+    @PostMapping(value = "/uploadNotificationAffirm")
+    public ResultVO uploadNotificationAffirm(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addNotificationAffirm(multipartFile, disputeId);
+    }
+
+    // 提交代理人委托书
+    @PostMapping(value = "/uploadProxyCertification")
+    public ResultVO uploadProxyCertification(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addProxyCertification(multipartFile, disputeId);
+    }
+
+    //提交专家申请书
+    public ResultVO uploadExportApply(@RequestParam(value = "application", required=false) MultipartFile application,
+                                             @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addExportApply(application, applicationDetail, disputeId);
+    }
+
+    //
 }

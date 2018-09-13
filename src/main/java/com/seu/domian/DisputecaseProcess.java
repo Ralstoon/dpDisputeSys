@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * @ClassName DisputecaseProcess
@@ -26,4 +27,8 @@ public class DisputecaseProcess {
     private String applyStatus="";
     private String userChoose="";
     private String mediateStage=InitConstant.init_mediateStage;
+    private Boolean isSuspended = Boolean.FALSE;
+    private Date endtimeDisputecase;
+    private Date startimeDisputecase;
+
 }

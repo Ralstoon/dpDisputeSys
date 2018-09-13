@@ -198,4 +198,18 @@ public class test {
         task = taskService.createTaskQuery().processInstanceId("550036").singleResult();
         System.out.println(task.getName());
     }
+
+    @Autowired
+    private DisputecaseProcessRepository disputecaseProcessRepository;
+
+    @Test
+    public void autoTest(){
+        disputecaseProcessRepository.findAllByIsSuspended(true).stream().forEach(disputecaseProcess -> {
+            Calendar c = Calendar.getInstance();
+            c.setTime(disputecaseProcess.getEndtimeDisputecase());
+            c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天
+            disputecaseProcess.setEndtimeDisputecase(c.getTime());
+            disputecaseProcessRepository.save(disputecaseProcess);
+        });
+    }
 }
