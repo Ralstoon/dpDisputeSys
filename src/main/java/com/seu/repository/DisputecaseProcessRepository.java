@@ -2,6 +2,7 @@ package com.seu.repository;
 
 import com.seu.domian.DisputecaseProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ import java.util.List;
  **/
 public interface DisputecaseProcessRepository extends JpaRepository<DisputecaseProcess,String> {
     DisputecaseProcess findByDisputecaseId(String disputecase_id);
-    List<DisputecaseProcess> findAllByIsSuspended(Boolean is_suspended);
+
+    List<DisputecaseProcess> findAllByIsSuspended(int is_suspended);
 }

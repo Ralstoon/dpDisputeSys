@@ -44,7 +44,7 @@ public class DisputecaseProcess {
     /** 调解结束时间 */
     private Date endtimeDisputecase;
     /** 进程是否挂起 */
-    private Boolean isSuspended = Boolean.FALSE;
+    private Integer isSuspended = 0;
 
     public DisputecaseProcess() {
     }

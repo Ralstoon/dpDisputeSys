@@ -25,7 +25,6 @@ import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.VerifyProcessUtil;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +170,11 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
         disputecaseAccessoryRepository.save(disputecaseAccessory);
 
-        return ResultVOUtil.ReturnBack(112,"闻讯医院成功");
+        /** 完成流程 */
+
+
+
+        return ResultVOUtil.ReturnBack(112,"问询医院成功");
     }
 
     @Override
