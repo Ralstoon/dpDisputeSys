@@ -16,6 +16,7 @@ import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.utils.AutoSendUtil;
 import com.seu.utils.GetHospitalUtil;
+import com.seu.utils.GetWorkingTimeUtil;
 import com.seu.utils.StrIsEmptyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
@@ -374,7 +375,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Integer size=map.getInteger("size");
         Integer page=map.getInteger("page")-1;
         String filterStatus=map.getString("filterStatus").trim();
-        String filterMediator=map.getString("filterMediator").trim();
+//        String filterMediator=map.getString("filterMediator").trim();
         Date startTime=map.getDate("startTime");
         Date endTime=map.getDate("endTime");
         if(endTime!=null){
@@ -393,8 +394,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         /** 判断组合 */
         if(!StrIsEmptyUtil.isEmpty(filterStatus))
             count++;
-        if(!StrIsEmptyUtil.isEmpty(filterMediator))
-            count++;
+
         if(startTime!=null)
             count++;
         if(endTime!=null)
@@ -406,8 +406,6 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
                     disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,pageRequest);
-                else if(!StrIsEmptyUtil.isEmpty(filterMediator))
-                    disputecasePage=disputecaseRepository.findByMediatorId_HallData(filterMediator,pageRequest);
                 else if(startTime!=null)
                     disputecasePage=disputecaseRepository.findAfterTime_HallData(startTime,pageRequest);
                 else
@@ -415,33 +413,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 break;
             case 2:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
-                    if(!StrIsEmptyUtil.isEmpty(filterMediator))
-                        disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,pageRequest);
-                    else if(startTime!=null)
+                    if(startTime!=null)
                         disputecasePage=disputecaseRepository.findWithStatusAndAfterTime(filterStatus,startTime,pageRequest);
                     else
                         disputecasePage=disputecaseRepository.findWithStatusAndBeforeTime(filterStatus,endTime,pageRequest);
                 else
-                if(!StrIsEmptyUtil.isEmpty(filterMediator))
-                    if(startTime!=null)
-                        disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime_HallData(filterMediator,startTime,pageRequest);
-                    else
-                        disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime_HallData(filterMediator,endTime,pageRequest);
-                else
                     disputecasePage=disputecaseRepository.findBetweenTime_HallData(startTime,endTime,pageRequest);
                 break;
             case 3:
-                if(endTime==null)
-                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,pageRequest);
-                else if(startTime==null)
-                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,pageRequest);
-                else if(StrIsEmptyUtil.isEmpty(filterMediator))
-                    disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,pageRequest);
-                else
-                    disputecasePage=disputecaseRepository.findWithMediatorAndTime_HallData(filterMediator,startTime,endTime,pageRequest);
-                break;
-            case 4:
-                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,pageRequest);
+                disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,pageRequest);
                 break;
         }
         Integer totalPages=disputecasePage.getTotalPages();
@@ -469,6 +449,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList=new HashSet<>();
             String medicalProcess=disputecase.getMedicalProcess();
             JSONArray processList=JSONArray.parseArray(medicalProcess);
+            if(processList==null)
+                continue;
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
                 JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
@@ -490,11 +472,63 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
     @Override
-    public ResultVO getMyMediationData(String id) {
+    public ResultVO getMyMediationData(JSONObject map) {
+        Integer size=map.getInteger("size");
+        Integer page=map.getInteger("page")-1;
+        String filterStatus=map.getString("filterStatus").trim();
+        String filterMediator=map.getString("id").trim();
+        Date startTime=map.getDate("startTime");
+        Date endTime=map.getDate("endTime");
+        if(endTime!=null){
+            // endTime+1
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(endTime);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            endTime=calendar.getTime();
+        }
+        PageRequest pageRequest=new PageRequest(page,size);
+        Page<Disputecase> disputecasePage=null;
+
+
+
         /** 根据调解员id号查找所有与他相关的案件 */
-        List<Disputecase> disputecaseList=disputecaseRepository.findByMediatorId(id);
+        Integer count=0;
+        /** 判断组合 */
+        if(!StrIsEmptyUtil.isEmpty(filterStatus))
+            count++;
+        if(startTime!=null)
+            count++;
+        if(endTime!=null)
+            count++;
+        switch (count){
+            case 0:
+                disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
+                break;
+            case 1:
+                if(!StrIsEmptyUtil.isEmpty(filterStatus))
+                    disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,pageRequest);
+                else if(startTime!=null)
+                    disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime(filterMediator,startTime,pageRequest);
+                else
+                    disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime(filterMediator,endTime,pageRequest);
+                break;
+            case 2:
+                if(!StrIsEmptyUtil.isEmpty(filterStatus))
+                    if(startTime!=null)
+                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,pageRequest);
+                    else
+                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,pageRequest);
+                else
+                    disputecasePage=disputecaseRepository.findWithMediatorAndTime(filterMediator,startTime,endTime,pageRequest);
+                break;
+            case 3:
+                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,pageRequest);
+                break;
+        }
+
+        Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
-        for(Disputecase disputecase:disputecaseList){
+        for(Disputecase disputecase:disputecasePage.getContent()){
             MediationHallDataForm mediationHallDataForm=new MediationHallDataForm();
             mediationHallDataForm.setDate(disputecase.getApplyTime());
             mediationHallDataForm.setName(disputecase.getCaseName());
@@ -515,6 +549,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList=new HashSet<>();
             String medicalProcess=disputecase.getMedicalProcess();
             JSONArray processList=JSONArray.parseArray(medicalProcess);
+            if(processList==null)
+                continue;
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
                 JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
@@ -528,7 +564,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             mediationHallDataFormList.add(mediationHallDataForm);
         }
-        return ResultVOUtil.ReturnBack(mediationHallDataFormList,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
+        Map<String,Object> var=new HashMap<>();
+        var.put("mediationHallDataFormList",mediationHallDataFormList);
+        var.put("totalPages",totalPages);
+        return ResultVOUtil.ReturnBack(var,DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getCode(),DisputeProgressEnum.GETMYMEDIATIONDATA_SUCCESS.getMsg());
     }
 
     @Override
@@ -632,6 +671,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList = new HashSet<>();
             String medicalProcess = disputecase.getMedicalProcess();
             JSONArray processList = JSONArray.parseArray(medicalProcess);
+            if(processList==null)
+                continue;
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
                 JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
@@ -741,6 +782,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             Set<String> respondentList = new HashSet<>();
             String medicalProcess = disputecase.getMedicalProcess();
             JSONArray processList = JSONArray.parseArray(medicalProcess);
+            if(processList==null)
+                continue;
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
                 JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
@@ -1234,6 +1277,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             mediatorFormList.add(new OneMediatorForm(name,mediatorId));
         }
         return ResultVOUtil.ReturnBack(mediatorFormList,DisputeProgressEnum.GETMEDIATORLIST_SUCCESS.getCode(),DisputeProgressEnum.GETMEDIATORLIST_SUCCESS.getMsg());
+    }
 
+    @Override
+    public void setStartTimeAndEndTime(String caseId) {
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        Date currentDate=new Date();
+        currentProcess.setStartimeDisputecase(currentDate);
+        Date endDate= GetWorkingTimeUtil
     }
 }

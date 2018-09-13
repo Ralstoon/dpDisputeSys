@@ -34,10 +34,7 @@ import javax.annotation.Resource;
 public class AutoInform implements JavaDelegate {
 
 
-
-
-
-
+    // TODO 向用户，包括申请人和代理人发送告知书和代理人委托书，并告知于立案判断前登录系统并上传（未注册账号默认密码为111111）或在立案判断时亲自携带过来
     @Override
     public void execute(DelegateExecution delegateExecution) {
         DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
@@ -55,7 +52,6 @@ public class AutoInform implements JavaDelegate {
             String name=disputecaseApply.getName();
             String specificId=userRepository.findByPhone(phone).getSpecificId();
             String email=normalUserRepository.getOne(specificId).getEmail();
-//            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).get(0).getEmail();
             if(!(email==null ||email==""))
                 sendEmail(caseId,email);
             sendSms(caseId,phone,name);

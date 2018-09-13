@@ -37,11 +37,12 @@ public class ExceptionHandle {
             return ResultVOUtil.ReturnBack(-200,"Redis缓存服务器连接错误");
         }else if(e instanceof HttpRequestMethodNotSupportedException){
             return ResultVOUtil.ReturnBack(-300,"请求方法不支持");
-        }else if(e instanceof SetActivitiProcessException){
-            return ResultVOUtil.ReturnBack(((SetActivitiProcessException) e).getCode(),e.getMessage());
-        }else if(e instanceof NullPointerException){
-            return ResultVOUtil.ReturnBack(-400,"空指针异常,请检查参数");
+        }else if(e instanceof SetActivitiProcessException) {
+            return ResultVOUtil.ReturnBack(((SetActivitiProcessException) e).getCode(), e.getMessage());
         }
+//        else if(e instanceof NullPointerException){
+//            return ResultVOUtil.ReturnBack(-400,"空指针异常,请检查参数");
+//        }
 
         else{
             // TODO 写其他的异常,这里先写了一个泛用错误

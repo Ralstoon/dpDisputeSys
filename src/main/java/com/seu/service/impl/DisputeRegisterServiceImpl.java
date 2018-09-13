@@ -226,16 +226,17 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             disputecaseProcess.setId(processId);
             disputecaseProcess.setDisputecaseId(caseId);
             disputecaseProcess.setStatus("0");
-            disputecaseProcessRepository.save(disputecaseProcess);
+//            disputecaseProcessRepository.save(disputecaseProcess);
 
             String accessoryId=KeyUtil.genUniqueKey();
             DisputecaseAccessory disputecaseAccessory=new DisputecaseAccessory();
             disputecaseAccessory.setId(accessoryId);
             disputecaseAccessory.setDisputecaseId(caseId);
-            disputecaseAccessoryRepository.save(disputecaseAccessory);
+//            disputecaseAccessoryRepository.save(disputecaseAccessory);
 
             disputecaseRepository.save(disputecase);
-
+            disputecaseProcessRepository.save(disputecaseProcess);
+            disputecaseAccessoryRepository.save(disputecaseAccessory);
             //Disputecase disputecase=disputecaseRepository.getOne(caseId);
             JSONArray array = JSONArray.parseArray(involvedPeople);
             String proposerId = "";

@@ -66,7 +66,7 @@ public interface DisputeProgressService {
     ResultVO getMediationHallData(JSONObject map);
 
     /** 获取我的调节中的数据 */
-    ResultVO getMyMediationData(String id);
+    ResultVO getMyMediationData(JSONObject map);
 
     /** 管理员获得案件列表 */
     ResultVO getManagerCaseList(JSONObject map) throws Exception;
@@ -133,4 +133,7 @@ public interface DisputeProgressService {
 
     /** 下拉框：管理员页面获取所有调解员(不分页) */
     ResultVO getAllMediator();
+
+    /** 立案判断通过后为process表添加 调解开始时间和调解结束时间，初始限时30个工作日 */
+    void setStartTimeAndEndTime(String caseId);
 }
