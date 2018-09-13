@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -152,16 +153,31 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
         com.alibaba.fastjson.JSONArray files= com.alibaba.fastjson.JSONArray.parseArray("[]");
 
-        for (MultipartFile multipartFile: multipartFiles){
-            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-            FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
-            String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
-            obj.put("url","http://"+url);
-            obj.put("name",multipartFile.getOriginalFilename());
-            files.add(obj);
-        }
+        //Arrays.stream(multipartFiles).filter(each -> each.getOriginalFilename() == "");
+
+            for (MultipartFile multipartFile: multipartFiles){
+                com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+//                try {
+                    FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+                    String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
+                    obj.put("url","http://"+url);
+                    obj.put("name",multipartFile.getOriginalFilename());
+                    files.add(obj);
+//                }catch (Exception e){
+//                    obj.put("url","");
+//                    obj.put("name","");
+//                    files.add(obj);
+//                }
+
+            }
+
+
+
         save.put("file", files);
-        save.put("text", text);
+        if(text != null){
+            save.put("text", text);
+        }
+
         save.put("isFinisihed", isFinished);
 
         inquireHospital.add(save);

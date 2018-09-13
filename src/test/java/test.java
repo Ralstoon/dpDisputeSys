@@ -204,7 +204,7 @@ public class test {
 
     @Test
     public void autoTest(){
-        disputecaseProcessRepository.findAllByIsSuspended(true).stream().forEach(disputecaseProcess -> {
+        disputecaseProcessRepository.findAllByIsSuspended(1).stream().forEach(disputecaseProcess -> {
             Calendar c = Calendar.getInstance();
             c.setTime(disputecaseProcess.getEndtimeDisputecase());
             c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天

@@ -73,7 +73,7 @@ public class DisputeProgressController {
     // TODO 流程测试
     // TODO 完成以下todo后删除
     // TODO 加入上传 受理、不予立案的通知书 并发送给用户(申请人和代理人)
-    // TODO 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间(已完成)
+    //
     @PostMapping(value="/DisposeApply")
     @Transactional
     public ResultVO caseAccept(@RequestBody JSONObject map) throws Exception {
