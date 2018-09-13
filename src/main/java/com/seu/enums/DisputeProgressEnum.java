@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum DisputeProgressEnum {
     SETCURRENTPROCESS_FAIL(-999,"流程操作失败"),
+    FINDMEDIATOR_FAIL(-105,"调解员id不存在"),
 
     STARTUP_SUCCESS(0,"纠纷调解工作流启动成功"),
     STARTUP_FAIL(1,"纠纷调解工作流启动失败"),

@@ -135,5 +135,5 @@ public interface DisputeProgressService {
     ResultVO getAllMediator();
 
     /** 立案判断通过后为process表添加 调解开始时间和调解结束时间，初始限时30个工作日 */
-    void setStartTimeAndEndTime(String caseId);
+    void setStartTimeAndEndTime(String caseId) throws Exception;
 }

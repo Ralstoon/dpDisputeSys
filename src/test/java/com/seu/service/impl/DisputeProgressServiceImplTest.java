@@ -36,7 +36,11 @@ public class DisputeProgressServiceImplTest {
 
     @Test
     public void getMediationHallData(){
-
+        try {
+            disputeProgressService.setStartTimeAndEndTime("1536822904188267621");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test

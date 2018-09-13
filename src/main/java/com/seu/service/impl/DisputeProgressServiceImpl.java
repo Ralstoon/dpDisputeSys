@@ -14,10 +14,7 @@ import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
-import com.seu.utils.AutoSendUtil;
-import com.seu.utils.GetHospitalUtil;
-import com.seu.utils.GetWorkingTimeUtil;
-import com.seu.utils.StrIsEmptyUtil;
+import com.seu.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -29,6 +26,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -72,6 +70,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     private ExpertsRepository expertsRepository;
     @Autowired
     private ConstantDataRepository constantDataRepository;
+    @Autowired
+    private GetWorkingTimeUtil getWorkingTimeUtil;
+    @Autowired
+    private VerifyProcessUtil verifyProcessUtil;
 
     private ProcessDefinition pd;
     private Deployment deployment;
@@ -994,31 +996,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     public ResultVO setResultOfIndent(String caseId, String resultOfIndent) {
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
-        if(disputecaseAccessory.getMedicaldamageAssessment()==null)
+        if(StrIsEmptyUtil.isEmpty(disputecaseAccessory.getMedicaldamageAssessment()))
             disputecaseAccessory.setMedicaldamageAssessment("{}");
         JSONObject md=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
         md.put("文本",resultOfIndent);
+        // TODO 发送文件情况
         disputecaseAccessory.setMedicaldamageAssessment(md.toString());
         disputecaseAccessory=disputecaseAccessoryRepository.save(disputecaseAccessory);
 
-        // 防止进入子流程后无法用businesskey来查，这边用自定义的activiti表查找主流程实例
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        ProcessInstance pi=runtimeService.createProcessInstanceQuery().processInstanceId(pid).singleResult();
-        runtimeService.setVariable(pi.getId(),"paramAuthenticate","1");
+        runtimeService.setVariable(pid,"paramAuthenticate","1");
 
         /** 目前处于主流程:损害/医疗鉴定 */
-        Task task=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        Task task=null;
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"损害/医疗鉴定");
+        for(Task one:tasks)
+            if(one.getName().equals("损害/医疗鉴定")){
+                task=one;
+                break;
+            }
         taskService.complete(task.getId());  // 会进去到流程 调解前处理
 
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETRESULTOFINDENT_SUCCESS.getCode(),DisputeProgressEnum.SETRESULTOFINDENT_SUCCESS.getMsg());
-
-        /** 目前处于子流程:调解前处理的第一个任务，调解前选择 */
-//        ProcessInstance subPi=runtimeService.createProcessInstanceQuery().superProcessInstanceId(pid).singleResult();
-//        Map<String,Object> subvar=new HashMap<>();
-//        subvar.put("subP2T1",0);
-//        Task subTask1=taskService.createTaskQuery().processInstanceId(subPi.getId()).singleResult();
-//        taskService.complete(subTask1.getId(),subvar);
-//        Task subTask2=
 
     }
 
@@ -1097,9 +1096,17 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
+    @Transactional
     public ResultVO informIndenty(String caseId) {
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult(); // 流程：调节前处理
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调节前处理");
+        Task currentTask=null;
+        for(Task taskOne:tasks)
+            if(taskOne.getName().equals("调解前处理")){
+                currentTask=taskOne;
+                break;
+            }
+//        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult(); // 流程：调节前处理
         Map<String,Object> var=new HashMap<>();
         var.put("paramBeforeMediate",0);
         taskService.complete(currentTask.getId(),var);
@@ -1111,10 +1118,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             String specificId=userRepository.findByPhone(phone).getSpecificId();
             AutoSendUtil.sendSms(caseId,phone,name);
             String email=normalUserRepository.getOne(specificId).getEmail();
-//            String email=normalUserRepository.findByIdCard(disputecaseApply.getIdCard()).get(0).getEmail();
             if(!(email==null || email==""))
                 AutoSendUtil.sendEmail(name,email,caseId);
         }
+        /** 挂起流程，自动累加结束时间 */
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        currentProcess.setIsSuspended(1);
+        disputecaseProcessRepository.save(currentProcess);
 
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.INFORMINDENTY_SUCCESS.getCode(),DisputeProgressEnum.INFORMINDENTY_SUCCESS.getMsg());
     }
@@ -1280,10 +1290,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public void setStartTimeAndEndTime(String caseId) {
+    public void setStartTimeAndEndTime(String caseId) throws Exception{
         DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         Date currentDate=new Date();
         currentProcess.setStartimeDisputecase(currentDate);
-        Date endDate= GetWorkingTimeUtil
+        Date endDate= getWorkingTimeUtil.calWorkingTime(currentDate,30);
+        currentProcess.setEndtimeDisputecase(endDate);
+        disputecaseProcessRepository.save(currentProcess);
     }
 }

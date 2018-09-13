@@ -20,10 +20,15 @@ public class DisputecaseAccessory {
     private String normaluserUpload;
     /** 问询医院json */
     private String inquireHospital;
-    /** 专家申请（专家邀请书*1+材料*n）*/
-    private String appointExpert;
     /** 代理人委托书*n */
     private String proxyCertification;
+    /** 告知书确认函 */
+    private String notificationAffirm;
+    /** 专家申请（专家邀请书*1+材料*n）*/
+    private String appointExpert;
+    /** 受理通知书 */
+    private String acceptanceNotice;
+
 
 
     public DisputecaseAccessory(String id, String disputecaseId, String medicaldamageAssessment, String normaluserUpload, String inquireHospital, String appointExpert, String proxyCertification) {

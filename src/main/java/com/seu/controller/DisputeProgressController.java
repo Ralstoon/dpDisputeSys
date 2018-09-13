@@ -54,74 +54,7 @@ public class DisputeProgressController {
 
     @Autowired
     private VerifyProcessUtil verifyProcessUtil;
-    /*
-     *@Author 吴宇航
-     *@Description  纠纷登记功能，由当前用户操作;
-     *@Date 22:05 2018/7/20
-     *@Param [disputeRegisterDetailForm, bindingResult, session]
-     *@return com.seu.ViewObject.ResultVO
-     **/
-    // TODO 存在问题，即用户必须在进入纠纷登记页面后完成整个操作，否则不会做任何保存
-    // TODO 问题2，未对用的身份信息进行认证（姓名、身份证）
-    // TODO 大改，卸载登记controller中
-//    @PostMapping(value="/disputeRegister")
-//    @Transactional
-//    public ResultVO disputeRegister(@Valid DisputeRegisterDetailForm disputeRegisterDetailForm,
-//                                    BindingResult bindingResult){
-//        if(bindingResult.hasErrors()){
-//            // bindingResult.getFieldError().getDefaultMessage()表示返回验证失败的地方，比如XX必填
-//            Map<String,Object> param=new HashMap<>();
-//            param.put("data",bindingResult.getFieldError().getDefaultMessage());
-//            return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.DISPUTEREGISTER_FAIL.getCode(),DisputeProgressEnum.DISPUTEREGISTER_FAIL.getMsg());
-//        }
-//        //1、存储纠纷信息
-////        String userId=((NormalUser)session.getAttribute("currentUser")).getUserId();
-//        String userId=disputeRegisterDetailForm.getID();
-//        disputeRegisterDetailForm=new DisputeRegisterDetailForm(); //测试用，到时候删去
-//        String disputeId=disputeProgressService.saveDisputeInfo(disputeRegisterDetailForm,userId);
-//        System.out.println("disputeId："+disputeId);
-//        String name= normalUserService.findNormalUserNameByFatherId(userId);
-//        String email= normalUserService.findEmailByUserId(userId);
-//        String phone = normalUserService.findPhoneByUserId(userId);
-//
-//
-////        session.setAttribute("name",name);
-//        Map<String,Object> vars=new HashMap<>();
-//        vars.put("disputeId",disputeId);
-//        vars.put("userId",userId);
-//        vars.put("email",email);
-//
-//        vars.put("phone",phone);
-//
-//        //2、用纠纷信息id启动流程
-//        disputeProgressService.startProcess(disputeId,vars);
-//
-//        //3、完成纠纷登记操作
-//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-//        disputeProgressService.completeCurrentTask(tasks.get(0).getId());
-//        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
-//        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getCode(),DisputeProgressEnum.DISPUTEREGISTER_SUCCESS.getMsg());
-//
-//    }
 
-    /*
-     *@Author 吴宇航
-     *@Description  //暂存确认功能，建立在调解员选定具体案例并且确认
-     *@Date 21:07 2018/7/20
-     *@Param [starterId, session] 假设前端传过来要确认的纠纷案例id或者当事人id，目前只写了当事人id
-     *@return com.seu.ViewObject.ResultVO
-     **/
-    //TODO 假设是调解员登录
-    @PostMapping(value="/temporaryConfirm")
-    public ResultVO temporaryConfirm(@RequestParam("disputeId") String disputeId,
-                                     @RequestParam("ID") String ID){
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-        disputeProgressService.completeCurrentTask(tasks.get(0).getId());
-        String name=mediatorService.findNameByID(ID);
-        Map<String,Object> map=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
-        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getCode(),DisputeProgressEnum.TEMPORARYCONFIRM_SUCCESS.getMsg());
-
-    }
 
     /*
      *@Author 吴宇航
@@ -135,13 +68,14 @@ public class DisputeProgressController {
     // TODO 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间(已完成)
     @PostMapping(value="/DisposeApply")
     @Transactional
-    public ResultVO caseAccept(@RequestBody JSONObject map){
+    public ResultVO caseAccept(@RequestBody JSONObject map) throws Exception {
         Integer result=map.getInteger("result");
         String disputeId=map.getString("caseId");
         String ID=map.getString("id");
         String name=userService.findNameById(ID);
 
-        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"立案判断");
         Map<String,Object> var=new HashMap<>();
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputeId);
         if(result==0){
@@ -152,6 +86,8 @@ public class DisputeProgressController {
         else{
             var.put("caseAccept",1);  //通过
             disputecaseProcess.setStatus("1");
+            /** 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间 */
+            disputeProgressService.setStartTimeAndEndTime(disputeId);
         }
 
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
@@ -189,32 +125,6 @@ public class DisputeProgressController {
 
 
 
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private RuntimeService runtimeService;
-    @Autowired
-    private DisputecaseRepository disputecaseRepository;
-
-
-    /**
-     * @Author: W
-     * @Description: 查询待办任务，根据 参数 task
-     * @Date: 18:08 2018/7/21
-     * @param
-     * @param size
-     */
-//    @PostMapping(value = "/taskList")
-//    public ResultVO testlist(@RequestParam(value = "page",defaultValue = "1") Integer page,
-//                             @RequestParam(value = "size",defaultValue = "10") Integer size,
-//                             @RequestParam("task") String task){
-//        //todo 身份认证
-//        List<DisputeCaseForm> disputeCaseFormList=disputeProgressService.getDisputeListByTask(task,page-1,size);
-//        Map<String,Object> map=new HashMap<>();
-//        map.put("disputeCaseList",disputeCaseFormList);
-//        return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_TASK_SUCCESS.getCode(),DisputeProgressEnum.SEARCH_TASK_SUCCESS.getMsg());
-//    }
-
     @PostMapping(value = "/historicTaskList")
     public ResultVO getHistoricTaskListByDispute(@RequestParam(value = "disputeId") String disputeId){
         List<HistoricTaskForm> historicTaskFormList = disputeProgressService
@@ -224,32 +134,7 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(map,DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getCode(),DisputeProgressEnum.SEARCH_HISTORICTASKLIST_SUCESS.getMsg());
     }
 
-    // TODO 流程测试
-    /*
-     *@Author 吴宇航
-     *@Description  //调解员确定用户(纠纷案件) 完成”调解员选用户“任务
-     *@Date 17:01 2018/7/24
-     *@Param [disputeId, session]
-     *@return com.seu.ViewObject.ResultVO
-     **/
-    @PostMapping(value = "/mediator/forhandler")
-    public ResultVO mediatorSelectUser(@RequestBody Map<String, String> map){
-        String disputeId = map.get("CaseId");
-        String ID = map.get("id");
-//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
-        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"调解员选用户");
-        Task currentTask=null;
-        for(Task task:tasks){
-            if(task.getName().equals("调解员选用户")){
-                currentTask=task;
-                break;
-            }
-        }
-        disputeProgressService.completeCurrentTask(currentTask.getId());
-        /** 为案件进程表添加调解员申请状态*/
-        disputeProgressService.updateApplyStatus(disputeId,ID);
-        return ResultVOUtil.ReturnBack(DisputeProgressEnum.MEDIATORSELECTCASE_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORSELECTCASE_SUCCESS.getMsg());
-    }
+
 
     /** 调解员申请回避 */
     @PostMapping(value = "/mediator/fordebarb")
@@ -363,16 +248,18 @@ public class DisputeProgressController {
         return disputeProgressService.getMediationStage(caseId);
     }
 
-    /** 发送鉴定结果数据 */
+    /** 发送医疗/损害鉴定结果数据 */
     @PostMapping(value = "/mediator/resultOfIndent")
     public ResultVO setResultOfIndent(@RequestBody Map<String, String> map){
 
         String caseId = map.get("CaseId");
         String resultOfIndent = map.get("resultOfIndent");
-
+        //TODO 发送文件未做 wj
         return disputeProgressService.setResultOfIndent(caseId,resultOfIndent);
     }
 
+
+    // TODO 如果有专家预约，要怎么发送数据来保证格式统一
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
     public ResultVO setAppoint(@RequestBody Map<String, String> map){
@@ -380,7 +267,7 @@ public class DisputeProgressController {
         String currentStageContent = map.get("currentStageContent");
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }
-    //管理员选择具体某个调解员调解某个案件   wj
+    //管理员选择具体某个调解员调解某个案件 （管理者做决定）  wj
     @PostMapping(value = "/manager/PostMediatorForCase")
     @Transactional
     public ResultVO decideMediatorDisputeCase(@RequestBody Map<String, String> map){
@@ -388,7 +275,7 @@ public class DisputeProgressController {
         String mediatorId = map.get("MediatorId");
         String disputeId = map.get("CaseId");
         if(mediatorId==null||mediatorId.trim()=="" ||mediatorId.trim().equals("")){
-            return ResultVOUtil.ReturnBack(-105,"调解员id未获取到");
+            return ResultVOUtil.ReturnBack(DisputeProgressEnum.FINDMEDIATOR_FAIL.getCode(),DisputeProgressEnum.FINDMEDIATOR_FAIL.getMsg());
         }
         List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定");
         Task currentTask=null;
@@ -399,7 +286,6 @@ public class DisputeProgressController {
             }
         }
         disputeProgressService.completeCurrentTask(currentTask.getId());
-
         disputeProgressService.updateCaseStatus(disputeId,"2");
         return disputeProgressService.decideMediatorDisputeCase(mediatorId, disputeId);
     }

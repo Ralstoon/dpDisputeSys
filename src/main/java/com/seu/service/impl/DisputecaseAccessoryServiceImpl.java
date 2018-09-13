@@ -91,7 +91,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             List<NormalUserUpload> normalUserUploadList =  new ArrayList<NormalUserUpload>();
             normalUserUploadList.add(normalUserUpload);
             String normaluserUpload = JSONArray.fromObject(normalUserUploadList).toString();
-            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload,null);
+            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload,null,null,null);
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(normalUserUpload, DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getMsg());
         }
@@ -132,20 +132,11 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
 
         DisputecaseAccessory dA = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
-        if(dA == null){
-            String id = KeyUtil.genUniqueKey();
-            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
-            disputecaseAccessory.setId(id);
-            disputecaseAccessory.setDisputecaseId(caseId);
-            disputecaseAccessory.setInquireHospital(inquireHospital);
-            disputecaseAccessoryRepository.save(disputecaseAccessory);
-            return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
-        }
-        else {
-            dA.setInquireHospital(inquireHospital);
-            disputecaseAccessoryRepository.save(dA);
-            return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
+        // TODO 考虑第一次添加和非第一次添加，第一次添加要初始化这个字段
+//        dA.setInquireHospital(inquireHospital);
+        disputecaseAccessoryRepository.save(dA);
+        return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
 
-        }
+
     }
 }
