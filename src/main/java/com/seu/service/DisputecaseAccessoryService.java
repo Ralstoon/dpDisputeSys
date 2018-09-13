@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 
 public interface DisputecaseAccessoryService {
     String uploadFile(FileInputStream file, String fileName);
@@ -14,5 +15,10 @@ public interface DisputecaseAccessoryService {
     ResultVO normalFileList(String disputeId);
 
     /** 问询医院 */
-    ResultVO addInquireHospital(String caseId, String inquireHospital);
+    ResultVO addInquireHospital(MultipartFile[] multipartFiles, String text, String disputeID, String isFinished) throws IOException;
+
+    ResultVO addNotificationAffirm(MultipartFile multipartFile, String disputeId) throws IOException;
+    ResultVO addProxyCertification(MultipartFile multipartFile, String disputeId) throws IOException;
+
+    ResultVO addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws IOException;
 }

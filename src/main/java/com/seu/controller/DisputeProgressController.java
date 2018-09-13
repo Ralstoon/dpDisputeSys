@@ -2,9 +2,11 @@ package com.seu.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.ChangeAuthorityForm;
@@ -12,6 +14,8 @@ import com.seu.form.CommentForm;
 import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
+import com.seu.form.VOForm.NormalUserUploadListForm;
+import com.seu.repository.DisputecaseAccessoryRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.DisputecaseRepository;
 import com.seu.service.*;
@@ -26,8 +30,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +70,7 @@ public class DisputeProgressController {
      *@Param [result通过与否, starterId当前审核案件用户id, session]
      *@return com.seu.ViewObject.ResultVO
      **/
+    // TODO 流程测试
     // TODO 完成以下todo后删除
     // TODO 加入上传 受理、不予立案的通知书 并发送给用户(申请人和代理人)
     // TODO 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间(已完成)
@@ -291,20 +299,20 @@ public class DisputeProgressController {
     }
 
 
-    // TODO 待修改，完成后删除该todo
-    //发送问询医院数据
-    @PostMapping(value = "/detail/InquireInstitute")
-    @Transactional
-    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
-        // TODO 记得使用List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"问询医院");来确认当前任务是否是问询医院，否的话会自动返回异常
-        // TODO 问询医院的流程参数为 paramInquireHospital 0/1(Integer)
-        // TODO 问询医院每次进来都查找下task，上传保存资料，设置流程参数后完成当前任务
-
-        String caseId = map.get("caseId");
-        String inquireText = map.get("inquireText");
-
-        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
-    }
+//    // TODO 待修改，完成后删除该todo
+//    //发送问询医院数据
+//    @PostMapping(value = "/detail/InquireInstitute")
+//    @Transactional
+//    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
+//        // TODO 记得使用List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"问询医院");来确认当前任务是否是问询医院，否的话会自动返回异常
+//        // TODO 问询医院的流程参数为 paramInquireHospital 0/1(Integer)
+//        // TODO 问询医院每次进来都查找下task，上传保存资料，设置流程参数后完成当前任务
+//
+//        String caseId = map.get("caseId");
+//        String inquireText = map.get("inquireText");
+//
+//        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
+//    }
 
     //发送调解失败
     @PostMapping(value = "/mediator/MediationFailure")
@@ -358,6 +366,45 @@ public class DisputeProgressController {
         return disputeProgressService.getAuthority(id);
     }
 
+    @Autowired
+    private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
+
+    // 闻讯医院 todo only update accessory
+    @PostMapping(value = "/inqueryHospital")
+    public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
+                                    @RequestParam("text") String text,
+                                    @RequestParam("caseId") String disputeID,
+                                    @RequestParam("isFinisihed") String isFinished) throws IOException {
+
+        return disputecaseAccessoryService.addInquireHospital(multipartFiles, text, disputeID, isFinished);
+    }
+
+    // 获取闻讯医院结果
+    @PostMapping(value = "/getInqueryHospitalList")
+    public ResultVO getInqueryHospitalList(@RequestBody Map<String, String> map){
+
+        String disputeId = map.get("caseId");
+
+        ;
+
+        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
+    }
+
+    // 提交告知书确认函
+    @PostMapping(value = "/uploadNotificationAffirm")
+    public ResultVO uploadNotificationAffirm(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addNotificationAffirm(multipartFile, disputeId);
+    }
+
+    // 提交代理人委托书
+    @PostMapping(value = "/uploadProxyCertification")
+    public ResultVO uploadProxyCertification(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addProxyCertification(multipartFile, disputeId);
+    }
 
 
     /** 管理者获取该案件 的用户意向调解员 */
@@ -381,4 +428,13 @@ public class DisputeProgressController {
     public ResultVO getAllMediator(){
         return disputeProgressService.getAllMediator();
     }
+    //提交专家申请书
+    public ResultVO uploadExportApply(@RequestParam(value = "application", required=false) MultipartFile application,
+                                             @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail,
+                                             @RequestParam("caseId") String disputeId) throws IOException {
+
+        return disputecaseAccessoryService.addExportApply(application, applicationDetail, disputeId);
+    }
+
+    //
 }

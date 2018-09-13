@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import java.util.Date;
 import javax.persistence.OneToOne;
 import java.util.Date;
+import java.util.Date;
 
 /**
  * @ClassName DisputecaseProcess
@@ -43,7 +44,7 @@ public class DisputecaseProcess {
     /** 调解结束时间 */
     private Date endtimeDisputecase;
     /** 进程是否挂起 */
-    private Integer isSuspended;
+    private Boolean isSuspended = Boolean.FALSE;
 
     public DisputecaseProcess() {
     }
@@ -59,6 +60,8 @@ public class DisputecaseProcess {
         this.mediateStage = mediateStage;
         this.startimeDisputecase = startimeDisputecase;
         this.endtimeDisputecase = endtimeDisputecase;
-        this.isSuspended = isSuspended;
+
     }
+
+
 }

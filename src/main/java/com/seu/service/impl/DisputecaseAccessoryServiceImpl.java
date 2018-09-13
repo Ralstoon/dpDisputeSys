@@ -1,5 +1,6 @@
 package com.seu.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.qiniu.common.QiniuException;
@@ -12,11 +13,13 @@ import com.qiniu.util.Auth;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.ConstantQiniu;
+import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.NormalUserUpload;
 import com.seu.enums.DisputecaseAccessoryEnum;
 import com.seu.repository.DiseaseListRepository;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.repository.DisputecaseRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
@@ -27,8 +30,10 @@ import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +51,12 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Autowired
     private VerifyProcessUtil verifyProcessUtil;
+
+    @Autowired
+    private DisputecaseAccessoryService disputecaseAccessoryService;
+
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
 
     @Override
     public String uploadFile(FileInputStream file, String fileName){
@@ -91,7 +102,10 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             List<NormalUserUpload> normalUserUploadList =  new ArrayList<NormalUserUpload>();
             normalUserUploadList.add(normalUserUpload);
             String normaluserUpload = JSONArray.fromObject(normalUserUploadList).toString();
-            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload,null,null,null);
+            DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
+            disputecaseAccessory.setId(id);
+            disputecaseAccessory.setDisputecaseId(disputeID);
+            disputecaseAccessory.setNormaluserUpload(normaluserUpload);
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(normalUserUpload, DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getMsg());
         }
@@ -118,25 +132,100 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     }
 
     @Override
-    public ResultVO addInquireHospital(String caseId, String inquireHospital){
+    public ResultVO addInquireHospital(MultipartFile[] multipartFiles,
+                                       String text,
+                                       String disputeID,
+                                       String isFinished) throws IOException {
         //todo activiti test
-        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"问询医院");
-        Task currentTask=null;
-        for(Task task:tasks){
-            if(task.getName().trim().equals("问询医院")){
-                currentTask=task;
-                break;
-            }
+
+        Disputecase disputecase = disputecaseRepository.findOne(disputeID);
+
+        String title =disputecase.getCaseName();
+
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeID);
+        com.alibaba.fastjson.JSONArray inquireHospital;
+        if(disputecaseAccessory.getInquireHospital() == null){
+            inquireHospital= com.alibaba.fastjson.JSONArray.parseArray("[]");
+        }else {
+            inquireHospital= com.alibaba.fastjson.JSONArray.parseArray(disputecaseAccessory.getInquireHospital());
         }
-        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
+        com.alibaba.fastjson.JSONArray files= com.alibaba.fastjson.JSONArray.parseArray("[]");
+
+        for (MultipartFile multipartFile: multipartFiles){
+            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+            FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+            String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
+            obj.put("url","http://"+url);
+            obj.put("name",multipartFile.getOriginalFilename());
+            files.add(obj);
+        }
+        save.put("file", files);
+        save.put("text", text);
+        save.put("isFinisihed", isFinished);
+
+        inquireHospital.add(save);
+
+        disputecaseAccessory.setInquireHospital(inquireHospital.toString());
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+
+        return ResultVOUtil.ReturnBack(112,"闻讯医院成功");
+    }
+
+    @Override
+    public ResultVO addNotificationAffirm(MultipartFile multipartFile, String disputeId) throws IOException {
 
 
-        DisputecaseAccessory dA = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
-        // TODO 考虑第一次添加和非第一次添加，第一次添加要初始化这个字段
-//        dA.setInquireHospital(inquireHospital);
-        disputecaseAccessoryRepository.save(dA);
-        return ResultVOUtil.ReturnBack(DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDINQUIREHOSPITAL_SUCCESS.getMsg());
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ multipartFile.getOriginalFilename());
 
 
+        disputecaseAccessory.setNotificationAffirm("http://"+url);
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+        return ResultVOUtil.ReturnBack(112,"上传告知书确认成功");
+    }
+
+    @Override
+    public ResultVO addProxyCertification(MultipartFile multipartFile, String disputeId) throws IOException {
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ multipartFile.getOriginalFilename());
+
+
+        disputecaseAccessory.setProxyCertification("http://"+url);
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+        return ResultVOUtil.ReturnBack(112,"上传代理人委托书成功");
+    }
+
+    @Override
+    public ResultVO addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws IOException {
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+        FileInputStream inputStream = (FileInputStream) application.getInputStream();
+        String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
+        com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
+        com.alibaba.fastjson.JSONObject applicationJson= com.alibaba.fastjson.JSONObject.parseObject("{}");
+        applicationJson.put("url", applicationUrl);
+        applicationJson.put("name", application.getOriginalFilename());
+        save.put("application", application);
+        com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("{}");
+        for (MultipartFile multipartFile: applicationDetail){
+            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+            FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
+            String url = disputecaseAccessoryService.uploadFile(inputStream2, disputeId+"/"+ multipartFile.getOriginalFilename());
+            obj.put("url","http://"+url);
+            obj.put("name",multipartFile.getOriginalFilename());
+            files.add(obj);
+        }
+
+
+
+        return ResultVOUtil.ReturnBack(112,"上传专家申请成功");
     }
 }

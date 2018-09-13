@@ -8,10 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 
 @SpringBootApplication
 @MapperScan("com.seu.repository")
+@EnableScheduling
 //@ComponentScan(basePackages = {"com.seu.common","com.seu.config","com.seu.common"})
 @EnableCaching
 public class DpdisputesysApplication {
