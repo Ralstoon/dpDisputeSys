@@ -130,7 +130,9 @@ public class DisputeProgressController {
      *@Param [result通过与否, starterId当前审核案件用户id, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    // TODO 流程测试
+    // TODO 完成以下todo后删除
+    // TODO 加入上传 受理、不予立案的通知书 并发送给用户(申请人和代理人)
+    // TODO 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间(已完成)
     @PostMapping(value="/DisposeApply")
     @Transactional
     public ResultVO caseAccept(@RequestBody JSONObject map){
@@ -150,6 +152,7 @@ public class DisputeProgressController {
         else{
             var.put("caseAccept",1);  //通过
             disputecaseProcess.setStatus("1");
+            disputeProgressService.setStartTimeAndEndTime(disputeId);
         }
 
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
@@ -288,11 +291,9 @@ public class DisputeProgressController {
 
     /** 获取我的调节中的数据 */
     @PostMapping(value = "/mediator/GetMyMediationData")
-    public ResultVO getMyMediationData(@RequestBody Map<String, String> map){
+    public ResultVO getMyMediationData(@RequestBody JSONObject map){
 
-        String id = map.get("id");
-
-        return disputeProgressService.getMyMediationData(id);
+        return disputeProgressService.getMyMediationData(map);
     }
 
     /** 管理者获取案件列表 */
@@ -405,11 +406,15 @@ public class DisputeProgressController {
     }
 
 
-    // TODO 要改
+    // TODO 待修改，完成后删除该todo
     //发送问询医院数据
     @PostMapping(value = "/detail/InquireInstitute")
     @Transactional
     public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
+        // TODO 记得使用List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"问询医院");来确认当前任务是否是问询医院，否的话会自动返回异常
+        // TODO 问询医院的流程参数为 paramInquireHospital 0/1(Integer)
+        // TODO 问询医院每次进来都查找下task，上传保存资料，设置流程参数后完成当前任务
+
         String caseId = map.get("caseId");
         String inquireText = map.get("inquireText");
 
