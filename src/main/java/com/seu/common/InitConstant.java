@@ -51,5 +51,6 @@ public interface InitConstant {
 
     String currentProcess="当前应操作的流程是：[ %s ]";
 
+    String getTimeUrl="http://api.goseek.cn/Tools/holiday?date=";
 
 }

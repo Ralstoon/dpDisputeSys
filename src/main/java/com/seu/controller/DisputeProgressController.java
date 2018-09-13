@@ -386,7 +386,7 @@ public class DisputeProgressController {
         String mediatorId = map.get("MediatorId");
         String disputeId = map.get("CaseId");
 
-        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定,调解员选用户");
+        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"管理员做决定");
         Task currentTask=null;
         for(Task task:tasks){
             if(task.getName().equals("管理员做决定")){
