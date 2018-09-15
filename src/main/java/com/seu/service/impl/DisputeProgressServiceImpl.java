@@ -1035,7 +1035,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Integer stage=mediateStage.getInteger("stage");
         Integer currentStatus=mediateStage.getInteger("currentStatus");
         JSONArray stageContent=mediateStage.getJSONArray("stageContent");
-        stageContent.remove(stage-1);
+        if(stage>0)
+            stageContent.remove(stage-1);
         stageContent.add(JSONObject.parseObject(currentStageContent));
         mediateStage.put("stageContent",stageContent);
         disputecaseProcess.setMediateStage(mediateStage.toString());
@@ -1099,7 +1100,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Transactional
     public ResultVO informIndenty(String caseId) {
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调节前处理");
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解前处理");
         Task currentTask=null;
         for(Task taskOne:tasks)
             if(taskOne.getName().equals("调解前处理")){

@@ -16,6 +16,7 @@ import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.form.VOForm.NormalUserUploadListForm;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.repository.DisputecaseActivitiRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
@@ -33,10 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/DisputeWeb")
@@ -72,12 +70,43 @@ public class DisputeProgressController {
     // TODO 完成以下todo后删除
     // TODO 加入上传 受理、不予立案的通知书 并发送给用户(申请人和代理人)
     //
+//    @PostMapping(value="/DisposeApply")
+//    @Transactional
+//    public ResultVO caseAccept(@RequestBody JSONObject map) throws Exception {
+//        Integer result=map.getInteger("result");
+//        String disputeId=map.getString("caseId");
+//        String ID=map.getString("id");
+//        String name=userService.findNameById(ID);
+//
+////        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
+//        List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"立案判断");
+//        Map<String,Object> var=new HashMap<>();
+//        DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputeId);
+//        if(result==0){
+//            var.put("caseAccept",0);  //不通过
+//            disputecaseProcess.setStatus("8");
+//        }
+//
+//        else{
+//            var.put("caseAccept",1);  //通过
+//            disputecaseProcess.setStatus("1");
+//            /** 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间 */
+//            disputeProgressService.setStartTimeAndEndTime(disputeId);
+//        }
+//
+//        disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
+//
+//
+//        disputecaseProcessRepository.save(disputecaseProcess);
+//        Map<String,Object> param=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
+//        return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.CASEACCEPT_SUCCESS.getCode(),DisputeProgressEnum.CASEACCEPT_SUCCESS.getMsg());
+//    }
     @PostMapping(value="/DisposeApply")
     @Transactional
-    public ResultVO caseAccept(@RequestBody JSONObject map) throws Exception {
-        Integer result=map.getInteger("result");
-        String disputeId=map.getString("caseId");
-        String ID=map.getString("id");
+    public ResultVO caseAccept(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                               @RequestParam("result") Integer result,
+                               @RequestParam("caseId") String disputeId,
+                               @RequestParam("id") String ID) throws Exception {
         String name=userService.findNameById(ID);
 
 //        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
@@ -95,7 +124,7 @@ public class DisputeProgressController {
             /** 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间 */
             disputeProgressService.setStartTimeAndEndTime(disputeId);
         }
-
+        String url = disputecaseAccessoryService.addAcceptanceNotification(multipartFile, disputeId);
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
 
 
@@ -265,7 +294,7 @@ public class DisputeProgressController {
     }
 
 
-    // TODO 如果有专家预约，要怎么发送数据来保证格式统一
+    // TODO 如果有专家预约，要怎么发送数据来保证格式统一   //调节前处理
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
     public ResultVO setAppoint(@RequestBody Map<String, String> map){
@@ -434,5 +463,57 @@ public class DisputeProgressController {
         return disputecaseAccessoryService.addExportApply(application, applicationDetail, disputeId);
     }
 
-    //
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+
+//    // 调解前预约 调解员判断 是否进行 专家预约，调解员线下确认时间
+//    @PostMapping("/mediator/appointBeforeMediate")
+//    public ResultVO appointBeforeMediate(Map<String, Object> map){
+//        String disputeId = (String)map.get("caseId");
+//        Date mediteTime = (Date)map.get("mediteTime");
+//        String mediationPlace =(String)map.get("mediationPlace");
+//        //String appointResult = (String)map.get("appointResult");
+//
+//        String ms=disputecaseProcessRepository.findByDisputecaseId(disputeId).getMediateStage();
+//        JSONObject mediateStage=JSONObject.parseObject(ms);
+//        Integer stage=mediateStage.getInteger("stage");
+//        JSONObject currentStageContent=mediateStage.getJSONArray("stageContent").getJSONObject(stage-1);
+//        currentStageContent.getJSONObject("particopateContact").put("mediationTime", mediteTime);
+//        currentStageContent.getJSONObject("particopateContact").put("mediationPlace", mediationPlace);
+//
+//        Map<String, Object> var = new HashMap<>();
+//        var.put("disputeId", disputeId);
+//        var.put("appointResult", (String)map.get("appointResult"));
+//
+//        String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
+//        Task currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
+//
+//        disputeProgressService.completeCurrentTask(currentTask.getId(), var);
+//        return null;
+//    }
+
+//    //专家预约审核前，用户上传申请材料查看
+//    @PostMapping("/exportAppointApplication")
+//    public  ResultVO exportAppointApplication(Map<String, String> map) {
+//
+//        String disputeId = map.get("caseId");
+//        return ResultVOUtil.ReturnBack(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getAppointExpert(),112, "获取用户 专家申请资料。");
+//    }
+
+    //专家预约审核
+    @PostMapping("/exportAppointCheck")
+    public ResultVO ExportAppointCheck(Map<String, String> map){
+        String disputeId = map.get("caseId");
+
+        String exportAppointCheck = map.get("exportAppointCheck");//意见， 同意或不同意1/0
+        Map<String, Object> var = new HashMap<>();
+        var.put("exportAppointCheck", exportAppointCheck);
+
+//            String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
+        Task currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
+        disputeProgressService.completeCurrentTask(currentTask.getId(), var);
+
+        return ResultVOUtil.ReturnBack(map,112,"审核完成");
+    }
+
 }

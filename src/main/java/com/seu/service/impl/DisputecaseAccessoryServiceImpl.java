@@ -268,4 +268,19 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
         return ResultVOUtil.ReturnBack(112,"上传专家申请成功");
     }
+
+    @Override
+    public String addAcceptanceNotification(MultipartFile multipartFile, String disputeId) throws IOException {
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ multipartFile.getOriginalFilename());
+
+
+        disputecaseAccessory.setAcceptanceNotice("http://"+url);
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+
+        return  url;
+    }
 }
