@@ -254,14 +254,13 @@ public class DisputeProgressController {
         return disputeProgressService.getMediationStage(caseId);
     }
 
-    /** 发送医疗/损害鉴定结果数据 */
+    /** 发送医疗鉴定结果数据 */
     @PostMapping(value = "/mediator/resultOfIndent")
-    public ResultVO setResultOfIndent(@RequestBody Map<String, String> map){
+    public ResultVO setResultOfIndent(@RequestParam("caseId") String caseId,
+                                      @RequestParam("text") String text,
+                                      @RequestParam(value = "file",required = false) MultipartFile[] multipartFiles){
 
-        String caseId = map.get("CaseId");
-        String resultOfIndent = map.get("resultOfIndent");
-        //TODO 发送文件未做 wj
-        return disputeProgressService.setResultOfIndent(caseId,resultOfIndent);
+        return disputeProgressService.setResultOfIndent(caseId,text,multipartFiles);
     }
 
 
@@ -297,20 +296,7 @@ public class DisputeProgressController {
     }
 
 
-//    // TODO 待修改，完成后删除该todo
-//    //发送问询医院数据
-//    @PostMapping(value = "/detail/InquireInstitute")
-//    @Transactional
-//    public ResultVO inquireInstitute(@RequestBody Map<String, String> map){
-//        // TODO 记得使用List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"问询医院");来确认当前任务是否是问询医院，否的话会自动返回异常
-//        // TODO 问询医院的流程参数为 paramInquireHospital 0/1(Integer)
-//        // TODO 问询医院每次进来都查找下task，上传保存资料，设置流程参数后完成当前任务
-//
-//        String caseId = map.get("caseId");
-//        String inquireText = map.get("inquireText");
-//
-//        return disputecaseAccessoryService.addInquireHospital(caseId, inquireText);
-//    }
+
 
     //发送调解失败
     @PostMapping(value = "/mediator/MediationFailure")
@@ -367,7 +353,7 @@ public class DisputeProgressController {
     @Autowired
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
-    // 闻讯医院
+    // 问询医院
     @PostMapping(value = "/inqueryHospital")
     public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
                                     @RequestParam("text") String text,
@@ -434,5 +420,5 @@ public class DisputeProgressController {
         return disputecaseAccessoryService.addExportApply(application, applicationDetail, disputeId);
     }
 
-    //
+    /** 管理者查看所有预约专家的案件 */
 }

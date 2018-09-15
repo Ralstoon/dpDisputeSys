@@ -65,17 +65,17 @@ public class ESInsert {
 
 
     public static void main(String[] args) throws Exception {
-//        String index="手术_index";
-//        String index_type=index+"_type";
-//        String url="D:\\Documents\\WorkSpace\\worksapce_python\\666\\data\\operators_all.txt";
-//        new ESInsert().insertJSON(url,index,index_type);
+        String index="疾病_index";
+        String index_type=index+"_type";
+        String url="D:\\Documents\\WorkSpace\\worksapce_python\\666\\data\\disease.txt";
+        new ESInsert().insertJSON(url,index,index_type);
 
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println(new Date());
-        String s=sdf.format(new Date());
-        System.out.println(s);
-        Date cur=sdf.parse(s);
-        System.out.println(cur);
+//        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println(new Date());
+//        String s=sdf.format(new Date());
+//        System.out.println(s);
+//        Date cur=sdf.parse(s);
+//        System.out.println(cur);
     }
 
 }

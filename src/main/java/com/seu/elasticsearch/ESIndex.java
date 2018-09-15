@@ -6,6 +6,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
 
 /**
  * @ClassName ESIndex
@@ -52,8 +53,9 @@ public class ESIndex {
     }
 
     public static void main(String[] args){
+
         try{
-            new ESIndex().createESIndex("手术_index");
+            new ESIndex().createESIndex("疾病_index");
 //            new ESIndex().searchESIndex("operation_index","operation_index_type");
         }catch (Exception e){
             e.printStackTrace();

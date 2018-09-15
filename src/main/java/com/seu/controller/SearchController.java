@@ -1,14 +1,13 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.service.KeyWordsSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName SearchController
@@ -27,22 +26,39 @@ public class SearchController {
     private KeyWordsSearchService keyWordsSearchService;
 
 
-    @GetMapping(value = "/oneWord")
-    public List<String> searchOneWord(@RequestParam("keyword") String keyword) throws Exception{
+    @PostMapping(value = "/oneWord")
+    public List<String> searchOneWord(@RequestBody JSONObject map) throws Exception{
+        String keyword=map.getString("keyword");
+        String type=map.getString("type");
         log.info("=====start=====");
-        List<String> results=keyWordsSearchService.getByOneWord(keyword);
+        List<String> results=keyWordsSearchService.getByOneWord(keyword,type);
         log.info("=====finish=====");
         return results;
     }
 
-    @GetMapping(value = "/words")
-    public List<String> searchByWords(@RequestParam("keywords") String keywords) throws Exception{
+    @PostMapping(value = "/words")
+    public List<String> searchByWords(@RequestBody JSONObject map) throws Exception{
+
+        String keywords=map.getString("keywords");
+        String type=map.getString("type");
         log.info("=====start=====");
-        List<String> results=keyWordsSearchService.getByWords(keywords);
+        List<String> results=keyWordsSearchService.getByWords(keywords,type);
         log.info("=====finish=====");
         return results;
+    }
 
+    @PostMapping(value = "/similarCases")
+    public Map<String,Object> getSimilarCases(@RequestBody JSONObject map){
+        String caseId=map.getString("caseId");
+        Map<String,Object> results=keyWordsSearchService.getSimilarCases(caseId);
+        return results;
+    }
 
+    @PostMapping(value = "/caseDetails")
+    public Object getCaseDetails(@RequestBody JSONObject map){
+        String caseName=map.getString("caseName");
+        String type=map.getString("type");
+        return keyWordsSearchService.getCaseDetails(caseName,type);
     }
 
 }

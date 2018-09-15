@@ -9,6 +9,7 @@ import com.seu.form.HistoricTaskForm;
 import net.sf.json.JSON;
 import org.activiti.engine.task.Task;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
@@ -83,13 +84,11 @@ public interface DisputeProgressService {
     /** 管理员发送授权调解员权限改变信息 */
     ResultVO changeAuthorityNameList(String changeAuthorityFormList);
 
-    // TODO yaogai
     /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
     ResultVO getMediationStage(String caseId);
 
-    // TODO yaogai
     /** 发送鉴定结果数据 */
-    ResultVO setResultOfIndent(String caseId,String resultOfIndent);
+    ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles);
 
     // TODO YAOGAI
     /** 发送预约数据 */

@@ -152,6 +152,13 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 
+		<!-- Hanlp汉语言分词工具 -->
+		<dependency>
+			<groupId>com.hankcs</groupId>
+			<artifactId>hanlp</artifactId>
+			<version>portable-1.2.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
