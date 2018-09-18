@@ -21,4 +21,6 @@ public interface DisputecaseAccessoryService {
     ResultVO addProxyCertification(MultipartFile multipartFile, String disputeId) throws IOException;
 
     ResultVO addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws IOException;
+
+    String addAcceptanceNotification(MultipartFile multipartFile, String disputeId) throws IOException;
 }

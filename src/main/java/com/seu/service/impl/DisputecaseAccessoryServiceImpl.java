@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -169,16 +170,31 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
         com.alibaba.fastjson.JSONArray files= com.alibaba.fastjson.JSONArray.parseArray("[]");
 
-        for (MultipartFile multipartFile: multipartFiles){
-            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-            FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
-            String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
-            obj.put("url","http://"+url);
-            obj.put("name",multipartFile.getOriginalFilename());
-            files.add(obj);
-        }
+        //Arrays.stream(multipartFiles).filter(each -> each.getOriginalFilename() == "");
+
+            for (MultipartFile multipartFile: multipartFiles){
+                com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+                try {
+                    FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+                    String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
+                    obj.put("url","http://"+url);
+                    obj.put("name",multipartFile.getOriginalFilename());
+                    files.add(obj);
+                }catch (Exception e){
+                    obj.put("url","");
+                    obj.put("name","");
+                    files.add(obj);
+                }
+
+            }
+
+
+
         save.put("file", files);
-        save.put("text", text);
+        if(text != null){
+            save.put("text", text);
+        }
+
         save.put("isFinisihed", isFinished);
 
         inquireHospital.add(save);
@@ -251,5 +267,20 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
 
         return ResultVOUtil.ReturnBack(112,"上传专家申请成功");
+    }
+
+    @Override
+    public String addAcceptanceNotification(MultipartFile multipartFile, String disputeId) throws IOException {
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ multipartFile.getOriginalFilename());
+
+
+        disputecaseAccessory.setAcceptanceNotice("http://"+url);
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+
+        return  url;
     }
 }

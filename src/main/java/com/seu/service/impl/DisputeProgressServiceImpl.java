@@ -1117,7 +1117,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Transactional
     public ResultVO informIndenty(String caseId) {
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调节前处理");
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解前处理");
         Task currentTask=null;
         for(Task taskOne:tasks)
             if(taskOne.getName().equals("调解前处理")){
