@@ -410,7 +410,9 @@ public class DisputeProgressController {
     public ResultVO getAllMediator(){
         return disputeProgressService.getAllMediator();
     }
-    //提交专家申请书
+
+
+    /** 提交专家申请书 */
     public ResultVO uploadExportApply(@RequestParam(value = "application", required=false) MultipartFile application,
                                              @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail,
                                              @RequestParam("caseId") String disputeId) throws IOException {
@@ -457,14 +459,13 @@ public class DisputeProgressController {
 
     //专家预约审核
     @PostMapping("/exportAppointCheck")
-    public ResultVO ExportAppointCheck(Map<String, String> map){
+    public ResultVO ExportAppointCheck(@RequestBody Map<String, String> map){
         String disputeId = map.get("caseId");
 
-        String exportAppointCheck = map.get("exportAppointCheck");//意见， 同意或不同意1/0
+        String exportAppointCheck = map.get("profesorVerify");//意见， 同意或不同意1/0
         Map<String, Object> var = new HashMap<>();
-        var.put("exportAppointCheck", exportAppointCheck);
+        var.put("profesorVerify", exportAppointCheck);
 
-//            String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
         disputeProgressService.completeCurrentTask(currentTask.getId(), var);
 
