@@ -246,6 +246,16 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Override
     public ResultVO addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws IOException {
+        /** 设置流程参数 */
+        Integer appointResult=0,paramBeforeMediate=0;
+        if(application!=null){
+            paramBeforeMediate=1;
+            appointResult=1;
+        }
+        String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
+        runtimeService.setVariable(pid,"paramBeforeMediate",paramBeforeMediate);
+        runtimeService.setVariable(pid,"appointResult",appointResult);
+
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
         FileInputStream inputStream = (FileInputStream) application.getInputStream();
         String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
@@ -254,7 +264,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         applicationJson.put("url", applicationUrl);
         applicationJson.put("name", application.getOriginalFilename());
         save.put("application", application);
-        com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("{}");
+        com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("[]");
         for (MultipartFile multipartFile: applicationDetail){
             com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
             FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
@@ -263,9 +273,9 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             obj.put("name",multipartFile.getOriginalFilename());
             files.add(obj);
         }
-
-
-
+        save.put("files",files);
+        disputecaseAccessory.setAppointExpert(save.toString());
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
         return ResultVOUtil.ReturnBack(112,"上传专家申请成功");
     }
 

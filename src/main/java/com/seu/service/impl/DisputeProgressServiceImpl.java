@@ -1067,17 +1067,27 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          * 3、自动发送预约消息
          */
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        Integer result=0;
-        String particopate=JSONObject.parseObject(currentStageContent).getString("particopate");
-        Pattern pattern=Pattern.compile("专家");
-        Matcher matcher=pattern.matcher(particopate);
-        if(matcher.find())
-            result=1;
-        Map<String ,Object> var=new HashMap<>();
-        var.put("paramBeforeMediate",1);
-        var.put("appointResult",result);
-        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
-        taskService.complete(currentTask.getId(),var);
+//        Integer result=0;
+//        String particopate=JSONObject.parseObject(currentStageContent).getString("particopate");
+//        Pattern pattern=Pattern.compile("专家");
+//        Matcher matcher=pattern.matcher(particopate);
+//        if(matcher.find())
+//            result=1;
+//        Map<String ,Object> var=new HashMap<>();
+//        var.put("paramBeforeMediate",1);
+//        var.put("appointResult",result);
+//        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解前处理");
+        Task currentTask=null;
+        for(Task one :tasks)
+            if(one.getName().equals("调解前处理")){
+                currentTask=one;
+                break;
+            }
+        taskService.complete(currentTask.getId());
+        currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        taskService.complete(currentTask.getId());// Wj
+
         // 3的流程看webServiceTask MediateInform
 
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETAPPOINT_SUCCESS.getCode(),DisputeProgressEnum.SETAPPOINT_SUCCESS.getMsg());

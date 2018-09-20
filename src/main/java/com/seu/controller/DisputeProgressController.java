@@ -265,9 +265,11 @@ public class DisputeProgressController {
     // TODO 如果有专家预约，要怎么发送数据来保证格式统一   //调节前处理
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
-    public ResultVO setAppoint(@RequestBody Map<String, String> map){
-        String caseId = map.get("caseId");
-        String currentStageContent = map.get("currentStageContent");
+    public ResultVO setAppoint(@RequestParam("caseId") String caseId,
+                               @RequestParam("currentStageContent") String currentStageContent,
+                               @RequestParam(value = "application", required=false) MultipartFile application,
+                               @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail) throws IOException {
+        disputecaseAccessoryService.addExportApply(application, applicationDetail, caseId);
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }
     //管理员选择具体某个调解员调解某个案件 （管理者做决定）  wj
@@ -470,6 +472,14 @@ public class DisputeProgressController {
         disputeProgressService.completeCurrentTask(currentTask.getId(), var);
 
         return ResultVOUtil.ReturnBack(map,112,"审核完成");
+    }
+
+    // 发送调解文件，完成调解结果处理
+    @PostMapping("/completeCurrentMediate")
+    public ResultVO completeCurrentMediate(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
+                                           @RequestParam("caseId") String disputeID){
+
+        return null;
     }
 
     /** 管理者查看所有预约专家的案件 */
