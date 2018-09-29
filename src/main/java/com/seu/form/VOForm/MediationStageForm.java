@@ -46,4 +46,7 @@ public class MediationStageForm implements Serializable{
 
     private String currentStageContent="[]";
 
+    /** 挂起状态 */
+    private Integer isSuspended;
+
 }

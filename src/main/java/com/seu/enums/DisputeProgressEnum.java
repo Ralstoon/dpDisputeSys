@@ -34,8 +34,8 @@ public enum DisputeProgressEnum {
     MEDIATORGETAUTHORITY_SUCCESS(24,"获取调解员权限成功"),
     GETUSERCHOOSE_SUCCESS(25,"获取案件的意向调解员成功"),
     GETUSERCHOOSE_NONE(26,"该案件未选择意向调解员"),
-    GETADDITIONALALLOCATION_SUCCESS(27,"获取另外分配调解员成功")
-
+    GETADDITIONALALLOCATION_SUCCESS(27,"获取另外分配调解员成功"),
+    GETINFORMATION_SUCCESS(28,"从后台获取信息成功")
 
     ;
     private String msg;

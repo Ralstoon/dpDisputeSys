@@ -23,6 +23,8 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @ClassName MediateInform
@@ -74,14 +76,14 @@ public class MediateInform implements JavaDelegate {
                 sendEmail(caseId,name,email,MediationTime,MediationPlace);
         }
 
-        JSONObject expertChoosed=currentStageContent.getJSONObject("particopateContact").getJSONObject("expertChoosed");
-        String name=expertChoosed.getString("name");
-        String phone=expertChoosed.getString("phone");
-        String email=expertChoosed.getString("email");
-        if(phone.trim()!="")
-            sendSms(caseId,name,phone,MediationTime,MediationPlace);
-        if(email.trim()!="")
-            sendEmail(caseId,name,email,MediationTime,MediationPlace);
+//        JSONObject expertChoosed=currentStageContent.getJSONObject("particopateContact").getJSONObject("expertChoosed");
+//        String name=expertChoosed.getString("name");
+//        String phone=expertChoosed.getString("phone");
+//        String email=expertChoosed.getString("email");
+//        if(phone.trim()!="")
+//            sendSms(caseId,name,phone,MediationTime,MediationPlace);
+//        if(email.trim()!="")
+//            sendEmail(caseId,name,email,MediationTime,MediationPlace);
 
 
 

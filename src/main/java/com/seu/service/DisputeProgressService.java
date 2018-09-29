@@ -37,10 +37,6 @@ public interface DisputeProgressService {
     DisputeRegisterDetailForm getDisputeForm(String disputeId);
 
 
-    //TODO 重写,分步骤进行
-    /** 存储纠纷信息到数据库中 */
-//    String saveDisputeInfo(DisputeRegisterDetailForm disputeRegisterDetailForm,String starterId);
-
 
     /** 通过用户id查找该用户的纠纷案件 */
     List<DisputeCaseForm> getDisputeListByUserId(String userId);
@@ -67,7 +63,7 @@ public interface DisputeProgressService {
     ResultVO getMediationHallData(JSONObject map);
 
     /** 获取我的调节中的数据 */
-    ResultVO getMyMediationData(JSONObject map);
+    ResultVO getMyMediationData(JSONObject map) throws Exception;
 
     /** 管理员获得案件列表 */
     ResultVO getManagerCaseList(JSONObject map) throws Exception;
@@ -79,10 +75,10 @@ public interface DisputeProgressService {
     ResultVO getMediatorList(String id,Pageable pageable);
 
     /** 管理员 获取所有调解员的授权信息 */
-    ResultVO getNameofAuthorityList(String id, Pageable pageable);
+    ResultVO getNameofAuthorityList(JSONObject map);
 
     /** 管理员发送授权调解员权限改变信息 */
-    ResultVO changeAuthorityNameList(String changeAuthorityFormList);
+    ResultVO changeAuthorityNameList(JSONObject map);
 
     /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
     ResultVO getMediationStage(String caseId);
@@ -90,7 +86,6 @@ public interface DisputeProgressService {
     /** 发送鉴定结果数据 */
     ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles);
 
-    // TODO YAOGAI
     /** 发送预约数据 */
     ResultVO setAppoint(String caseId,String currentStageContent);
 
@@ -135,4 +130,15 @@ public interface DisputeProgressService {
 
     /** 立案判断通过后为process表添加 调解开始时间和调解结束时间，初始限时30个工作日 */
     void setStartTimeAndEndTime(String caseId) throws Exception;
+
+    // TODO 改掉假数据
+    /** 问询医院时获取医院信息 */
+    ResultVO getHospitalMessage(String caseId);
+
+    /** 提交问讯结果（文本），问讯医院 */
+    ResultVO inqueryHospital(JSONObject map);
+
+    /** 获取问讯列表 */
+    ResultVO getInqueryHospitalList(String caseId);
+
 }

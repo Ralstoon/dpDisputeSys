@@ -2,7 +2,11 @@ package com.seu.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.seu.common.InitConstant;
+import com.seu.domian.DisputecaseProcess;
+import com.seu.repository.DisputecaseProcessRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
@@ -39,6 +43,7 @@ public class GetWorkingTimeUtil {
      * @param limitTime
      * @return
      */
+    @Async
     public Date calWorkingTime(Date curTime,int limitTime) throws Exception{
         Date endTime=curTime;
         Calendar c=Calendar.getInstance();
@@ -54,4 +59,29 @@ public class GetWorkingTimeUtil {
         return endTime;
     }
 
+
+    @Autowired
+    private DisputecaseProcessRepository disputecaseProcessRepository;
+    public Object calRemainTime(String caseId) throws Exception{
+        DisputecaseProcess dp=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        Date endTime=dp.getEndtimeDisputecase();
+        if(endTime==null)
+            return null;
+        Date currentTime=new Date();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        endTime=sdf.parse(sdf.format(endTime));
+        currentTime=sdf.parse(sdf.format(currentTime));
+
+        Calendar c=Calendar.getInstance();
+        int countdown=0;
+        while(currentTime.getTime()<=endTime.getTime()){
+            Integer result=getResult(endTime);
+            if(result==0)
+                countdown+=1;
+            c.setTime(endTime);
+            c.add(Calendar.DAY_OF_MONTH,1);
+            currentTime=c.getTime();
+        }
+        return countdown;
+    }
 }

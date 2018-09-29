@@ -19,6 +19,8 @@ import com.seu.service.DisputeRegisterService;
 import com.seu.util.MD5Util;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.KeyUtil;
+import com.seu.utils.StrIsEmptyUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -43,7 +45,7 @@ import java.util.*;
  * @Version 1.0
  **/
 @Service
-
+@Slf4j
 public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Autowired
@@ -216,8 +218,6 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             disputecase.setApplyTime(df.parse(dateS));
             disputecase.setId(caseId);
 
-            //disputecase=disputecaseRepository.save(disputecase);
-
             /** disputecase表和disputecaseApply表 */
             /** 创建process表和Accessory表 */
             String processId=KeyUtil.genUniqueKey();
@@ -286,7 +286,8 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
                 disputecaseApplyRepository.save(applyOne);
             }
-            disputecase.setProposerId(proposerId.substring(0, proposerId.length() - 1));
+            if(!StrIsEmptyUtil.isEmpty(processId))
+                disputecase.setProposerId(proposerId.substring(0, proposerId.length() - 1));
             if (agentId == "")
                 disputecase.setAgnetId("");
             else

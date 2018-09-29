@@ -44,6 +44,8 @@ public class ManagerCaseForm {
     private String mediatorid;
     /** 用户意向调解员 */
     private List<intentionOne> userIntention=new ArrayList<>();
+    /** 剩余工作日 */
+    private Object countdown;
 
     public void addUserIntention(String mediatorName,String mediatorId,String mediatorIntention){
         if(userIntention==null)

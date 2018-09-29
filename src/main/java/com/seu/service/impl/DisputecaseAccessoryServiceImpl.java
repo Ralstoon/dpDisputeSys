@@ -31,6 +31,7 @@ import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -169,27 +170,20 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
         com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
         com.alibaba.fastjson.JSONArray files= com.alibaba.fastjson.JSONArray.parseArray("[]");
-
-        //Arrays.stream(multipartFiles).filter(each -> each.getOriginalFilename() == "");
-
-            for (MultipartFile multipartFile: multipartFiles){
-                com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-                try {
-                    FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
-                    String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
-                    obj.put("url","http://"+url);
-                    obj.put("name",multipartFile.getOriginalFilename());
-                    files.add(obj);
-                }catch (Exception e){
-                    obj.put("url","");
-                    obj.put("name","");
-                    files.add(obj);
-                }
-
+        for (MultipartFile multipartFile: multipartFiles){
+            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+            try {
+                FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+                String url = disputecaseAccessoryService.uploadFile(inputStream, title+ multipartFile.getOriginalFilename());
+                obj.put("url","http://"+url);
+                obj.put("name",multipartFile.getOriginalFilename());
+                files.add(obj);
+            }catch (Exception e){
+                obj.put("url","");
+                obj.put("name","");
+                files.add(obj);
             }
-
-
-
+        }
         save.put("file", files);
         if(text != null){
             save.put("text", text);
@@ -245,7 +239,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     }
 
     @Override
-    public ResultVO addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws IOException {
+    public void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
         /** 设置流程参数 */
         Integer appointResult=0,paramBeforeMediate=0;
         if(application!=null){
@@ -257,29 +251,33 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         runtimeService.setVariable(pid,"appointResult",appointResult);
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
-        FileInputStream inputStream = (FileInputStream) application.getInputStream();
-        String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
-        com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
-        com.alibaba.fastjson.JSONObject applicationJson= com.alibaba.fastjson.JSONObject.parseObject("{}");
-        applicationJson.put("url", applicationUrl);
-        applicationJson.put("name", application.getOriginalFilename());
-        save.put("application", application);
-        com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("[]");
-        for (MultipartFile multipartFile: applicationDetail){
-            com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-            FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
-            String url = disputecaseAccessoryService.uploadFile(inputStream2, disputeId+"/"+ multipartFile.getOriginalFilename());
-            obj.put("url","http://"+url);
-            obj.put("name",multipartFile.getOriginalFilename());
-            files.add(obj);
+        if(application!=null){
+            FileInputStream inputStream = (FileInputStream) application.getInputStream();
+            String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
+            com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
+            com.alibaba.fastjson.JSONObject applicationJson= com.alibaba.fastjson.JSONObject.parseObject("{}");
+            applicationJson.put("url", applicationUrl);
+            applicationJson.put("name", application.getOriginalFilename());
+            save.put("application", application);
+            if(applicationDetail.length!=0){
+                com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("[]");
+                for (MultipartFile multipartFile: applicationDetail){
+                    com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+                    FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
+                    String url = disputecaseAccessoryService.uploadFile(inputStream2, disputeId+"/"+ multipartFile.getOriginalFilename());
+                    obj.put("url","http://"+url);
+                    obj.put("name",multipartFile.getOriginalFilename());
+                    files.add(obj);
+                }
+                save.put("files",files);
+            }
+            disputecaseAccessory.setAppointExpert(save.toString());
         }
-        save.put("files",files);
-        disputecaseAccessory.setAppointExpert(save.toString());
         disputecaseAccessoryRepository.save(disputecaseAccessory);
-        return ResultVOUtil.ReturnBack(112,"上传专家申请成功");
     }
 
     @Override
+//    @Async
     public String addAcceptanceNotification(MultipartFile multipartFile, String disputeId) throws IOException {
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
 

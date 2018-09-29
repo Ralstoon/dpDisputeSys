@@ -21,11 +21,14 @@ import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
 import com.seu.utils.VerifyProcessUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +42,7 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/DisputeWeb")
 @CrossOrigin
+@Slf4j
 public class DisputeProgressController {
     @Autowired
     private DisputeProgressService disputeProgressService;
@@ -66,38 +70,49 @@ public class DisputeProgressController {
      *@Param [result通过与否, starterId当前审核案件用户id, session]
      *@return com.seu.ViewObject.ResultVO
      **/
-    // TODO 流程测试
-    // TODO 完成以下todo后删除
-    // TODO 加入上传 受理、不予立案的通知书 并发送给用户(申请人和代理人)
-    // TODO 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间(已完成)
     @PostMapping(value="/DisposeApply")
     @Transactional
     public ResultVO caseAccept(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
                                @RequestParam("result") Integer result,
                                @RequestParam("caseId") String disputeId,
                                @RequestParam("id") String ID) throws Exception {
+        log.info("\n开始 立案判断\n");
         String name=userService.findNameById(ID);
-
-//        List<Task> tasks=disputeProgressService.searchCurrentTasks(disputeId);
         List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"立案判断");
         Map<String,Object> var=new HashMap<>();
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputeId);
+        String status=null;
         if(result==0){
             var.put("caseAccept",0);  //不通过
-            disputecaseProcess.setStatus("8");
+//            disputecaseProcess.setStatus("8");
+            status="8";
         }
 
         else{
             var.put("caseAccept",1);  //通过
-            disputecaseProcess.setStatus("1");
-            /** 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间 */
-            disputeProgressService.setStartTimeAndEndTime(disputeId);
+//            disputecaseProcess.setStatus("1");
+            status="1";
         }
-        String url = disputecaseAccessoryService.addAcceptanceNotification(multipartFile, disputeId);
+        if(result!=0){
+            /** 向数据库process表中添加纠纷开始时间，并计算30个工作日后的结束时间 */
+            log.info("\n开始 计算工作日\n");
+            disputeProgressService.setStartTimeAndEndTime(disputeId);
+            log.info("\n结束 计算工作日\n");
+        }
+
+
+        if(multipartFile!=null){
+            log.info("\n开始 上传文件\n");
+            disputecaseAccessoryService.addAcceptanceNotification(multipartFile, disputeId);
+            log.info("\n结束 上传文件\n");
+        }
+        log.info("\n结束 立案判断\n");
         disputeProgressService.completeCurrentTask(tasks.get(0).getId(),var);
-
-
-        disputecaseProcessRepository.save(disputecaseProcess);
+        log.info("\n开始 修改案件状态\n");
+        System.out.println(status);
+        System.out.println(disputeId);
+        disputeProgressService.updateCaseStatus(disputeId,status);
+        log.info("\n结束 修改案件状态\n");
         Map<String,Object> param=DisputeProcessReturnMap.initDisputeProcessReturnMap(tasks.get(0).getName(),name);
         return ResultVOUtil.ReturnBack(param,DisputeProgressEnum.CASEACCEPT_SUCCESS.getCode(),DisputeProgressEnum.CASEACCEPT_SUCCESS.getMsg());
     }
@@ -144,7 +159,7 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/fordebarb")
     public ResultVO mediatorFordebarb(@RequestBody Map<String, String > map){
 
-        String disputeId = map.get("CaseId");
+        String disputeId = map.get("caseId");
         String ID = map.get("id");
 
         /** 为案件进程表添加调解员回避状态*/
@@ -179,7 +194,7 @@ public class DisputeProgressController {
 
     /** 获取我的调节中的数据 */
     @PostMapping(value = "/mediator/GetMyMediationData")
-    public ResultVO getMyMediationData(@RequestBody JSONObject map){
+    public ResultVO getMyMediationData(@RequestBody JSONObject map) throws Exception{
 
         return disputeProgressService.getMyMediationData(map);
     }
@@ -191,7 +206,8 @@ public class DisputeProgressController {
     }
 
 
-    /** 管理员获取统计管理页面列表 */
+    /** 管理员获取统计管理页面列表
+     * 上送司法厅的分页筛选*/
     @PostMapping(value = "/manager/getCase_judiciary")
     public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
 //
@@ -203,11 +219,12 @@ public class DisputeProgressController {
     /** 管理员获取所有的调解员列表(分页) */
     @PostMapping(value = "/manager/getMediatorListWithPage")
     public ResultVO getMediatorListWithPage(@RequestBody JSONObject map){
-
+        log.info("\n开始 [获取所有调解员列表]\n");
         String caseId=map.getString("caseId");
         Integer page=map.getInteger("page")-1;  // 前端从一开始，后台从0开始
         Integer size=map.getInteger("size");
         PageRequest pageRequest=new PageRequest(page,size);
+        log.info("\n结束 [获取所有调解员列表]\n");
         return disputeProgressService.getMediatorList(caseId,pageRequest);
     }
 
@@ -215,20 +232,14 @@ public class DisputeProgressController {
     @PostMapping(value = "/manager/getNameofAuthorityList")
     public ResultVO getNameofAuthorityList(@RequestBody JSONObject map){
 
-        String id = map.getString("id");
-        Integer page=map.getInteger("page")-1;  // 前端从一开始，后台从0开始
-        Integer size=map.getInteger("size");
-        PageRequest pageRequest=new PageRequest(page,size);
-
-        return disputeProgressService.getNameofAuthorityList(id,pageRequest);
+        return disputeProgressService.getNameofAuthorityList(map);
     }
 
     /**管理员发送授权调解员权限信息 */
     @PostMapping(value = "/manager/ChangeAuthorityNameList")
-    public ResultVO changeAuthorityNameList(@RequestBody Map<String, String> map){
+    public ResultVO changeAuthorityNameList(@RequestBody JSONObject map){
 
-        String changeAuthorityFormList = map.get("param");
-        return disputeProgressService.changeAuthorityNameList(changeAuthorityFormList);
+        return disputeProgressService.changeAuthorityNameList(map);
     }
 
     //添加具体任务的评价
@@ -255,20 +266,19 @@ public class DisputeProgressController {
     /** 发送医疗鉴定结果数据 */
     @PostMapping(value = "/mediator/resultOfIndent")
     public ResultVO setResultOfIndent(@RequestParam("caseId") String caseId,
-                                      @RequestParam("text") String text,
-                                      @RequestParam(value = "file",required = false) MultipartFile[] multipartFiles){
+                                      @RequestParam("resultOfIdentify") String text,
+                                      @RequestParam(value = "files") MultipartFile[] multipartFiles){
 
         return disputeProgressService.setResultOfIndent(caseId,text,multipartFiles);
     }
 
 
-    // TODO 如果有专家预约，要怎么发送数据来保证格式统一   //调节前处理
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
     public ResultVO setAppoint(@RequestParam("caseId") String caseId,
                                @RequestParam("currentStageContent") String currentStageContent,
                                @RequestParam(value = "application", required=false) MultipartFile application,
-                               @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail) throws IOException {
+                               @RequestParam(value = "applicationDetail") MultipartFile[] applicationDetail) throws Exception {
         disputecaseAccessoryService.addExportApply(application, applicationDetail, caseId);
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }
@@ -333,7 +343,7 @@ public class DisputeProgressController {
     /** 通知用户进行医疗鉴定 */
     @PostMapping(value = "/mediator/InformIndenty")
     public  ResultVO informIndenty(@RequestBody Map<String, String> map){
-        String caseId = map.get("CaseId");
+        String caseId = map.get("caseId");
         return disputeProgressService.informIndenty(caseId);
     }
 
@@ -353,26 +363,8 @@ public class DisputeProgressController {
     @Autowired
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
-    // 问询医院
-    @PostMapping(value = "/inqueryHospital")
-    public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
-                                    @RequestParam("text") String text,
-                                    @RequestParam("caseId") String disputeID,
-                                    @RequestParam("isFinisihed") String isFinished) throws IOException {
 
-        return disputecaseAccessoryService.addInquireHospital(multipartFiles, text, disputeID, isFinished);
-    }
 
-    // 获取闻讯医院结果
-    @PostMapping(value = "/getInqueryHospitalList")
-    public ResultVO getInqueryHospitalList(@RequestBody Map<String, String> map){
-
-        String disputeId = map.get("caseId");
-
-        ;
-
-        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
-    }
 
     // 提交告知书确认函
     @PostMapping(value = "/uploadNotificationAffirm")
@@ -399,11 +391,13 @@ public class DisputeProgressController {
     /** 管理者获取该案件的 另外分配：剔除 用户意向和申请回避 */
     @PostMapping("/manager/getMediatorList")
     public ResultVO additionalAllocation(@RequestBody JSONObject map){
+        log.info("\n开始 [另外分配]\n");
         String caseId=map.getString("caseId");
         Integer page=map.getInteger("page")-1;
         Integer size=map.getInteger("size");
 
         PageRequest pageRequest=new PageRequest(page,size);
+        log.info("\n结束 [另外分配]\n");
         return disputeProgressService.getAdditionalAllocation(caseId,pageRequest);
     }
 
@@ -412,18 +406,6 @@ public class DisputeProgressController {
     public ResultVO getAllMediator(){
         return disputeProgressService.getAllMediator();
     }
-
-
-    /** 提交专家申请书 */
-    public ResultVO uploadExportApply(@RequestParam(value = "application", required=false) MultipartFile application,
-                                             @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail,
-                                             @RequestParam("caseId") String disputeId) throws IOException {
-
-        return disputecaseAccessoryService.addExportApply(application, applicationDetail, disputeId);
-    }
-
-    @Autowired
-    private DisputecaseActivitiRepository disputecaseActivitiRepository;
 
 //    // 调解前预约 调解员判断 是否进行 专家预约，调解员线下确认时间
 //    @PostMapping("/mediator/appointBeforeMediate")
@@ -482,5 +464,52 @@ public class DisputeProgressController {
         return null;
     }
 
-    /** 管理者查看所有预约专家的案件 */
+
+    /** 问询医院时获取医院信息 */
+    @PostMapping(value = "/getHospitalMessage")
+    public ResultVO getHospitalMessage(@RequestBody JSONObject map){
+        String caseId=map.getString("caseId");
+        return disputeProgressService.getHospitalMessage(caseId);
+    }
+
+    /** 提交问讯结果（文本），问讯医院 */
+    @PostMapping(value = "/inqueryHospital")
+    public ResultVO inqueryHospital(@RequestBody JSONObject map){
+        return disputeProgressService.inqueryHospital(map);
+    }
+
+
+//    // 问询医院
+//    @PostMapping(value = "/inqueryHospital")
+//    public ResultVO inqueryHospital(@RequestParam(value = "file", required=false) MultipartFile[] multipartFiles,
+//                                    @RequestParam("text") String text,
+//                                    @RequestParam("caseId") String disputeID,
+//                                    @RequestParam("isFinisihed") String isFinished) throws IOException {
+//
+//        return disputecaseAccessoryService.addInquireHospital(multipartFiles, text, disputeID, isFinished);
+//    }
+
+
+
+
+    /** 获取问讯列表 */
+    @PostMapping(value = "/getInqueryHospitalList")
+    public ResultVO getInqueryHospitalList(@RequestBody JSONObject map){
+        String caseId=map.getString("caseId");
+        return disputeProgressService.getInqueryHospitalList(caseId);
+    }
+
+
+//    // 获取闻讯医院结果
+//    @PostMapping(value = "/getInqueryHospitalList")
+//    public ResultVO getInqueryHospitalList(@RequestBody Map<String, String> map){
+//
+//        String disputeId = map.get("caseId");
+//
+//        ;
+//
+//        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
+//    }
+
+
 }

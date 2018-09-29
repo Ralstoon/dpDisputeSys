@@ -29,6 +29,8 @@ public class MediationHallDataForm {
     private List<String> Applicant;
     /** 被申请人 */
     private List<String> Respondent;
+    /** 剩余工作日 */
+    private Object countdown;
 
 
 }

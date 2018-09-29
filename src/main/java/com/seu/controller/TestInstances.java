@@ -1,9 +1,11 @@
-package com.seu.testt;
+package com.seu.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.seu.domian.Admin;
+import com.seu.domian.One;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @ClassName TestInstances
@@ -30,5 +32,17 @@ public class TestInstances {
     @PostMapping(value = "/run3")
     public void run3(@RequestParam("caseId") Integer caseId){
         System.out.println(caseId);
+    }
+
+    @PostMapping(value = "/run4")
+    public void run4(@RequestBody @Valid One one,
+                     BindingResult bindingResult){
+        try {
+            if(bindingResult.hasErrors())
+                System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            System.out.println(one.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

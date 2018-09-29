@@ -110,43 +110,43 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
      * GetMediationHallData 默认案件状态为0或1
      */
     /** 获取所有案件 */
-    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' ORDER BY ?#{#pageable}",
-            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0'",
+    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9' ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9'",
             nativeQuery = true)
     Page<Disputecase> findAll_HallData(Pageable pageable);
 
-    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1 ORDER BY ?#{#pageable}",
-            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1",
+    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1",
             nativeQuery = true)
     Page<Disputecase> findByMediatorId_HallData(String filterMediator,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.apply_time>=?1 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.apply_time>=?1",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.apply_time>=?1 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.apply_time>=?1",
             nativeQuery =true )
     Page<Disputecase> findAfterTime_HallData(Date startTime,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.apply_time<?1 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.apply_time<?1",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.apply_time<?1 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.apply_time<?1",
             nativeQuery =true )
     Page<Disputecase> findBeforeTime_HallData(Date endTime,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time>=?2 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time>=?2",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time>=?2 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time>=?2",
             nativeQuery = true)
     Page<Disputecase> findWithMediatorAndAfterTime_HallData(String filterMediator, Date startTime,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time<?2 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time<?2",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time<?2 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time<?2",
             nativeQuery = true)
     Page<Disputecase> findWithMediatorAndBeforeTime_HallData(String filterStatus, Date endTime,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.apply_time>=?1 AND a.apply_time<?2 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0') and a.apply_time>=?1 AND a.apply_time<?2",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.apply_time>=?1 AND a.apply_time<?2 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.apply_time>=?1 AND a.apply_time<?2",
             nativeQuery = true)
     Page<Disputecase> findBetweenTime_HallData(Date startTime,Date endTime,Pageable pageable);
 
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time>=?2 AND a.apply_time<?3 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0') and a.mediator_id=?1 AND a.apply_time>=?2 AND a.apply_time<?3",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time>=?2 AND a.apply_time<?3 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id WHERE (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 AND a.apply_time>=?2 AND a.apply_time<?3",
             nativeQuery = true)
     Page<Disputecase> findWithMediatorAndTime_HallData(String filterMediator,Date startTime,Date endTime,Pageable pageable);
 }

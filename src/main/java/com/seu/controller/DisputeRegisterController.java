@@ -14,6 +14,7 @@ import com.seu.service.MediatorService;
 import com.seu.utils.Request2JSONobjUtil;
 import com.sun.deploy.net.URLEncoder;
 import com.sun.org.apache.regexp.internal.RE;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/RegConflict")
 @CrossOrigin
+@Slf4j
 public class DisputeRegisterController {
     @Autowired
     private DisputeRegisterService disputeRegisterService;
@@ -110,6 +112,7 @@ public class DisputeRegisterController {
 
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
+
     public ResultVO getBasicDivideInfo(HttpServletRequest request){
         JSONObject map=Request2JSONobjUtil.convert(request);
         String stageContent=map.getString("stageContent");
@@ -125,10 +128,11 @@ public class DisputeRegisterController {
 //        Integer claimAmount = (Integer)map.get("claimAmount");
 
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        log.info("\n医疗行为接受完成\n");
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
         disputeProgressService.completeCurrentTask(currentTask.getId());
-
+        log.info("\n医疗行为任务完成\n");
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
 

@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Calendar;
 
-public class deadlineCalculate {
+public class  deadlineCalculate {
     @Autowired
     private DisputecaseProcessRepository disputecaseProcessRepository;
 

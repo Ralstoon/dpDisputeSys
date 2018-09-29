@@ -104,7 +104,7 @@ public class GetTitleAndAbstract {
                     diagnosisFailure = diagnosisFailure.substring(0, diagnosisFailure.length() - 1);
                     detail = detail + "院方可能存在检查失误" + diagnosisFailure+ "。";
                 }
-                Object test =((com.alibaba.fastjson.JSONObject) verification).get("test");
+                Object test =((com.alibaba.fastjson.JSONObject) verification).get("testt");
                 if((String)test != ""){
                     detail = detail + "院方检查行为是"+test+"。";
                 }

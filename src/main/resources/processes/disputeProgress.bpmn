@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1536997502666" name="" targetNamespace="http://activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1538116568009" name="" targetNamespace="http://activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <collaboration id="Collaboration" isClosed="false">
     <participant id="pool1" name="Pool" processRef="process_pool1">
       <participantMultiplicity maximum="1" minimum="0"/>
@@ -57,9 +57,10 @@
         <flowNodeRef>sid-680CF315-39F6-4635-9159-AC804FC7C446</flowNodeRef>
         <flowNodeRef>sid-86DE1F50-4D4A-4E02-8607-49C08D1A4E73</flowNodeRef>
         <flowNodeRef>sid-CB3756D8-C700-4914-9859-8BBAD07DDBB4</flowNodeRef>
+        <flowNodeRef>sid-119B6224-E31E-43EB-9DF0-1E70683C814E</flowNodeRef>
         <flowNodeRef>sid-D1DB0413-F0BF-4706-B750-064AC69049B5</flowNodeRef>
         <flowNodeRef>sid-30C1EA70-0A73-4440-9FD4-B9CA7545FF58</flowNodeRef>
-        <flowNodeRef>sid-119B6224-E31E-43EB-9DF0-1E70683C814E</flowNodeRef>
+        <flowNodeRef>sid-FFA4C5B1-8942-4E9D-92E5-BD336C6AE249</flowNodeRef>
       </lane>
       <lane id="lane3" name="管理员">
         <flowNodeRef>usertask4</flowNodeRef>
@@ -135,18 +136,8 @@
     <sequenceFlow id="sid-1FBD215A-05F4-4096-91B6-A3C37D55C91A" name="无专家" sourceRef="sid-1DF8624D-4F6C-484F-BFA8-5165C4A58470" targetRef="sid-1B2E5B95-6BF4-4E61-83E7-2C691D85E9BD">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${appointResult==0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow5" sourceRef="usertask2" targetRef="exclusivegateway2"/>
-    <sequenceFlow id="sid-5560DD1F-7F26-492D-B150-ED3D6237BEDC" sourceRef="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879" targetRef="usertask1"/>
-    <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
     <sequenceFlow id="sid-3E2C8B7B-8CBF-4A5C-B74D-D7DFE2FAE3E1" name="有专家" sourceRef="sid-1DF8624D-4F6C-484F-BFA8-5165C4A58470" targetRef="sid-C3332F14-158D-4BD7-906F-7B836EF3CEAA">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${appointResult==1}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-EECF58E3-050B-42CF-A58F-C9AE3F5BDC3D" sourceRef="sid-C3332F14-158D-4BD7-906F-7B836EF3CEAA" targetRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D"/>
-    <sequenceFlow id="sid-D3905E6C-5083-4B44-88C1-9A7FF8DB45F1" name="通过" sourceRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D" targetRef="sid-1B2E5B95-6BF4-4E61-83E7-2C691D85E9BD">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${profesorVerify==1}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-DB6C0163-45FE-4DD3-9948-C1C7B48E45BD" name="未通过" sourceRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D" targetRef="sid-19C41E14-98BA-4C66-AC49-2106B3F9C4B1">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${profesorVerify==0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-90BBC751-AF7F-4838-9A6D-D3C6CB1F1134" sourceRef="sid-18B708AD-454E-4CB7-AD28-C0FF1E2DD2C8" targetRef="sid-828F386A-2577-4D60-A5A7-2733F368C3EE">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${appointResult==1}]]></conditionExpression>
@@ -156,11 +147,18 @@
     </sequenceFlow>
     <sequenceFlow id="sid-86DE1F50-4D4A-4E02-8607-49C08D1A4E73" sourceRef="sid-ECE8AF82-BF1F-4D20-92D5-5E5F823C3F6B" targetRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01"/>
     <sequenceFlow id="sid-CB3756D8-C700-4914-9859-8BBAD07DDBB4" sourceRef="_6" targetRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8"/>
-    <sequenceFlow id="sid-D1DB0413-F0BF-4706-B750-064AC69049B5" sourceRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetRef="_6">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramInquireHospital==0}]]></conditionExpression>
+    <sequenceFlow id="sid-119B6224-E31E-43EB-9DF0-1E70683C814E" sourceRef="sid-3D9043A0-68F7-4F7A-8E74-411B238E200F" targetRef="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramBeforeMediate==0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-30C1EA70-0A73-4440-9FD4-B9CA7545FF58" sourceRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetRef="usertask2">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramInquireHospital==1}]]></conditionExpression>
+    <sequenceFlow id="flow5" sourceRef="usertask2" targetRef="exclusivegateway2"/>
+    <sequenceFlow id="sid-5560DD1F-7F26-492D-B150-ED3D6237BEDC" sourceRef="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879" targetRef="usertask1"/>
+    <sequenceFlow id="_2" sourceRef="usertask4" targetRef="sid-E98F408E-5F2A-4394-BB72-B85530C82896"/>
+    <sequenceFlow id="sid-EECF58E3-050B-42CF-A58F-C9AE3F5BDC3D" sourceRef="sid-C3332F14-158D-4BD7-906F-7B836EF3CEAA" targetRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D"/>
+    <sequenceFlow id="sid-D3905E6C-5083-4B44-88C1-9A7FF8DB45F1" name="通过" sourceRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D" targetRef="sid-1B2E5B95-6BF4-4E61-83E7-2C691D85E9BD">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${profesorVerify==1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-DB6C0163-45FE-4DD3-9948-C1C7B48E45BD" name="未通过" sourceRef="sid-8F00D087-E634-4C0B-8427-5EA1C157ED7D" targetRef="sid-19C41E14-98BA-4C66-AC49-2106B3F9C4B1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${profesorVerify==0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-6457FF19-358D-43DA-B21F-92353BDC034D" name="不通过" sourceRef="exclusivegateway2" targetRef="sid-01815696-C738-453B-A88C-1FD1445E1F9F">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${caseAccept==0}]]></conditionExpression>
@@ -168,8 +166,14 @@
     <sequenceFlow id="sid-39F4E892-6D05-4796-A52E-6E942BE3F305" name="通过" sourceRef="exclusivegateway2" targetRef="usertask4">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${caseAccept==1}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-119B6224-E31E-43EB-9DF0-1E70683C814E" sourceRef="sid-3D9043A0-68F7-4F7A-8E74-411B238E200F" targetRef="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramBeforeMediate==0}]]></conditionExpression>
+    <sequenceFlow id="sid-D1DB0413-F0BF-4706-B750-064AC69049B5" sourceRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetRef="_6">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramInquireHospital==0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-30C1EA70-0A73-4440-9FD4-B9CA7545FF58" sourceRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetRef="usertask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramInquireHospital==1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-FFA4C5B1-8942-4E9D-92E5-BD336C6AE249" sourceRef="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetRef="sid-01815696-C738-453B-A88C-1FD1445E1F9F">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramInquireHospital==2}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=3;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
@@ -367,9 +371,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879" id="Shape-sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879">
-        <omgdc:Bounds height="32.0" width="32.0" x="40.5" y="522.1637192300979"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="24.5" y="506.16371923009785"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="-46.0" y="-22.311622045606782"/>
+          <omgdc:Bounds height="0.0" width="0.0" x="-62.0" y="-38.31162204560678"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-936DDDD2-DA5E-458B-81D3-58CF8260D7EF" id="BPMNEdge_sid-936DDDD2-DA5E-458B-81D3-58CF8260D7EF" sourceElement="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetElement="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E">
@@ -396,6 +400,15 @@
       <bpmndi:BPMNEdge bpmnElement="sid-3E2C8B7B-8CBF-4A5C-B74D-D7DFE2FAE3E1" id="BPMNEdge_sid-3E2C8B7B-8CBF-4A5C-B74D-D7DFE2FAE3E1" sourceElement="sid-1DF8624D-4F6C-484F-BFA8-5165C4A58470" targetElement="sid-C3332F14-158D-4BD7-906F-7B836EF3CEAA">
         <omgdi:waypoint x="847.0" y="400.0"/>
         <omgdi:waypoint x="847.0" y="504.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-FFA4C5B1-8942-4E9D-92E5-BD336C6AE249" id="BPMNEdge_sid-FFA4C5B1-8942-4E9D-92E5-BD336C6AE249" sourceElement="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetElement="sid-01815696-C738-453B-A88C-1FD1445E1F9F">
+        <omgdi:waypoint x="123.0" y="425.0"/>
+        <omgdi:waypoint x="65.0" y="425.0"/>
+        <omgdi:waypoint x="65.0" y="173.0"/>
+        <omgdi:waypoint x="237.0" y="176.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
@@ -502,9 +515,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-252A0C8F-1312-4F06-92D6-7BE3A69D64AC" id="BPMNEdge_sid-252A0C8F-1312-4F06-92D6-7BE3A69D64AC" sourceElement="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetElement="sid-19C41E14-98BA-4C66-AC49-2106B3F9C4B1">
-        <omgdi:waypoint x="1411.0" y="405.0"/>
-        <omgdi:waypoint x="1411.0" y="625.0"/>
-        <omgdi:waypoint x="562.0" y="625.0"/>
+        <omgdi:waypoint x="1407.0" y="409.0"/>
+        <omgdi:waypoint x="1407.0" y="625.0"/>
+        <omgdi:waypoint x="558.0" y="625.0"/>
         <omgdi:waypoint x="566.0" y="428.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
@@ -540,8 +553,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-D1DB0413-F0BF-4706-B750-064AC69049B5" id="BPMNEdge_sid-D1DB0413-F0BF-4706-B750-064AC69049B5" sourceElement="sid-F2F98EDE-B536-4FBF-96F5-A91E74F052F8" targetElement="_6">
         <omgdi:waypoint x="146.0" y="426.0"/>
-        <omgdi:waypoint x="229.0" y="426.0"/>
-        <omgdi:waypoint x="229.0" y="328.0"/>
+        <omgdi:waypoint x="225.0" y="426.0"/>
+        <omgdi:waypoint x="225.0" y="328.0"/>
         <omgdi:waypoint x="181.0" y="327.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
@@ -604,7 +617,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-5560DD1F-7F26-492D-B150-ED3D6237BEDC" id="BPMNEdge_sid-5560DD1F-7F26-492D-B150-ED3D6237BEDC" sourceElement="sid-CABFEA95-5990-48D5-9E37-5BA4E1AB6879" targetElement="usertask1">
-        <omgdi:waypoint x="49.25403330758516" y="552.0"/>
+        <omgdi:waypoint x="40.5" y="537.9921855917195"/>
         <omgdi:waypoint x="10.0" y="552.0"/>
         <omgdi:waypoint x="10.0" y="260.0"/>
         <bpmndi:BPMNLabel>

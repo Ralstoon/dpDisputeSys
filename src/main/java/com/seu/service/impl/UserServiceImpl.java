@@ -1,5 +1,6 @@
 package com.seu.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -22,12 +23,14 @@ import com.seu.repository.UserRepository;
 import com.seu.service.UserService;
 import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -131,32 +134,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResultVO registerMediator(JSONObject map) {
-        String phone=map.getString("phone");
-        User user=userRepository.findByPhone(phone);
-        if(user!=null)
-            return ResultVOUtil.ReturnBack(RegisterEnum.REGISTERMEDIATOR_FAIL.getCode(),RegisterEnum.REGISTERMEDIATOR_FAIL.getMsg());
-        String password=map.getString("password");
-        String md5Password=MD5Util.MD5EncodeUtf8(password);
-        String mediatorName=map.getString("mediatorName");
-        String idCard=map.getString("idCard");
-        String mediateCenter=map.getString("mediateCenter");
-        String authorityConfirm=map.getString("authorityConfirm");
-        String authorityJudiciary=map.getString("authorityJudiciary");
-
-        String id=KeyUtil.genUniqueKey();
-        String specificId=KeyUtil.genUniqueKey();
-        String role="1";
-        User registerUser=new User(id,phone,md5Password,role,specificId);
-        Mediator registerMediator=new Mediator(specificId,id,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
-        registerUser=userRepository.save(registerUser);
-        registerMediator=mediatorRepository.save(registerMediator);
-        if(registerUser!=null && registerMediator!=null){
-            RegisterMediatorForm registerMediatorForm=new RegisterMediatorForm(phone,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
-            return ResultVOUtil.ReturnBack(registerMediatorForm,RegisterEnum.REGISTERMEDIATOR_SUCCESS.getCode(),RegisterEnum.REGISTERMEDIATOR_SUCCESS.getMsg());
-        }else {
-            return ResultVOUtil.ReturnBack(RegisterEnum.BACKGROUNDSERVER_EXCEPTION.getCode(),RegisterEnum.BACKGROUNDSERVER_EXCEPTION.getMsg());
+    public ResultVO registerMediator(JSONArray arr) {
+        log.info("进入注册调解员");
+        for(int i=0;i<arr.size();++i){
+            JSONObject map=arr.getJSONObject(i);
+            String phone=map.getString("phone");
+            User user=userRepository.findByPhone(phone);
+            if(user!=null)
+                continue;
+            String password=map.getString("password");
+            String md5Password=MD5Util.MD5EncodeUtf8(password);
+            String mediatorName=map.getString("mediatorName");
+            String idCard=map.getString("idCard");
+            String mediateCenter=map.getString("mediateCenter");
+            String authorityConfirm=map.getString("authorityConfirm");
+            String authorityJudiciary=map.getString("authorityJudiciary");
+            String id=KeyUtil.genUniqueKey();
+            String specificId=KeyUtil.genUniqueKey();
+            String role="1";
+            User registerUser=new User(id,phone,md5Password,role,specificId);
+            Mediator registerMediator=new Mediator(specificId,id,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
+            userRepository.save(registerUser);
+            mediatorRepository.save(registerMediator);
         }
+        return ResultVOUtil.ReturnBack(RegisterEnum.REGISTERMEDIATOR_SUCCESS.getCode(),RegisterEnum.REGISTERMEDIATOR_SUCCESS.getMsg());
+
+
+
+
 
     }
 }

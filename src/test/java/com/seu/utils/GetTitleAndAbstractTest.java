@@ -40,7 +40,7 @@ public class GetTitleAndAbstractTest {
                 "\t\t\t\t\"behavior\": [\"失误1\", \"失误2\"]\n" +
                 "\t\t\t},\n" +
                 "\t\t\t\"verification\": {\n" +
-                "\t\t\t\t\"test\": \"检验内容\",\n" +
+                "\t\t\t\t\"testt\": \"检验内容\",\n" +
                 "\t\t\t\t\"behavior\": [\"失误1\", \"失误2\"]\n" +
                 "\t\t\t}\n" +
                 "\t\t},\n" +

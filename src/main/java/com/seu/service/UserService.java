@@ -1,5 +1,6 @@
 package com.seu.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.common.ServerResponse;
@@ -21,6 +22,6 @@ public interface UserService {
 
 
     /** 调解员账号注册 */
-    ResultVO registerMediator(JSONObject map);
+    ResultVO registerMediator(JSONArray map);
 
 }

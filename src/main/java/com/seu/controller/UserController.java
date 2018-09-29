@@ -1,5 +1,6 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -126,8 +127,8 @@ public class UserController {
 
 //    @Autowired
 //    private StringRedisTemplate stringRedisTemplate;
-//    @RequestMapping(value="test",method = RequestMethod.GET)
-//    public Set<String> test(){
+//    @RequestMapping(value="testt",method = RequestMethod.GET)
+//    public Set<String> testt(){
 //        String pattern="123321";
 //        Set<String> result=stringRedisTemplate.keys("*"+pattern);
 //        return result;
@@ -145,7 +146,9 @@ public class UserController {
 
     /** 注册调解员 */
     @PostMapping(value = "registerMediator")
-    public ResultVO registerMediator(@RequestBody JSONObject map){
+    public ResultVO registerMediator(@RequestBody JSONObject var){
+//        System.out.println(var.toString());
+        JSONArray map=var.getJSONArray("addMeditorList");
         return userService.registerMediator(map);
     }
 }

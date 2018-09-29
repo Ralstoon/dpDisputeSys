@@ -23,4 +23,9 @@ public interface MediatorRepository extends JpaRepository<Mediator,String> {
             nativeQuery = true)
     Page<Mediator> findAllWithoutUserChooseAndAvoid(String userChoose, String avoidStatus, Pageable pageable);
 
+    Page<Mediator> findAllByAuthorityConfirmAndAuthorityJudiciary(String filterType1,String filterType2,Pageable pageable);
+    Page<Mediator> findAllByAuthorityConfirm(String filterType,Pageable pageable);
+    Page<Mediator> findAllByAuthorityJudiciary(String filterType,Pageable pageable);
+
+
 }
