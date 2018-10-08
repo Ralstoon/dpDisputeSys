@@ -5,6 +5,7 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
+import com.seu.utils.GetWorkingTimeUtil;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -211,5 +212,10 @@ public class test {
             disputecaseProcess.setEndtimeDisputecase(c.getTime());
             disputecaseProcessRepository.save(disputecaseProcess);
         });
+    }
+
+    @Test
+    public void test0929() throws Exception {
+        System.out.println(new GetWorkingTimeUtil().calRemainTime("1538123913134925965"));
     }
 }
