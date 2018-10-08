@@ -9,10 +9,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class  deadlineCalculate {
     @Autowired
     private DisputecaseProcessRepository disputecaseProcessRepository;
+
+    @Autowired
+    private GetWorkingTimeUtil getWorkingTimeUtil;
 
     @Scheduled(cron = "0 15 1 * * ?") //每天 1:15 自动执行
     public void scheduled(){
@@ -33,7 +37,16 @@ public class  deadlineCalculate {
     }
 
     @Scheduled(cron = "0 1 0 * * ?") //每天 0:01 自动执行
-    public void setEndDate(Date endDate) throws Exception {
-        EndDate.endDate = new GetWorkingTimeUtil().calWorkingTime(new Date(), 30);
+    public void setEndDate() throws Exception {
+        Date currentDate = new Date();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        EndDate.endDate = getWorkingTimeUtil.calWorkingTime(currentDate, 30);
+        Calendar c=Calendar.getInstance();
+        c.setTime(currentDate);
+        EndDate.isWeekday = new HashMap<>();
+        for(int i = 0; i<60; i++){
+            EndDate.isWeekday.put(sdf.parse(sdf.format(c.getTime())), getWorkingTimeUtil.getResult(c.getTime()));
+            c.add(Calendar.DAY_OF_MONTH,1);
+        }
     }
 }

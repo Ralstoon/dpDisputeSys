@@ -214,8 +214,13 @@ public class test {
         });
     }
 
+    @Autowired
+    private GetWorkingTimeUtil getWorkingTimeUtil;
+
     @Test
     public void test0929() throws Exception {
-        System.out.println(new GetWorkingTimeUtil().calRemainTime("1538123913134925965"));
+        System.out.println(getWorkingTimeUtil.calRemainTime("1538123913134925965"));
     }
+
+
 }
