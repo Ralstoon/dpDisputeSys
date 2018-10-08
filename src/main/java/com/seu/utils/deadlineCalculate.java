@@ -1,11 +1,14 @@
 package com.seu.utils;
 
+import com.seu.common.EndDate;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.repository.DisputecaseProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class  deadlineCalculate {
     @Autowired
@@ -27,5 +30,10 @@ public class  deadlineCalculate {
             disputecaseProcess.setEndtimeDisputecase(c.getTime());
             disputecaseProcessRepository.save(disputecaseProcess);
         });
+    }
+
+    @Scheduled(cron = "0 1 0 * * ?") //每天 0:01 自动执行
+    public void setEndDate(Date endDate) throws Exception {
+        EndDate.endDate = new GetWorkingTimeUtil().calWorkingTime(new Date(), 30);
     }
 }

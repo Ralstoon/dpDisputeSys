@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.common.EndDate;
 import com.seu.common.InitConstant;
 import com.seu.converter.Disputecase2DisputeRegisterDetailForm;
 import com.seu.domian.*;
@@ -1372,7 +1373,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         Date currentDate=new Date();
         currentProcess.setStartimeDisputecase(currentDate);
-        Date endDate= getWorkingTimeUtil.calWorkingTime(currentDate,30);
+//      Date endDate = getWorkingTimeUtil.calWorkingTime(currentDate,30);//todo 未测试 18-09-29 16:36
+        if (EndDate.endDate == null)
+            EndDate.endDate= getWorkingTimeUtil.calWorkingTime(currentDate,30);
+        Date endDate= EndDate.endDate;
         currentProcess.setEndtimeDisputecase(endDate);
         disputecaseProcessRepository.save(currentProcess);
     }
