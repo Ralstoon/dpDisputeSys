@@ -1,5 +1,7 @@
 package com.seu.common;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * @ClassName InitConstant
  * @Description TODO
@@ -9,6 +11,7 @@ package com.seu.common;
  **/
 public interface InitConstant {
     String currentStageContent="{\n" +
+            "\t\"resultOfIdentify\": \"\",  \n" +
             "\t\t\"particopate\": [],\n" +
             "\t\t\"particopateContact\": {\n" +
             "\t\t\t\"expertChoosed\": {\n" +
@@ -23,15 +26,16 @@ public interface InitConstant {
             "\t\t}\n" +
             "\t}";
     String init_mediateStage="{\n" +
-            "\t\"stage\": \"\", \n" +
+            "\t\"stage\": 1, \n" +
             "\t\"currentStatus\": -1,  \n" +
             "\t\"applicants\": [],\n" +
             "\t\"respondents\": [],\n" +
             "\t\"identiQualify\": true,  \n" +
             "\t\"identified\": false,  \n" +
-            "\t\"resultOfIdentify\": \"\",  \n" +
             "\t\"expert\": false,  \n" +
+            "\t\"expertAppoint\": false,  \n" +
             "\t\"stageContent\": [{\n" +
+            "\t\"resultOfIdentify\": \"\",  \n" +
             "\t\t\"particopate\": [],  \n" +
             "\t\t\"particopateContact\": {\n" +
             "\t\t\t\"expertChoosed\": {\n" +
@@ -46,6 +50,8 @@ public interface InitConstant {
             "\t\t}\n" +
             "\t}]\n" +
             "}";
+
+    JSONObject init_identify=JSONObject.parseObject("{\"text\":\"\",\"files\":[]}");
     String mediate_inform_email="%s 您好，请于[%s]到 %s 参加医患纠纷调解";
     String damageIdentify= " %s您好，针对案件%s 请尽快办理医疗损害鉴定并及时上传";
 

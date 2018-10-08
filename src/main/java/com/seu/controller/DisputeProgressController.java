@@ -266,7 +266,7 @@ public class DisputeProgressController {
     /** 发送医疗鉴定结果数据 */
     @PostMapping(value = "/mediator/resultOfIndent")
     public ResultVO setResultOfIndent(@RequestParam("caseId") String caseId,
-                                      @RequestParam("resultOfIdentify") String text,
+                                      @RequestParam("text") String text,
                                       @RequestParam(value = "files") MultipartFile[] multipartFiles){
 
         return disputeProgressService.setResultOfIndent(caseId,text,multipartFiles);
@@ -276,6 +276,7 @@ public class DisputeProgressController {
     /** 发送预约数据 */
     @PostMapping(value = "/mediator/appoint")
     public ResultVO setAppoint(@RequestParam("caseId") String caseId,
+                               @RequestParam("id") String id,
                                @RequestParam("currentStageContent") String currentStageContent,
                                @RequestParam(value = "application", required=false) MultipartFile application,
                                @RequestParam(value = "applicationDetail") MultipartFile[] applicationDetail) throws Exception {
@@ -333,9 +334,9 @@ public class DisputeProgressController {
     }
 
     /** 申请再次调解*/
-    @PostMapping(value = "/user/reMediation")
+    @PostMapping(value = "/mediator/reMediation")
     public ResultVO reMediation(@RequestBody Map<String, String> map){
-        String caseId = map.get("CaseId");
+        String caseId = map.get("caseId");
 
         return disputeProgressService.reMediation(caseId);
     }
@@ -510,6 +511,8 @@ public class DisputeProgressController {
 //
 //        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
 //    }
+
+
 
 
 }

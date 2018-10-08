@@ -141,4 +141,7 @@ public interface DisputeProgressService {
     /** 获取问讯列表 */
     ResultVO getInqueryHospitalList(String caseId);
 
+    /** 设置流程挂起状态 */
+    void setSuspended(String caseId,Integer isSuspended);
+
 }

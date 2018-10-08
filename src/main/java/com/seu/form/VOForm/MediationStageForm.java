@@ -1,5 +1,7 @@
 package com.seu.form.VOForm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.seu.common.RedisConstant;
 import lombok.Data;
@@ -32,19 +34,20 @@ public class MediationStageForm implements Serializable{
     /** 是否做过鉴定 */
     private boolean identified=false;
 
-    /** 鉴定结果 */
-    private String resultOfIdentify="";
 
     /** 可否预约专家 */
     private boolean expert=false;
 
+    /** 是否预约过专家 */
+    private String expertAppoint;
+
     /** 申请人数组 */
-    private String applicants="[]";
+    private JSONArray applicants;
 
     /** 被申请人数组 */
-    private String respondents="[]";
+    private JSONArray respondents=JSONArray.parseArray("[]");
 
-    private String currentStageContent="[]";
+    private JSONObject currentStageContent;
 
     /** 挂起状态 */
     private Integer isSuspended;

@@ -15,6 +15,7 @@ import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.ConstantQiniu;
 import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseAccessory;
+import com.seu.domian.DisputecaseProcess;
 import com.seu.domian.NormalUserUpload;
 import com.seu.enums.DisputecaseAccessoryEnum;
 import com.seu.repository.DiseaseListRepository;
@@ -25,6 +26,7 @@ import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.VerifyProcessUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
@@ -45,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryService {
 
     @Autowired
@@ -240,6 +243,8 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Override
     public void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
+        log.info("\n专家预约 文件转储开始\n");
+
         /** 设置流程参数 */
         Integer appointResult=0,paramBeforeMediate=0;
         if(application!=null){
@@ -249,6 +254,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         runtimeService.setVariable(pid,"paramBeforeMediate",paramBeforeMediate);
         runtimeService.setVariable(pid,"appointResult",appointResult);
+        runtimeService.setVariable(pid,"paramProfesor",1);
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
         if(application!=null){
@@ -273,7 +279,10 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             }
             disputecaseAccessory.setAppointExpert(save.toString());
         }
+        /** 将流程挂起为专家预约 2 */
+        disputeProgressService.setSuspended(disputeId,2);
         disputecaseAccessoryRepository.save(disputecaseAccessory);
+        log.info("\n专家预约 文件转储成功\n");
     }
 
     @Override

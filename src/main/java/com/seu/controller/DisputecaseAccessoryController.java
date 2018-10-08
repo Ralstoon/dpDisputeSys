@@ -65,8 +65,8 @@ public class DisputecaseAccessoryController {
             obj.put("caseId",disputeID);
             obj.put("name",multipartFile.getOriginalFilename());
             save.add(obj);
-//            NormalUserUploadListForm normalUserUploadListForm = new NormalUserUploadListForm(url, disputeID);
-//            normalUserUploadListFormList.add(normalUserUploadListForm);
+            NormalUserUploadListForm normalUserUploadListForm = new NormalUserUploadListForm(url, disputeID);
+            normalUserUploadListFormList.add(normalUserUploadListForm);
         }
         disputecaseAccessory.setNormaluserUpload(save.toString());
         disputecaseAccessoryRepository.save(disputecaseAccessory);
