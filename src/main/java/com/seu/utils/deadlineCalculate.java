@@ -18,7 +18,7 @@ public class  deadlineCalculate {
     @Autowired
     private GetWorkingTimeUtil getWorkingTimeUtil;
 
-    @Scheduled(cron = "0 15 1 * * ?") //每天 1:15 自动执行
+    @Scheduled(cron = "0 1 0 * * ?") //每天 0:01 自动执行
     public void scheduled(){
         disputecaseProcessRepository.findAllByIsSuspended(1).stream().forEach(disputecaseProcess -> {
             Calendar c = Calendar.getInstance();
@@ -36,7 +36,7 @@ public class  deadlineCalculate {
         });
     }
 
-    @Scheduled(cron = "0 1 0 * * ?") //每天 0:01 自动执行
+    @Scheduled(cron = "0 10 0 * * ?") //每天 0:10 自动执行
     public void setEndDate() throws Exception {
         Date currentDate = new Date();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");

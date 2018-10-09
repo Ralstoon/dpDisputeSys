@@ -222,5 +222,16 @@ public class test {
         System.out.println(getWorkingTimeUtil.calRemainTime("1538123913134925965"));
     }
 
+    @Autowired
+    private ConstantDataRepository constantDataRepository;
 
+    @Test
+    public void getCityListTest(){
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject citys = JSONObject.parseObject(constantData.getData());
+        for(String city: citys.keySet()){
+            System.out.println(city);
+        }
+        System.out.println(citys.keySet());
+    }
 }
