@@ -512,7 +512,13 @@ public class DisputeProgressController {
 //        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
 //    }
 
-
-
+    /** 管理员获取专家管理界面数据 */
+    @PostMapping("/manager/getExpertManageList")
+    public ResultVO getExpertManageList(@RequestBody JSONObject map) throws Exception{
+        int size=map.getInteger("size");
+        int page=map.getInteger("page")-1;
+        PageRequest pageRequest=new PageRequest(page,size);
+        return disputeProgressService.getExpertManageList(pageRequest);
+    }
 
 }

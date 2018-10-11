@@ -321,27 +321,6 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         disputecase.setCaseName(result.get("title"));
         disputecase.setBriefCase(result.get("detail"));
 
-        //打开process和Accessory
-//        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(disputecase.getId());
-//        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
-
-        /** 创建process表和Accessory表 */
-        //String processId=KeyUtil.genUniqueKey();
-        //disputecase.setProcessId(disputecaseProcess.getId());
-        //DisputecaseProcess disputecaseProcess=new DisputecaseProcess();
-        //disputecaseProcess.setId(processId);
-        //disputecaseProcess.setDisputecaseId(caseId);
-        //disputecaseProcess.setStatus("0");
-        //disputecaseProcessRepository.save(disputecaseProcess);
-
-//        String accessoryId=KeyUtil.genUniqueKey();
-//        DisputecaseAccessory disputecaseAccessory=new DisputecaseAccessory();
-//        disputecaseAccessory.setId(accessoryId);
-//        disputecaseAccessory.setDisputecaseId(caseId);
-//        disputecaseAccessoryRepository.save(disputecaseAccessory);
-//
-//        disputecaseRepository.save(disputecase);
-
         /** 开启流程，并完成纠纷登记 */
         Map<String,Object> var =new HashMap<>();
         var.put("disputeId",caseId);

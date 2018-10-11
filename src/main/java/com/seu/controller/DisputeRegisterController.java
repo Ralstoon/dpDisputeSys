@@ -120,12 +120,6 @@ public class DisputeRegisterController {
         Integer mainRecStage=map.getInteger("mainRecStage");
         String require=map.getString("Require");
         Integer claimAmount=map.getInteger("claimAmount");
-//    public ResultVO getBasicDivideInfo(@RequestBody Map<String, Object> map){
-//        String stageContent = (String)map.get("stageContent");
-//        String caseId = (String)map.get("CaseId");
-//        Integer mainRecStage = (Integer)map.get("mainRecStage");
-//        String require = (String)map.get("Require");
-//        Integer claimAmount = (Integer)map.get("claimAmount");
 
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         log.info("\n医疗行为接受完成\n");

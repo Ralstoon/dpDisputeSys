@@ -264,7 +264,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             com.alibaba.fastjson.JSONObject applicationJson= com.alibaba.fastjson.JSONObject.parseObject("{}");
             applicationJson.put("url", applicationUrl);
             applicationJson.put("name", application.getOriginalFilename());
-            save.put("application", application);
+            save.put("application", applicationJson);
             if(applicationDetail.length!=0){
                 com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("[]");
                 for (MultipartFile multipartFile: applicationDetail){
@@ -277,6 +277,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
                 }
                 save.put("files",files);
             }
+            System.out.println(save.toString());
             disputecaseAccessory.setAppointExpert(save.toString());
         }
         /** 将流程挂起为专家预约 2 */

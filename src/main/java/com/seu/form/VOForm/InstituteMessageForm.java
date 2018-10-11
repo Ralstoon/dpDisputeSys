@@ -1,5 +1,7 @@
 package com.seu.form.VOForm;
 
+import com.seu.common.InitConstant;
+import com.seu.utils.StrIsEmptyUtil;
 import lombok.Data;
 
 /**
@@ -25,8 +27,17 @@ public class InstituteMessageForm {
 
     public InstituteMessageForm(String name, String fixedTele, String contactPerson, String contactPhone) {
         this.name = name;
-        this.fixedTele = fixedTele;
-        this.contactPerson = contactPerson;
-        this.contactPhone = contactPhone;
+        if(StrIsEmptyUtil.isEmpty(fixedTele))
+            this.fixedTele= InitConstant.fixed;
+        else
+            this.fixedTele = fixedTele;
+        if(StrIsEmptyUtil.isEmpty(contactPerson))
+            this.contactPerson= InitConstant.fixed;
+        else
+            this.contactPerson = contactPerson;
+        if(StrIsEmptyUtil.isEmpty(contactPhone))
+            this.contactPhone=InitConstant.fixed;
+        else
+            this.contactPhone = contactPhone;
     }
 }

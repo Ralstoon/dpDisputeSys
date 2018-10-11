@@ -8,6 +8,8 @@ import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import net.sf.json.JSON;
 import org.activiti.engine.task.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,7 +133,6 @@ public interface DisputeProgressService {
     /** 立案判断通过后为process表添加 调解开始时间和调解结束时间，初始限时30个工作日 */
     void setStartTimeAndEndTime(String caseId) throws Exception;
 
-    // TODO 改掉假数据
     /** 问询医院时获取医院信息 */
     ResultVO getHospitalMessage(String caseId);
 
@@ -143,5 +144,8 @@ public interface DisputeProgressService {
 
     /** 设置流程挂起状态 */
     void setSuspended(String caseId,Integer isSuspended);
+
+    /** 管理员获取专家管理界面数据 */
+    ResultVO getExpertManageList(PageRequest pageRequest);
 
 }

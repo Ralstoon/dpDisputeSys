@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(("/search"))
+@RequestMapping(("/DisputeWeb"))
 public class SearchController {
     @Autowired
     private KeyWordsSearchService keyWordsSearchService;

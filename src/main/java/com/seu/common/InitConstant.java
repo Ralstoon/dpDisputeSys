@@ -59,4 +59,6 @@ public interface InitConstant {
 
     String getTimeUrl="http://api.goseek.cn/Tools/holiday?date=";
 
+    String fixed="缺省";
+
 }

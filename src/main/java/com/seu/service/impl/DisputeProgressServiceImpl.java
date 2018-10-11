@@ -9,10 +9,8 @@ import com.seu.common.InitConstant;
 import com.seu.converter.Disputecase2DisputeRegisterDetailForm;
 import com.seu.domian.*;
 import com.seu.enums.DisputeProgressEnum;
-import com.seu.form.CommentForm;
+import com.seu.form.*;
 import com.seu.form.VOForm.*;
-import com.seu.form.DisputeRegisterDetailForm;
-import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
@@ -30,6 +28,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +78,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     private VerifyProcessUtil verifyProcessUtil;
     @Autowired
     private DisputecaseAccessoryService disputecaseAccessoryService;
+    @Autowired
+    private ContactListRepository contactListRepository;
 
     private ProcessDefinition pd;
     private Deployment deployment;
@@ -1383,13 +1384,30 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
     @Override
     public ResultVO getHospitalMessage(String caseId) {
-        // TODO 医院联系人表，暂时先用假数据
-        InstituteMessageForm imForm=new InstituteMessageForm("南京鼓楼医院","020-123456","联系人","199999999");
+        // 先获取医疗行为数据，解析出医院信息,每个医院信息包括 市 区 名
+        // TODO 解析方式随前端发送数据变化而变化
+        JSONArray jsArr=JSONArray.parseArray(disputecaseRepository.getOne(caseId).getMedicalProcess());
+        Map<String,InstituteForm> instituteFormMap=new HashMap<>();
+        for(int i=0;i<jsArr.size();++i){
+            JSONObject obj=jsArr.getJSONObject(i);
+            JSONArray InvolvedInstitutes=obj.getJSONArray("InvolvedInstitute");
+            for(int j=0;j<InvolvedInstitutes.size();++j){
+                JSONObject jsonObject=InvolvedInstitutes.getJSONObject(j);
+                InstituteForm instituteForm=new InstituteForm(jsonObject.getString("City"),jsonObject.getString("Zone"),jsonObject.getString("Hospital"));
+                instituteFormMap.put(instituteForm.toString(),instituteForm);
+            }
+        }
+        List<ContactList> contactLists=new ArrayList<>();
+        for(InstituteForm form:instituteFormMap.values()){
+            List<ContactList> lists=contactListRepository.findAllByCityAndZoneAndName(form.getCity(),form.getZone(),form.getHospital());
+            for(ContactList c:lists)
+                contactLists.add(c);
+        }
         List<InstituteMessageForm> instituteMessage=new ArrayList<>();
-        instituteMessage.add(imForm);
-        imForm=new InstituteMessageForm("南京儿童医院","020-123456","儿童联系人","699999999");
-        instituteMessage.add(imForm);
-
+        for(ContactList con:contactLists){
+            InstituteMessageForm imForm=new InstituteMessageForm(con.getName(),con.getTele(),con.getContactPerson(),con.getContactPhone());
+            instituteMessage.add(imForm);
+        }
         return ResultVOUtil.ReturnBack(instituteMessage,DisputeProgressEnum.GETINFORMATION_SUCCESS.getCode(),DisputeProgressEnum.GETINFORMATION_SUCCESS.getMsg());
     }
 
@@ -1517,5 +1535,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         disputecaseProcess.setIsSuspended(isSuspended);
         disputecaseProcessRepository.save(disputecaseProcess);
+    }
+
+    @Override
+    public ResultVO getExpertManageList(PageRequest pageRequest) {
+        Page<Object[]> pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+        List<ExpertAppointForm> list=new ArrayList<>();
+        for(Object[] obj:pages.getContent()){
+            ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()));
+            list.add(form);
+        }
+        return ResultVOUtil.ReturnBack(list,200,"管理员获取专家管理界面数据成功");
     }
 }
