@@ -25,10 +25,11 @@ public class GetTitleAndAbstract {
         for (Object stage:arr){
             Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
 
-            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
-
-                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
-            }
+//            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
+//
+//                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
+//            }
+            hospitalList.add(((JSONObject)involvedInstitute).getString("Hospital"));
         }
 
         String personNames="";
@@ -47,17 +48,17 @@ public class GetTitleAndAbstract {
         for(Object stage : arr){
             detail = detail + "患者与";
             Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
-            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
-
-                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
-            }
-            hospitals = "";
-            for(String hospital: hospitalList){
-                hospitals = hospitals + hospital + "、";
-            }
-            hospitals = hospitals.substring(0,hospitals.length() - 1);
-
-            detail = detail + hospitals + "存在医疗纠纷。在"+((com.alibaba.fastjson.JSONObject) stage).getString("diseaseBefore")+"中，";
+//            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
+//
+//                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
+//            }
+//            hospitals = "";
+//            for(String hospital: hospitalList){
+//                hospitals = hospitals + hospital + "、";
+//            }
+//            hospitals = hospitals.substring(0,hospitals.length() - 1);
+            hospitals = ((JSONObject)involvedInstitute).getString("Hospital");
+            detail = detail + hospitals + "存在医疗纠纷。在医疗行为环节"+((com.alibaba.fastjson.JSONObject) stage).getString("name")+"中，";
 
             //获取resultOfRegConflict列表
             JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
