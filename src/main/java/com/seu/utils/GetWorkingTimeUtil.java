@@ -1,6 +1,7 @@
 package com.seu.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.seu.common.EndDate;
 import com.seu.common.InitConstant;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.repository.DisputecaseProcessRepository;
@@ -17,12 +18,13 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 @Component
 public class GetWorkingTimeUtil {
 
-    private Integer getResult(Date curTime) throws Exception {
+    public Integer getResult(Date curTime) throws Exception {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
         String s=sdf.format(curTime);
         URL url=new URL(InitConstant.getTimeUrl+s);
@@ -74,11 +76,24 @@ public class GetWorkingTimeUtil {
 
         Calendar c=Calendar.getInstance();
         int countdown=0;
+        if (EndDate.isWeekday==null){
+            Date currentDate = new Date();
+            Calendar c1=Calendar.getInstance();
+            c1.setTime(currentDate);
+//            EndDate.isWeekday.clear();
+            EndDate.isWeekday = new HashMap<>();
+            for(int i = 0; i<60; i++){
+
+                EndDate.isWeekday.put(sdf.parse(sdf.format(c1.getTime())), getResult(c1.getTime()));
+                c1.add(Calendar.DAY_OF_MONTH,1);
+            }
+        }
+
         while(currentTime.getTime()<=endTime.getTime()){
-            Integer result=getResult(endTime);
+            Integer result = EndDate.isWeekday.get(currentTime);
             if(result==0)
                 countdown+=1;
-            c.setTime(endTime);
+            c.setTime(currentTime);
             c.add(Calendar.DAY_OF_MONTH,1);
             currentTime=c.getTime();
         }

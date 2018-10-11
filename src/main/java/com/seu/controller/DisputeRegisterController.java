@@ -3,8 +3,10 @@ package com.seu.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.ConstantData;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
+import com.seu.repository.ConstantDataRepository;
 import com.seu.repository.DisputecaseActivitiRepository;
 import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.MediatorRepository;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Map;
+import java.util.*;
 
 import java.util.Map;
 
@@ -130,5 +132,53 @@ public class DisputeRegisterController {
         return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
 
+    @Autowired
+    private ConstantDataRepository constantDataRepository;
 
+    //获取江苏省市级列表
+    @GetMapping(value = "/getCityList")
+    public ResultVO getCityList(){
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject city = JSONObject.parseObject(constantData.getData());
+        List<String> cityList = new ArrayList<>(city.keySet());
+        Map map = new HashMap();
+        map.put("cityList", cityList);
+        return ResultVOUtil.ReturnBack(map, 1, "获取城市列表成功");
+    }
+
+    //获取对应市的县区列表
+    @GetMapping(value = "/getZoneList")
+    public ResultVO getZoneList(@RequestParam(value = "city") String city){
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject citys = JSONObject.parseObject(constantData.getData());
+        List<String> zoneList = new ArrayList<>(citys.getJSONObject(city).keySet());
+        Map map = new HashMap();
+        map.put("zoneList", zoneList);
+        return ResultVOUtil.ReturnBack(map, 1, "获取县区列表成功");
+    }
+
+    //获取对应县区的医院列表
+    @GetMapping(value = "/getHospitalList")
+    public ResultVO getHospitalList(@RequestParam(value = "city") String city,
+                                    @RequestParam(value = "zone") String zone){
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject citys = JSONObject.parseObject(constantData.getData());
+        List<String> hospitalList = new ArrayList<>(citys.getJSONObject(city).getJSONObject(zone).keySet());
+        Map map = new HashMap();
+        map.put("hospitalList", hospitalList);
+        return ResultVOUtil.ReturnBack(map, 1, "获取医院列表成功");
+    }
+
+    //获取对应县区的科室列表
+    @GetMapping(value = "/getDepartMentlList")
+    public ResultVO getDepartMentlList(@RequestParam(value = "city") String city,
+                                       @RequestParam(value = "zone") String zone,
+                                       @RequestParam(value = "hospital") String hospital){
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject citys = JSONObject.parseObject(constantData.getData());
+        List<String> departmentList = (List<String>) citys.getJSONObject(city).getJSONObject(zone).get(hospital);
+        Map map = new HashMap();
+        map.put("departmentList", departmentList);
+        return ResultVOUtil.ReturnBack(map, 1, "获取科室列表成功");
+    }
 }
