@@ -1,3 +1,4 @@
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
 import com.seu.domian.*;
@@ -313,9 +314,131 @@ public class test {
 
     @Test
     public void test1011(){
+        JSONArray jsonArray = JSONArray.parseArray(g);
+        System.out.println(jsonArray);
         List<String> names=new ArrayList<>();
         names.add("wj");
         Map d = GetTitleAndAbstract.generateCaseTitleDetail(g, names);
         int a;
+
+    }
+
+    @Test
+    public void test1013(){
+        String da = "[{\n" +
+                "\t\"name\": \"疗程1\",\n" +
+                "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
+                "\t\"InvolvedInstitute\": {\n" +
+                "\t\t\"City\": \"南京市\",\n" +
+                "\t\t\"Zone\": \"鼓楼区\",\n" +
+                "\t\t\"Hospital\": \"连天美医院\",\n" +
+                "\t\t\"Department\": [\"皮肤美容\"]\n" +
+                "\t},\n" +
+                "\t\"resultOfRegConflict\": [{\n" +
+                "\t\t\"name\": \"诊断相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [\"心阴虚\"],\n" +
+                "\t\t\"defaultBehavior\": [\"错误诊断\", \"延误诊断\"],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"检验相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"手术相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"非手术性治疗相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"用药相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"输血相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"麻醉相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}, {\n" +
+                "\t\t\"name\": \"管理相关\",\n" +
+                "\t\t\"test\": \"\",\n" +
+                "\t\t\"added\": \"\",\n" +
+                "\t\t\"medicine\": \"\",\n" +
+                "\t\t\"syndrome\": \"\",\n" +
+                "\t\t\"operation\": [],\n" +
+                "\t\t\"diseaseAfter\": [],\n" +
+                "\t\t\"diseaseBefore\": [],\n" +
+                "\t\t\"defaultBehavior\": [],\n" +
+                "\t\t\"diseasesymptomAfter\": [],\n" +
+                "\t\t\"diseasesymptomBefore\": []\n" +
+                "\t}],\n" +
+                "\t\"ResultOfDamageDetail\": \"无\"\n" +
+                "}]";
+        JSONArray jsonArray = JSONArray.parseArray(da);
+        System.out.println(jsonArray);
+        List<String> names=new ArrayList<>();
+        names.add("wj");
+        Map d = GetTitleAndAbstract.generateCaseTitleDetail(da, names);
+        int a =3;
+
     }
 }

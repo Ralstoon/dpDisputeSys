@@ -63,41 +63,98 @@ public class GetTitleAndAbstract {
             //获取resultOfRegConflict列表
             JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
             for(Object eachResult: resultOfRegConflict){
-                detail = detail + "患者因存在症状"
-                        + ((List<String>)(((JSONObject)eachResult).get("diseasesymptomBefore"))).stream().collect(Collectors.joining("、"))
-                        + "在"
-                        + hospitals
-                        + "就诊。院方诊断为"
-                        + ((List<String>)(((JSONObject)eachResult).get("diseaseBefore"))).stream().collect(Collectors.joining("、"));
-                if( ((JSONObject)eachResult).get("test") != null && ((JSONObject)eachResult).get("test") != "" ){
+
+                if(
+                         ((JSONObject)eachResult).getString("test").isEmpty()
+
+
+                        && ((List<String>)((JSONObject)eachResult).get("operation")).size() == 0
+
+                        && ((JSONObject)eachResult).getString("medicine").isEmpty()
+
+                        && ((JSONObject)eachResult).getString("added").isEmpty()
+
+                        && ((JSONObject)eachResult).getString("syndrome").isEmpty()
+
+
+                        && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() ==0
+
+
+                        && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() ==0
+
+                        && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() ==0
+
+                        && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() ==0
+
+                        && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() ==0)
+
+                    continue;
+
+                if( ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() !=0 ){
+                    detail = detail + "患者因存在症状"
+                            + ((List<String>)(((JSONObject)eachResult).get("diseasesymptomBefore"))).stream().collect(Collectors.joining("、"))
+                            + "在"
+                            + hospitals
+                            + "就诊。";
+                }
+
+                if ( ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() !=0 ){
+                    detail = detail + "院方诊断为"
+                            + ((List<String>)(((JSONObject)eachResult).get("diseaseBefore"))).stream().collect(Collectors.joining("、"));
+                }
+
+
+                if( ((JSONObject)eachResult).get("test") != null && !((JSONObject)eachResult).getString("test").isEmpty() ){
                     detail = detail + "。医院进行了" + ((JSONObject)eachResult).getString("test") + "检测。";
                 }
-                if( ((JSONObject)eachResult).get("operation") != null && ((JSONObject)eachResult).get("operation") != "" ){
+                if( ((JSONObject)eachResult).get("operation") != null && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
                     detail = detail + "医院进行了" + ((JSONObject)eachResult).getString("operation") + "手术。";
                 }
 
-                if( ((JSONObject)eachResult).get("medicine") != null && ((JSONObject)eachResult).get("medicine") != "" ){
+                if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
                     detail = detail + "医方对患者使用了" + ((JSONObject)eachResult).getString("medicine") + "药品。";
                 }
-                if( ((JSONObject)eachResult).get("added") != null && ((JSONObject)eachResult).get("added") != "" ){
+                if( ((JSONObject)eachResult).get("added") != null && !((JSONObject)eachResult).getString("added").isEmpty() ){
                     detail = detail + "（备注：" + ((JSONObject)eachResult).getString("added") + "。）";
                 }
 
-                if( ((JSONObject)eachResult).get("syndrome") != null && ((JSONObject)eachResult).get("syndrome") != "" ){
+                if( ((JSONObject)eachResult).get("syndrome") != null && !((JSONObject)eachResult).getString("syndrome").isEmpty() ){
                     detail = detail + "患者出现并发症" + ((JSONObject)eachResult).getString("syndrome") + "。";
                 }
 
-                detail = detail + "院方一系列医疗行为导致患者出现"
-                        + ((List<String>)(((JSONObject)eachResult).get("diseasesymptomAfter"))).stream().collect(Collectors.joining("、"))
-                        + "症状。并患"
-                        + ((List<String>)(((JSONObject)eachResult).get("diseasemAfter"))).stream().collect(Collectors.joining("、"))
-                        + "。院方可能在"
-                        + ((JSONObject)eachResult).getString("name")
-                        + "失误，具体包括"
-                        + ((List<String>)(((JSONObject)eachResult).get("defaultBehavior"))).stream().collect(Collectors.joining("、"))
-                        + "。";
+                if( ((JSONObject)eachResult).get("diseasesymptomAfter") != null && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() !=0 ){
+                    detail = detail
+                            + "院方一系列医疗行为导致患者出现"
+                            + ((List<String>)(((JSONObject)eachResult).get("diseasesymptomAfter"))).stream().collect(Collectors.joining("、"))
+                            + "症状";
+                }
+
+                if (((JSONObject) eachResult).get("diseasemAfter") != null && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
+                    detail = detail
+                            + "使患者患有"
+                            + ((List<String>)(((JSONObject) eachResult).get("diseasemAfter"))).stream().collect(Collectors.joining("、"))
+                            + "。";
+                }
+
+                if (((JSONObject) eachResult).get("name") != null && !((JSONObject) eachResult).getString("name").isEmpty()) {
+                    detail = detail
+                            + "院方可能在"
+                            + ((JSONObject) eachResult).getString("name")
+                            + "失误。";
+                }
+
+                if (((JSONObject) eachResult).get("defaultBehavior") != null && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() !=0) {
+                    detail = detail.substring(0, detail.length() - 1);
+                    detail = detail
+                            + "，具体包括"
+                            + ((List<String>)(((JSONObject) eachResult).get("defaultBehavior"))).stream().collect(Collectors.joining("、"))
+                            + "。";
+                }
             }
-            detail = detail + "在本阶段医疗行为中，最终造成患者"+ ((JSONObject) stage).getString("ResultOfDamage")+ "损害结果。";
+            if( !((JSONObject) stage).getString("ResultOfDamage").isEmpty() )
+                detail = detail  + "在本阶段医疗行为中，最终造成患者"+ ((JSONObject) stage).getString("ResultOfDamage")+ "损害结果。";
+            if( !((JSONObject) stage).getString("ResultOfDamageDetail").isEmpty() )
+                detail = detail  + "详情：" + ((JSONObject) stage).getString("ResultOfDamageDetail");
 
 //            detail = detail + hospitals + "存在医疗纠纷。患者因存在";
 //            Object resultList = ((com.alibaba.fastjson.JSONObject) stage).get("ResultList");

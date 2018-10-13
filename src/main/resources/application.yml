@@ -20,11 +20,11 @@ spring:
 server:
   port: 8080
 
-  ssl:
-    key-store-type: PKCS12
-    key-store: C:/Users/Administrator/keystore.p12
-    key-store-password: 123456
-    key-alias: tomcat
+#  ssl:
+#    key-store-type: PKCS12
+#    key-store: C:/Users/Administrator/keystore.p12
+#    key-store-password: 123456
+#    key-alias: tomcat
 
 
 
@@ -39,5 +39,5 @@ qiniu:
   path: pe93soaos.bkt.clouddn.com
 
 
-security:
-  require-ssl: true
+#security:
+#  require-ssl:
