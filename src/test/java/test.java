@@ -1,4 +1,3 @@
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
 import com.seu.domian.*;
@@ -237,208 +236,86 @@ public class test {
         System.out.println(citys.keySet());
     }
 
-    String g = "[{\n" +
-            "\t\"name\": \"疗程1\",\n" +
-            "\t\"resultOfRegConflict\": [{\n" +
-            "\t\t\t\"name\": \"诊断相关\",\n" +
-            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomBefore\": [\"dd\"],\n" +
-            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"test\": \"ff\",\n" +
-            "\t\t\t\"operation\": \"ss\",\n" +
-            "\t\t\t\"syndrome\": \"\",\n" +
-            "\t\t\t\"medicine\": \"ee\",\n" +
-            "\t\t\t\"added\": \"ss\"\n" +
-            "\t\t},\n" +
-            "\t\t{\n" +
-            "\t\t\t\"name\": \"检验相关\",\n" +
-            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"test\": \"\",\n" +
-            "\t\t\t\"operation\": \"s\",\n" +
-            "\t\t\t\"syndrome\": \"s\",\n" +
-            "\t\t\t\"medicine\": \"ff\",\n" +
-            "\t\t\t\"added\": \"ddd\"\n" +
-            "\t\t}\n" +
-            "\t],\n" +
-            "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
-            "\t\"InvolvedInstitute\": {\n" +
-            "\t\t\"City\": \"yz\",\n" +
-            "\t\t\"Zone\": \"hj\",\n" +
-            "\t\t\"Hospital\": \"yi\",\n" +
-            "\t\t\"Department\": [\"g\",\"p\"]\n" +
-            "\t}\n" +
-            "},\n" +
-            "{\n" +
-            "\t\"name\": \"疗程2\",\n" +
-            "\t\"resultOfRegConflict\": [{\n" +
-            "\t\t\t\"name\": \"诊断相关\",\n" +
-            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomBefore\": [\"dd\"],\n" +
-            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"test\": \"ff\",\n" +
-            "\t\t\t\"operation\": \"ss\",\n" +
-            "\t\t\t\"syndrome\": \"\",\n" +
-            "\t\t\t\"medicine\": \"ee\",\n" +
-            "\t\t\t\"added\": \"ss\"\n" +
-            "\t\t},\n" +
-            "\t\t{\n" +
-            "\t\t\t\"name\": \"检验相关\",\n" +
-            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
-            "\t\t\t\"test\": \"\",\n" +
-            "\t\t\t\"operation\": \"s\",\n" +
-            "\t\t\t\"syndrome\": \"s\",\n" +
-            "\t\t\t\"medicine\": \"ff\",\n" +
-            "\t\t\t\"added\": \"ddd\"\n" +
-            "\t\t}\n" +
-            "\t],\n" +
-            "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
-            "\t\"InvolvedInstitute\": {\n" +
-            "\t\t\"City\": \"yz\",\n" +
-            "\t\t\"Zone\": \"hj\",\n" +
-            "\t\t\"Hospital\": \"er\",\n" +
-            "\t\t\"Department\": [\"g\",\"p\"]\n" +
-            "\t}\n" +
-            "}]";
+//    String g = "[{\n" +
+//            "\t\"name\": \"疗程1\",\n" +
+//            "\t\"resultOfRegConflict\": [{\n" +
+//            "\t\t\t\"name\": \"诊断相关\",\n" +
+//            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomBefore\": [\"dd\"],\n" +
+//            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"test\": \"ff\",\n" +
+//            "\t\t\t\"operation\": \"ss\",\n" +
+//            "\t\t\t\"syndrome\": \"\",\n" +
+//            "\t\t\t\"medicine\": \"ee\",\n" +
+//            "\t\t\t\"added\": \"ss\"\n" +
+//            "\t\t},\n" +
+//            "\t\t{\n" +
+//            "\t\t\t\"name\": \"检验相关\",\n" +
+//            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"test\": \"\",\n" +
+//            "\t\t\t\"operation\": \"s\",\n" +
+//            "\t\t\t\"syndrome\": \"s\",\n" +
+//            "\t\t\t\"medicine\": \"ff\",\n" +
+//            "\t\t\t\"added\": \"ddd\"\n" +
+//            "\t\t}\n" +
+//            "\t],\n" +
+//            "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
+//            "\t\"InvolvedInstitute\": {\n" +
+//            "\t\t\"City\": \"yz\",\n" +
+//            "\t\t\"Zone\": \"hj\",\n" +
+//            "\t\t\"Hospital\": \"yi\",\n" +
+//            "\t\t\"Department\": [\"g\",\"p\"]\n" +
+//            "\t}\n" +
+//            "},\n" +
+//            "{\n" +
+//            "\t\"name\": \"疗程2\",\n" +
+//            "\t\"resultOfRegConflict\": [{\n" +
+//            "\t\t\t\"name\": \"诊断相关\",\n" +
+//            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomBefore\": [\"dd\"],\n" +
+//            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"test\": \"ff\",\n" +
+//            "\t\t\t\"operation\": \"ss\",\n" +
+//            "\t\t\t\"syndrome\": \"\",\n" +
+//            "\t\t\t\"medicine\": \"ee\",\n" +
+//            "\t\t\t\"added\": \"ss\"\n" +
+//            "\t\t},\n" +
+//            "\t\t{\n" +
+//            "\t\t\t\"name\": \"检验相关\",\n" +
+//            "\t\t\t\"defaultBehavior\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasesymptomAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseaseBefore\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"diseasemAfter\": [\"dd\",\"ww\"],\n" +
+//            "\t\t\t\"test\": \"\",\n" +
+//            "\t\t\t\"operation\": \"s\",\n" +
+//            "\t\t\t\"syndrome\": \"s\",\n" +
+//            "\t\t\t\"medicine\": \"ff\",\n" +
+//            "\t\t\t\"added\": \"ddd\"\n" +
+//            "\t\t}\n" +
+//            "\t],\n" +
+//            "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
+//            "\t\"InvolvedInstitute\": {\n" +
+//            "\t\t\"City\": \"yz\",\n" +
+//            "\t\t\"Zone\": \"hj\",\n" +
+//            "\t\t\"Hospital\": \"er\",\n" +
+//            "\t\t\"Department\": [\"g\",\"p\"]\n" +
+//            "\t}\n" +
+//            "}]";
 
-    @Test
-    public void test1011(){
-        JSONArray jsonArray = JSONArray.parseArray(g);
-        System.out.println(jsonArray);
-        List<String> names=new ArrayList<>();
-        names.add("wj");
-        Map d = GetTitleAndAbstract.generateCaseTitleDetail(g, names);
-        int a;
-
-    }
-
-    @Test
-    public void test1013(){
-        String da = "[{\n" +
-                "\t\"name\": \"疗程1\",\n" +
-                "\t\"ResultOfDamage\": \"一级甲等（死亡）\",\n" +
-                "\t\"InvolvedInstitute\": {\n" +
-                "\t\t\"City\": \"南京市\",\n" +
-                "\t\t\"Zone\": \"鼓楼区\",\n" +
-                "\t\t\"Hospital\": \"连天美医院\",\n" +
-                "\t\t\"Department\": [\"皮肤美容\"]\n" +
-                "\t},\n" +
-                "\t\"resultOfRegConflict\": [{\n" +
-                "\t\t\"name\": \"诊断相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [\"心阴虚\"],\n" +
-                "\t\t\"defaultBehavior\": [\"错误诊断\", \"延误诊断\"],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"检验相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"手术相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"非手术性治疗相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"用药相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"输血相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"麻醉相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}, {\n" +
-                "\t\t\"name\": \"管理相关\",\n" +
-                "\t\t\"test\": \"\",\n" +
-                "\t\t\"added\": \"\",\n" +
-                "\t\t\"medicine\": \"\",\n" +
-                "\t\t\"syndrome\": \"\",\n" +
-                "\t\t\"operation\": [],\n" +
-                "\t\t\"diseaseAfter\": [],\n" +
-                "\t\t\"diseaseBefore\": [],\n" +
-                "\t\t\"defaultBehavior\": [],\n" +
-                "\t\t\"diseasesymptomAfter\": [],\n" +
-                "\t\t\"diseasesymptomBefore\": []\n" +
-                "\t}],\n" +
-                "\t\"ResultOfDamageDetail\": \"无\"\n" +
-                "}]";
-        JSONArray jsonArray = JSONArray.parseArray(da);
-        System.out.println(jsonArray);
-        List<String> names=new ArrayList<>();
-        names.add("wj");
-        Map d = GetTitleAndAbstract.generateCaseTitleDetail(da, names);
-        int a =3;
-
-    }
+//    @Test
+//    public void test1011(){
+//        List<String> names=new ArrayList<>();
+//        names.add("wj");
+//        Map d = GetTitleAndAbstract.generateCaseTitleDetail(g, names);
+//        int a;
+//    }
 }
