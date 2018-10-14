@@ -461,11 +461,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 continue;
             for (int i = 0; i < processList.size(); ++i) {
                 JSONObject jsStr = processList.getJSONObject(i);
-                JSONArray jsStr_arr=jsStr.getJSONArray("InvolvedInstitute");
-                for(int j=0;j<jsStr_arr.size();++j){
-                    JSONObject temppp=jsStr_arr.getJSONObject(j);
-                    respondentList.add(temppp.getString("Hospital"));
-                }
+                JSONObject jsStr_arr=jsStr.getJSONObject("InvolvedInstitute");
+                respondentList.add(jsStr_arr.getString("Hospital"));
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
