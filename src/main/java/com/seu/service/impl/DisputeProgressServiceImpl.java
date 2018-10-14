@@ -1385,18 +1385,26 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Override
     public ResultVO getHospitalMessage(String caseId) {
         // 先获取医疗行为数据，解析出医院信息,每个医院信息包括 市 区 名
-        // TODO 解析方式随前端发送数据变化而变化
+        // TODO 解析方式随前端发送数据变化而变化 10/12 wj已修改
         JSONArray jsArr=JSONArray.parseArray(disputecaseRepository.getOne(caseId).getMedicalProcess());
         Map<String,InstituteForm> instituteFormMap=new HashMap<>();
-        for(int i=0;i<jsArr.size();++i){
+//        for(int i=0;i<jsArr.size();++i){
+//            JSONObject obj=jsArr.getJSONObject(i);
+//            JSONArray InvolvedInstitutes=obj.getJSONArray("InvolvedInstitute");
+//            for(int j=0;j<InvolvedInstitutes.size();++j){
+//                JSONObject jsonObject=InvolvedInstitutes.getJSONObject(j);
+//                InstituteForm instituteForm=new InstituteForm(jsonObject.getString("City"),jsonObject.getString("Zone"),jsonObject.getString("Hospital"));
+//                instituteFormMap.put(instituteForm.toString(),instituteForm);
+//            }
+//        }
+
+        for(int i = 0; i < jsArr.size(); ++i){
             JSONObject obj=jsArr.getJSONObject(i);
-            JSONArray InvolvedInstitutes=obj.getJSONArray("InvolvedInstitute");
-            for(int j=0;j<InvolvedInstitutes.size();++j){
-                JSONObject jsonObject=InvolvedInstitutes.getJSONObject(j);
-                InstituteForm instituteForm=new InstituteForm(jsonObject.getString("City"),jsonObject.getString("Zone"),jsonObject.getString("Hospital"));
-                instituteFormMap.put(instituteForm.toString(),instituteForm);
-            }
+            JSONObject involvedInstitute=obj.getJSONObject("InvolvedInstitute");
+            InstituteForm instituteForm=new InstituteForm(involvedInstitute.getString("City"),involvedInstitute.getString("Zone"),involvedInstitute.getString("Hospital"));
+            instituteFormMap.put(instituteForm.toString(),instituteForm);
         }
+
         List<ContactList> contactLists=new ArrayList<>();
         for(InstituteForm form:instituteFormMap.values()){
             List<ContactList> lists=contactListRepository.findAllByCityAndZoneAndName(form.getCity(),form.getZone(),form.getHospital());

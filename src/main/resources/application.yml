@@ -38,8 +38,8 @@ qiniu:
   path: pe93soaos.bkt.clouddn.com
 
 
-security:
-  require-ssl: true
+#security:
+#  require-ssl: true
 
 #自定义路径
 py:

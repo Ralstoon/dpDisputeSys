@@ -136,7 +136,7 @@ public class DisputeRegisterController {
     private ConstantDataRepository constantDataRepository;
 
     //获取江苏省市级列表
-    @GetMapping(value = "/getCityList")
+    @PostMapping(value = "/getCityList")
     public ResultVO getCityList(){
         ConstantData constantData = constantDataRepository.findByName("room_list");
         JSONObject city = JSONObject.parseObject(constantData.getData());
@@ -147,8 +147,9 @@ public class DisputeRegisterController {
     }
 
     //获取对应市的县区列表
-    @GetMapping(value = "/getZoneList")
-    public ResultVO getZoneList(@RequestParam(value = "city") String city){
+    @PostMapping(value = "/getZoneList")
+    public ResultVO getZoneList(@RequestBody Map<String, String > map1){
+        String city = map1.get("city");
         ConstantData constantData = constantDataRepository.findByName("room_list");
         JSONObject citys = JSONObject.parseObject(constantData.getData());
         List<String> zoneList = new ArrayList<>(citys.getJSONObject(city).keySet());
@@ -158,9 +159,10 @@ public class DisputeRegisterController {
     }
 
     //获取对应县区的医院列表
-    @GetMapping(value = "/getHospitalList")
-    public ResultVO getHospitalList(@RequestParam(value = "city") String city,
-                                    @RequestParam(value = "zone") String zone){
+    @PostMapping(value = "/getHospitalList")
+    public ResultVO getHospitalList(@RequestBody Map<String, String > map1){
+        String city = map1.get("city");
+        String zone = map1.get("zone");
         ConstantData constantData = constantDataRepository.findByName("room_list");
         JSONObject citys = JSONObject.parseObject(constantData.getData());
         List<String> hospitalList = new ArrayList<>(citys.getJSONObject(city).getJSONObject(zone).keySet());
@@ -170,15 +172,16 @@ public class DisputeRegisterController {
     }
 
     //获取对应县区的科室列表
-    @GetMapping(value = "/getDepartMentlList")
-    public ResultVO getDepartMentlList(@RequestParam(value = "city") String city,
-                                       @RequestParam(value = "zone") String zone,
-                                       @RequestParam(value = "hospital") String hospital){
+    @PostMapping(value = "/getDepartmentList")
+    public ResultVO getDepartMentlList(@RequestBody Map<String, String > map1){
+        String city = map1.get("city");
+        String zone = map1.get("zone");
+        String hospital = map1.get("hospital");
         ConstantData constantData = constantDataRepository.findByName("room_list");
         JSONObject citys = JSONObject.parseObject(constantData.getData());
         List<String> departmentList = (List<String>) citys.getJSONObject(city).getJSONObject(zone).get(hospital);
         Map map = new HashMap();
-        map.put("departmentList", departmentList);
+        map.put("departmentList", new HashSet<>(departmentList));
         return ResultVOUtil.ReturnBack(map, 1, "获取科室列表成功");
     }
 }
