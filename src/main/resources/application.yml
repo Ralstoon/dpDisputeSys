@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://223.3.72.234:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+    url: jdbc:mysql://wangj1106.imwork.net:50456/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
     username: root
     password: 123456
   jpa:

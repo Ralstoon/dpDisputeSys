@@ -25,18 +25,11 @@ public class WebRTCSigApi {
     private PrivateKey mPrivateKey = null;
     private PublicKey mPublicKey = null;
     
-    /**
-     * 设置sdkappid
-     * @param sdkappid
-     */
+
     public void setSdkAppid(int sdkappid) {
         this.mSdkAppid = sdkappid;
     }
-    
-    /**
-     * 设置私钥 如果要生成userSig和privateMapKey则需要私钥
-     * @param privateKey 私钥文件内容
-     */
+
     public void setPrivateKey(String privateKey) {
         String privateKeyPEM = privateKey.replace("-----BEGIN PRIVATE KEY-----", "")
         .replace("-----END PRIVATE KEY-----", "")
@@ -52,10 +45,7 @@ public class WebRTCSigApi {
         }
     }
     
-    /**
-     * 设置公钥 如果要验证userSig和privateMapKey则需要公钥
-     * @param publicKey 公钥文件内容
-     */
+
     public void setPublicKey(String publicKey) {
         String publicKeyPEM = publicKey.replace("-----BEGIN PUBLIC KEY-----", "")
         .replace("-----END PUBLIC KEY-----", "")
@@ -71,11 +61,7 @@ public class WebRTCSigApi {
         }
     }
     
-    /**
-     * ECDSA-SHA256签名
-     * @param data 需要签名的数据
-     * @return 签名
-     */
+
     public byte[] sign(byte[] data) {
         try {
             Signature signer = Signature.getInstance("SHA256withECDSA");
@@ -87,13 +73,7 @@ public class WebRTCSigApi {
         }
         return null;
     }
-    
-    /**
-     * 验证ECDSA-SHA256签名
-     * @param data 需要验证的数据原文
-     * @param sig 需要验证的签名
-     * @return true:验证成功 false:验证失败
-     */
+
     public boolean verify(byte[] data, byte[] sig) {
         try {
             Signature signer = Signature.getInstance("SHA256withECDSA");
@@ -105,13 +85,7 @@ public class WebRTCSigApi {
         }
         return false;
     }
-    
-    /**
-     * 用于url的base64encode
-     * '+' => '*', '/' => '-', '=' => '_'
-     * @param data 需要编码的数据
-     * @return 编码后的base64数据
-     */
+
     private byte[] base64UrlEncode(byte[] data) {
         byte[] encode = Base64.getEncoder().encode(data);
         for (int i = 0; i < encode.length; i++) {
@@ -126,12 +100,7 @@ public class WebRTCSigApi {
         return encode;
     }
     
-    /**
-     * 用于url的base64decode
-     * '*' => '+', '-' => '/', '_' => '='
-     * @param data 需要解码的数据
-     * @return 解码后的数据
-     */
+
     private byte[] base64UrlDecode(byte[] data) {
         byte[] encode = Arrays.copyOf(data, data.length);
         for (int i = 0; i < encode.length; i++) {
@@ -146,12 +115,7 @@ public class WebRTCSigApi {
         return encode;
     }
     
-    /**
-     * 生成userSig
-     * @param userid 用户名
-     * @param expire userSig有效期，出于安全考虑建议为300秒，您可以根据您的业务场景设置其他值。
-     * @return 生成的userSig
-     */
+
     public String genUserSig(String userid, int expire) {
         String time = String.valueOf(System.currentTimeMillis()/1000);
         String serialString =
@@ -189,27 +153,11 @@ public class WebRTCSigApi {
         return userSig;
     }
     
-    /**
-     * 生成privateMapKey
-     * @param userid 用户名
-     * @param roomid 房间号
-     * @param expire privateMapKey有效期，出于安全考虑建议为300秒，您可以根据您的业务场景设置其他值。
-     * @return 生成的privateMapKey
-     */
+
     public String genPrivateMapKey(String userid, int roomid, int expire) {
         String time = String.valueOf(System.currentTimeMillis()/1000);
         
-        //视频校验位需要用到的字段
-        /*
-         cVer    unsigned char/1 版本号，填0
-         wAccountLen unsigned short /2   第三方自己的帐号长度
-         buffAccount wAccountLen 第三方自己的帐号字符
-         dwSdkAppid  unsigned int/4  sdkappid
-         dwRoomId    unsigned int/4  群组号码
-         dwExpTime   unsigned int/4  过期时间 （当前时间 + 有效期（单位：秒，建议300秒））
-         dwPrivilegeMap  unsigned int/4  权限位
-         dwAccountType   unsigned int/4  第三方帐号类型
-         */
+
         int accountLength = userid.length();
         int offset = 0;
         byte[] bytes = new byte[1+2+accountLength+4+4+4+4+4];
@@ -299,10 +247,8 @@ public class WebRTCSigApi {
     
     
     public JSONObject entrance(Integer roomid,String userid) {
-        int sdkappid = webrtcConstant.sdkAppid;   //腾讯云云通信sdkappid
-//        int roomid = 13071042;           //音视频房间号roomid
-//        String userid = "UserOne";  //用户名userid
-//
+        int sdkappid = webrtcConstant.sdkAppid;
+
         File privateKeyFile = new File(webrtcConstant.private_key);
         byte[] privateKey = new byte[(int)privateKeyFile.length()];
         
@@ -310,13 +256,12 @@ public class WebRTCSigApi {
         byte[] publicKey = new byte[(int)publicKeyFile.length()];
         
         try {
-            //读取私钥的内容
-            //PS:不要把私钥文件暴露到外网直接下载了哦
+
             FileInputStream in1 = new FileInputStream(privateKeyFile);
             in1.read(privateKey);
             in1.close();
             
-            //读取公钥的内容
+
             FileInputStream in2 = new FileInputStream(publicKeyFile);
             in2.read(publicKey);
             in2.close();
@@ -330,10 +275,10 @@ public class WebRTCSigApi {
         api.setPrivateKey(new String(privateKey));
         api.setPublicKey(new String(publicKey));
         
-        //生成userSig
+
         String userSig = api.genUserSig(userid, 300);
         
-        //生成privateMapKey
+
         String privateMapKey = api.genPrivateMapKey(userid, roomid, 300);
         JSONObject obj=JSONObject.parseObject("{}");
         obj.put("userSig",userSig);
