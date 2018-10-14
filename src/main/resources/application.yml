@@ -16,15 +16,14 @@ spring:
     host: 223.3.79.0
     port: 6379
 
-
 server:
-  port: 8080
-
+  port: 443
   ssl:
-    key-store-type: PKCS12
-    key-store: C:/Users/Administrator/keystore.p12
-    key-store-password: 123456
-    key-alias: tomcat
+    key-store-type: JKS
+    key-store: classpath:1541430928812.jks
+    key-store-password: 1541430928812
+    # 证书别名
+    key-alias: alias
 
 
 
@@ -41,3 +40,10 @@ qiniu:
 
 security:
   require-ssl: true
+
+#自定义路径
+py:
+  path: ./src/main/resources/pyfiles/
+
+webrtcKeys:
+  path: ./src/main/resources/webrtcKeys/

@@ -2,8 +2,11 @@ package com.seu.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.seu.service.WebrtcService;
+import com.seu.webrtc.LiveTapeApi;
 import com.seu.webrtc.WebRTCSigApi;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -19,19 +22,33 @@ import org.springframework.web.bind.annotation.*;
 public class WebrtcController {
     @Autowired
     private WebRTCSigApi webRTCSigApi;
-
-//    @PostMapping("/testRTC")
-//    public JSONObject testRTC(@RequestBody JSONObject obj){
-//        Integer roomid=obj.getInteger("roomid");
-//        String userid=obj.getString("userid");
-//        return webRTCSigApi.entrance(roomid,userid);
-//    }
+    @Autowired
+    private WebrtcService webrtcService;
+    @Autowired
+    private LiveTapeApi liveTapeApi;
 
     @PostMapping("/testRTC")
     public JSONObject testRTC(@RequestParam("roomid") Integer roomid,
                               @RequestParam("userid") String userid){
-//        Integer roomid=obj.getInteger("roomid");
-//        String userid=obj.getString("userid");
         return webRTCSigApi.entrance(roomid,userid);
+    }
+
+
+    @PostMapping("/mixStream")
+    public JSONObject mixStream(@RequestParam("time") Integer time){
+        // 没写暂停方法
+        return webrtcService.mixStream(time);
+    }
+
+    @PostMapping("/startLiveTape")
+    public JSONObject startLiveTape(@RequestParam("roomid") Integer roomid,
+                              @RequestParam("userid") String userid){
+        return liveTapeApi.startLiveTape(roomid,userid);
+    }
+
+    @PostMapping("/callback")
+    public void callback(@RequestBody JSONObject obj, HttpRequest request){
+        System.out.println(request.getURI().toString());
+        System.out.println(obj.toString());
     }
 }
