@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<input type="button" name="213" id="2" value="who is e" onclick="login()" />
+		<script>
+//  userId = $("#userId").val();
+    //请使用英文半角/数字作为用户名
+    ajax({
+        type: "POST",
+        url: 'http://localhost:8080/webrtc/testRTC',
+        dataType: 'json',
+        data: JSON.stringify({
+            roomid: parseInt(123321),
+            userid: '123321',
+        }),
+        success: function (json) {
+            if (json && json.errorCode === 0) {
+                //一会儿进入房间要用到
+                var userSig = json.userSig;
+                var privateMapKey = json.privMapEncrypt;
+                // 页面处理，显示视频流页面
+                $("#video-section").show();
+                $("#input-container").hide();
+
+                initRTC({
+                    "userId": userId,
+                    "userSig": userSig,
+                    "privateMapKey": privateMapKey,
+                    "sdkappid": sdkappid,
+                    "accountType": accountType,
+                    "closeLocalMedia": closeLocalMedia,
+                    "roomid": $("#roomid").val()
+                });
+
+            } else {
+                   console.error(json);
+            }
+        },
+        error: function (err) {
+               console.error(err);
+        }
+    })
+			
+		</script>
+		
+	</body>
+</html>
