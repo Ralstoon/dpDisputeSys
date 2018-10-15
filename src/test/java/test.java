@@ -5,6 +5,7 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
+import com.seu.util.MD5Util;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.GetWorkingTimeUtil;
 import org.activiti.engine.HistoryService;
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import com.seu.util.MD5Util;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,6 +28,7 @@ import java.util.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DpdisputesysApplication.class)
 public class test {
+
     @Autowired
     private TaskService taskService;
 
@@ -234,6 +237,11 @@ public class test {
             System.out.println(city);
         }
         System.out.println(citys.keySet());
+    }
+
+    @Test
+    public void tttt(){
+        System.out.println(MD5Util.MD5EncodeUtf8("123456789"));
     }
 
 //    String g = "[{\n" +

@@ -46,6 +46,12 @@ public class WebrtcController {
         return liveTapeApi.startLiveTape(roomid,userid);
     }
 
+    @PostMapping("/endLiveTape")
+    public JSONObject endLiveTape(@RequestParam("channel_id") String channel_id,
+                                    @RequestParam("task_id") String task_id){
+        return liveTapeApi.endLiveTape(channel_id,task_id);
+    }
+
     @PostMapping("/callback")
     public void callback(@RequestBody JSONObject obj, HttpRequest request){
         System.out.println(request.getURI().toString());

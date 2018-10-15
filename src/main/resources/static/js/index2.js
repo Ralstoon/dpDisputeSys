@@ -11,7 +11,7 @@
 // 所以你需要的是
 // 去控制台把私钥下载下来，用TLS工具算一个签名（usersig)
 
-var FetchSigCgi = 'http://localhost:8080/webrtc/testRTC';
+var channel_id,task_id;
 var accountType = 14418, // accounttype 还是在文档中会找到
     userSig,
     username;
@@ -179,7 +179,7 @@ function initRTC(opts) {
             var time=0  // 后台等待时间：在推流后应等待数秒再申请云端混流
             $.ajax({
         		type: "POST",
-        		url: 'http://www.wangj1106.top:8080/webrtc/mixStream',
+        		url: 'https://www.wangj1106.top:443/webrtc/mixStream',
         		dataType: 'json',
 				data:{roomid:parseInt(time)},
         		success: function (json) {
@@ -279,7 +279,7 @@ function login(closeLocalMedia) {
     //请使用英文半角/数字作为用户名
     $.ajax({
         type: "POST",
-        url: 'http://www.wangj1106.top:8080/webrtc/testRTC',
+        url: 'https://www.wangj1106.top:443/webrtc/testRTC',
         dataType: 'json',
 		data:{roomid:parseInt($("#roomid").val()),userid:userId},
         success: function (json) {
@@ -317,19 +317,41 @@ function startLiveTape(){
     //请使用英文半角/数字作为用户名
     $.ajax({
         type: "POST",
-        url: 'http://www.wangj1106.top:8080/webrtc/startLiveTape',
+        url: 'https://www.wangj1106.top:443/webrtc/startLiveTape',
         dataType: 'json',
 		data:{roomid:parseInt($("#roomid").val()),userid:userId},
         success: function (json) {
             if (json && json.errorCode === 0) {
             	alert("视频录制开始！");
-
+                channel_id = json.channel_id;
+                task_id=json.task_id;
             } else {
                    console.error(json);
             }
         },
         error: function (err) {
                console.error(err);
+        }
+    })
+}
+
+function endLiveTape(){
+    //请使用英文半角/数字作为用户名
+    $.ajax({
+        type: "POST",
+        url: 'https://www.wangj1106.top:443/webrtc/endLiveTape',
+        dataType: 'json',
+        data:{channel_id:channel_id,task_id:task_id},
+        success: function (json) {
+            if (json && json.errorCode === 0) {
+                alert("视频录制结束！");
+
+            } else {
+                console.error(json);
+            }
+        },
+        error: function (err) {
+            console.error(err);
         }
     })
 }
