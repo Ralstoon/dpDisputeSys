@@ -311,7 +311,7 @@ public class test {
 //            "\t}\n" +
 //            "}]";
 
-//    @Test
+//    @RegisterIMUtil
 //    public void test1011(){
 //        List<String> names=new ArrayList<>();
 //        names.add("wj");

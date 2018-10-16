@@ -23,8 +23,10 @@ import com.seu.repository.UserRepository;
 import com.seu.service.UserService;
 import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
+import com.seu.utils.RegisterIMUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private MediatorRepository mediatorRepository;
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private RegisterIMUtil registerIMUtil;
 
 
 
@@ -83,14 +87,10 @@ public class UserServiceImpl implements UserService {
 //        NormalUser saveNormalUser=normalUserDetailService.registerWithNormalUserDetail(user_id);
         NormalUser normalUser=new NormalUser(normalId,ID);
         NormalUser saveNormalUser=normalUserRepository.save(normalUser);
+        /** 注册IM */
+        registerIMUtil.registerIM(phone,password);
         return (saveNormalUser==null)?-1:1;
     }
-
-//    @Override
-//    public String findPhoneByUserId(String userId) {
-//        String phone = normalUserRepository.findNormalUserByUserId(userId).getPhone();
-//        return phone;
-//    }
 
     @Override
     @Transactional
@@ -102,15 +102,6 @@ public class UserServiceImpl implements UserService {
             redisTemplate.opsForValue().getOperations().delete(String.format(RedisConstant.USER_RREFIX,role,ID));
             return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
         }
-
-//        if(session==null ||(Collections.list(session.getAttributeNames()).size()==0)){
-//            throw new NormalUserException(LoginEnum.LOGINSESSION_NULL.getCode(),LoginEnum.LOGINSESSION_NULL.getMsg());
-//        }
-//        List<String> params= Collections.list(session.getAttributeNames());
-//        for(String param:params){
-//            session.removeAttribute(param);
-//        }
-//        return ResultVOUtil.ReturnBack(LoginEnum.LOGINOUT_SUCCESS.getCode(),LoginEnum.LOGINOUT_SUCCESS.getMsg());
     }
 
 
@@ -156,6 +147,9 @@ public class UserServiceImpl implements UserService {
             Mediator registerMediator=new Mediator(specificId,id,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
             userRepository.save(registerUser);
             mediatorRepository.save(registerMediator);
+            /** 在IM上进行注册，发送原密码 */
+            registerIMUtil.registerIM(phone,password,mediatorName);
+
         }
         return ResultVOUtil.ReturnBack(RegisterEnum.REGISTERMEDIATOR_SUCCESS.getCode(),RegisterEnum.REGISTERMEDIATOR_SUCCESS.getMsg());
 

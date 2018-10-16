@@ -34,6 +34,7 @@ public class WebRTCSigApi {
         String privateKeyPEM = privateKey.replace("-----BEGIN PRIVATE KEY-----", "")
         .replace("-----END PRIVATE KEY-----", "")
         .replace("\n", "");
+
         byte[] encodedKey = Base64.getDecoder().decode(privateKeyPEM.getBytes());
         
         try {
