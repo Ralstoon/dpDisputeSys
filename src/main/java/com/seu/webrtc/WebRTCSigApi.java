@@ -287,8 +287,7 @@ public class WebRTCSigApi {
         obj.put("errorCode",0);
         obj.put("sdkappid",sdkappid);
         return obj;
-//        System.out.println("userSig:\n" + userSig);
-//        System.out.println("privateMapKey:\n" + privateMapKey);
+
     }
     
 }
