@@ -20,6 +20,7 @@ import com.seu.repository.*;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
 import com.seu.utils.GetTitleAndAbstract;
+import com.seu.utils.Request2JSONobjUtil;
 import com.seu.utils.VerifyProcessUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
@@ -34,6 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -864,9 +866,10 @@ public class DisputeProgressController {
 
     //发送医疗过程信息，获取纠纷要素列表
     @PostMapping(value = "/mediator/getKeyWordList")
-    public ResultVO getKeyWordList(Map<String, String> map){
-        String id = map.get("id");//操作人id
-        String stageContent = map.get("stageContent");
+    public ResultVO getKeyWordList(HttpServletRequest request){
+        JSONObject map= Request2JSONobjUtil.convert(request);
+        String id = map.getString("id");//操作人id
+        String stageContent=map.getString("stageContent");
         JSONArray jsonArray = JSONArray.parseArray(stageContent);
 
         JSONArray result = JSONArray.parseArray("[]");
@@ -1013,7 +1016,11 @@ public class DisputeProgressController {
         Map<String, Object> map11 = new HashMap<>();
         result.stream().filter(each->((JSONObject)each).getString("value").isEmpty());
         map11.put("keyWordList", result);
-        map11.put("brief", (GetTitleAndAbstract.generateCaseTitleDetail(stageContent,new ArrayList<>())).get("detail"));
+        List<String> people = new ArrayList<>();
+        people.add("");
+        map11.put("brief", (GetTitleAndAbstract.generateCaseTitleDetail(stageContent,people)).get("detail"));
         return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
     }
+
+
 }
