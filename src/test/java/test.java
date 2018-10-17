@@ -1,11 +1,13 @@
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
+import com.seu.ViewObject.ResultVO;
 import com.seu.common.RedisConstant;
 import com.seu.domian.*;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
+import com.seu.service.DisputeRegisterService;
 import com.seu.service.UserService;
 import com.seu.service.impl.DisputeProgressServiceImpl;
 import com.seu.util.MD5Util;
@@ -366,9 +368,18 @@ public class test {
         System.out.println(currentProcess.getStatus());
     }
 
+    @Autowired
+    public DisputeRegisterService disputeRegisterService;
+
     @Test
     public void mmmmm() throws Exception {
-        System.out.println(getWorkingTimeUtil.calWorkingTime(new Date(),30));
-        System.out.println(getWorkingTimeUtil.getResult(new Date()));
+        String involvedPeople = "[{\n" +
+                "    \"name\":\"王某\",\n" +
+                "    \"cardID\":\"321002111111111111\",\n" +
+                "    \"picked\":\"申请人\",\n" +
+                "    \"phone\":\"15651632376\"\n" +
+                "  }]";
+        ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
+        res.getData();
     }
 }

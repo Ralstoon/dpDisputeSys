@@ -331,7 +331,8 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         ResultVO res=sendInvolvedPeopleInfo(involvedPeople);
         if(res.getCode()<0)
             return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
-        String caseId=JSONObject.parseObject(res.getData().toString()).getString("CaseId");
+        String caseId = ((Map<String,String>)res.getData()).get("CaseId");
+        //String caseId=JSONObject.parseObject(res.getData().toString()).getString("CaseId");
         /** 进行医疗行为登记 */
         JSONObject basicDivideInfo=obj.getJSONObject("BasicDivideInfo");
         String stageContent=basicDivideInfo.getString("stageContent");

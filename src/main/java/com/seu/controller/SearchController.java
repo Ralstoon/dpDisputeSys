@@ -53,7 +53,7 @@ public class SearchController {
     @PostMapping(value = "/similarCases")
     public Map<String,Object> getSimilarCases(HttpServletRequest request){
         JSONObject map= Request2JSONobjUtil.convert(request);
-        JSONArray keyWordList=map.getJSONArray("keyWordList");
+        JSONArray keyWordList=map.getJSONArray("KeyWordList");
         Map<String,Object> results=keyWordsSearchService.getSimilarCases(keyWordList);
         return results;
     }

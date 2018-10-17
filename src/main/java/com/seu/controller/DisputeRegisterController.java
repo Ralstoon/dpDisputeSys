@@ -187,6 +187,7 @@ public class DisputeRegisterController {
     /** 发送纠纷登记数据，进行案件登记 */
     @PostMapping(value = "/allMessage")
     public ResultVO getAllMessage(@RequestBody JSONObject obj){
-        return disputeRegisterService.getAllMessage(obj);
+
+        return disputeRegisterService.getAllMessage(obj.getJSONObject("regConflictData"));
     }
 }

@@ -363,7 +363,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }else {
             avoidStatus+=","+ID;
         }
-        disputecaseProcess.setApplyStatus(avoidStatus); //todo:  ???
+        disputecaseProcess.setAvoidStatus(avoidStatus); //todo:  ???
         disputecaseProcessRepository.save(disputecaseProcess);
     }
 
@@ -383,6 +383,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Override
     public ResultVO getMediationHallData(JSONObject map) {
         /** 根据是否发送案件状态、是否发送调解员id、是否发送起止时间来执行不同的sql方法 */
+
+        //id todo
+        String id = map.getString("id");
+
         Integer size=map.getInteger("size");
         Integer page=map.getInteger("page")-1;
         String filterStatus=map.getString("filterStatus").trim();
@@ -471,6 +475,18 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
             mediationHallDataFormList.add(mediationHallDataForm);
+
+            //当前人是否回避words=str.trim().split(",");todo:test
+
+            List<String> avoidId= Arrays.asList(disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getAvoidStatus().trim().split(","));
+            mediationHallDataForm.setFordebarb("0");
+            for (int i = 0; i<avoidId.size(); i++){
+                if (avoidId.get(i).equals(id)){
+                    mediationHallDataForm.setFordebarb("1");
+                }
+            }
+
+
         }
         Map<String,Object> var=new HashMap<>();
         var.put("mediationHallDataFormList",mediationHallDataFormList);
@@ -1166,7 +1182,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         disputecaseProcess.setStatus("2");
         JSONObject mediationStage=JSONObject.parseObject(disputecaseProcess.getMediateStage());
         JSONArray arr=mediationStage.getJSONArray("stageContent");
-        //arr.add(JSONObject.parseObject(InitConstant.currentProcess));//todo:?????????????????????????????
+        arr.add(JSONObject.parseObject(InitConstant.currentStageContent));//todo:?????????????????????????????
         mediationStage.put("stageContent",arr);
         Integer stage=mediationStage.getInteger("stage");
         stage+=1;

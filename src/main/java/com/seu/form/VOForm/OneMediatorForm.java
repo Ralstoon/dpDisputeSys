@@ -13,12 +13,12 @@ import lombok.Data;
 @Data
 public class OneMediatorForm {
     /** 调解员姓名 */
-    private String name;
+    private String mediatorName;
     /** 调解员id */
-    private String id;
+    private String mediatorId;
 
     public OneMediatorForm(String name, String id) {
-        this.name = name;
-        this.id = id;
+        this.mediatorName = name;
+        this.mediatorId = id;
     }
 }

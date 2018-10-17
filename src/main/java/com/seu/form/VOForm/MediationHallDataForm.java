@@ -31,6 +31,7 @@ public class MediationHallDataForm {
     private List<String> Respondent;
     /** 剩余工作日 */
     private Object countdown;
-
+    //
+    private String fordebarb;
 
 }
