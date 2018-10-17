@@ -148,4 +148,7 @@ public interface DisputeProgressService {
     /** 管理员获取专家管理界面数据 */
     ResultVO getExpertManageList(PageRequest pageRequest);
 
+    /** 根据caseId和video_url存入进展表的当前阶段中 */
+    void saveMediateVideo(String caseId,String video_url);
+
 }

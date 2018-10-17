@@ -662,16 +662,6 @@ public class DisputeProgressController {
     }
 
 
-//    // 获取闻讯医院结果
-//    @PostMapping(value = "/getInqueryHospitalList")
-//    public ResultVO getInqueryHospitalList(@RequestBody Map<String, String> map){
-//
-//        String disputeId = map.get("caseId");
-//
-//        ;
-//
-//        return ResultVOUtil.ReturnBack(JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getInquireHospital()), 112, "获取闻讯列表成功");
-//    }
 
     /** 管理员获取专家管理界面数据 */
     @PostMapping("/manager/getExpertManageList")

@@ -11,4 +11,6 @@ package com.seu.service;
 public interface MediatorService {
     /** 根据主ID号查询 */
     String findNameByID(String ID);
+
+    boolean isMediator(String phone);
 }

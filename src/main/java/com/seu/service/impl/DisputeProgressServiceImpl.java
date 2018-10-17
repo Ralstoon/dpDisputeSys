@@ -1552,4 +1552,23 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         return ResultVOUtil.ReturnBack(list,200,"管理员获取专家管理界面数据成功");
     }
+
+    @Override
+    public void saveMediateVideo(String caseId, String video_url) {
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        JSONObject mediateStage=JSONObject.parseObject(currentProcess.getMediateStage());
+        JSONArray stageContent=mediateStage.getJSONArray("stageContent");
+        JSONObject currentStageContent=stageContent.getJSONObject(mediateStage.getInteger("stage")-1);
+        JSONObject particopateContact=currentStageContent.getJSONObject("particopateContact");
+        JSONArray currentFiles=particopateContact.getJSONArray("currentFiles");
+        if(currentFiles.isEmpty())
+            currentFiles=JSONArray.parseArray("[]");
+        currentFiles.add(video_url);
+        particopateContact.put("currentFiles",currentFiles);
+        currentStageContent.put("particopateContact",particopateContact);
+        stageContent.set(mediateStage.getInteger("stage")-1,currentStageContent);
+        mediateStage.put("stageContent",stageContent);
+        currentProcess.setMediateStage(mediateStage.toString());
+        disputecaseProcessRepository.save(currentProcess);
+    }
 }

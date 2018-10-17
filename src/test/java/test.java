@@ -1,5 +1,6 @@
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
+import com.seu.common.RedisConstant;
 import com.seu.domian.*;
 import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
@@ -17,13 +18,18 @@ import org.activiti.engine.task.Task;
 import org.activiti.engine.test.Deployment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.python.antlr.ast.Str;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.session.SessionProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.seu.util.MD5Util;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DpdisputesysApplication.class)
@@ -54,6 +60,17 @@ public class test {
     private RuntimeService runtimeService;
     @Autowired
     private RepositoryService repositoryService;
+
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Test
+    public void redisTest(){
+//        redisTemplate.opsForList().leftPush("qwe123","A");
+//        redisTemplate.opsForList().leftPush("qwe123","B");
+        List<String> list=redisTemplate.opsForList().range("qwe123",0,7);
+        System.out.println(list.toString());
+    }
 
 
 
