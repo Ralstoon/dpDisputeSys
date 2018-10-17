@@ -95,11 +95,11 @@ public class DisputeRegisterController {
         return disputeRegisterService.getMediatorList(id);
     }
 
-    /** 进入纠纷登记时，获取案件ID */
-    @GetMapping(value = "/getCaseId")
-    public ResultVO getCaseId(){
-        return disputeRegisterService.getCaseId();
-    }
+//    /** 进入纠纷登记时，获取案件ID */
+//    @GetMapping(value = "/getCaseId")
+//    public ResultVO getCaseId(){
+//        return disputeRegisterService.getCaseId();
+//    }
 
     /** 发送涉事人员信息 */
     @PostMapping(value = "/InvolvedPeopleInfo")  //@RequestBody Map<String,String> map
@@ -114,7 +114,6 @@ public class DisputeRegisterController {
 
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
-
     public ResultVO getBasicDivideInfo(HttpServletRequest request){
         JSONObject map=Request2JSONobjUtil.convert(request);
         String stageContent=map.getString("stageContent");

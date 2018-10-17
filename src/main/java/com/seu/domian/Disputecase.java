@@ -1,6 +1,7 @@
 package com.seu.domian;
 
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
     //TODO disputeInfo表中userId和disputeId是一一一对应的，但是同一个用户可能先后多次做纠纷流程，因而在根据userId查询该表时可能会出现问题，这个要记得留意
 @Data
 @Entity
+//@Lazy(value = true)
 public class Disputecase {
     @Id
     private String id;

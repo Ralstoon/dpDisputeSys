@@ -16,12 +16,10 @@ import com.seu.form.VOForm.DisputeCaseForm;
 import com.seu.form.DisputeRegisterDetailForm;
 import com.seu.form.HistoricTaskForm;
 import com.seu.form.VOForm.NormalUserUploadListForm;
-import com.seu.repository.DisputecaseAccessoryRepository;
-import com.seu.repository.DisputecaseActivitiRepository;
-import com.seu.repository.DisputecaseProcessRepository;
-import com.seu.repository.DisputecaseRepository;
+import com.seu.repository.*;
 import com.seu.service.*;
 import com.seu.utils.DisputeProcessReturnMap;
+import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.VerifyProcessUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
@@ -173,16 +171,23 @@ public class DisputeProgressController {
 
     /** 用户选择调解员列表 */
     @PostMapping(value = "user/postMediatorList")
-    public ResultVO getUserChoose(@RequestBody Map<String, String > map){
+    public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
 
-        String pickedList = map.get("MediatorPickedlist");
-        String disputeId = map.get("CaseId");
+        List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
+
+
+        //String pickedList = map.get("MediatorPickedlist");
+        String disputeId = (String) map.get("CaseId");
 
         String mediatorList="";
-        pickedList=pickedList.substring(1,pickedList.length()-1);
-        for(String s:pickedList.split(",")){
-            mediatorList+=(s.substring(1,s.length()-1))+",";
+        for(int i = 0; i<pickedList.size(); i++){
+            mediatorList = mediatorList + pickedList.get(i) + ",";
         }
+//
+//        pickedList=pickedList.substring(1,pickedList.length()-1);
+//        for(String s:pickedList.split(",")){
+//            mediatorList+=(s.substring(1,s.length()-1))+",";
+//        }
         mediatorList=mediatorList.substring(0,mediatorList.length()-1);
         disputeProgressService.updateUserChoose(disputeId,mediatorList);
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
@@ -278,160 +283,160 @@ public class DisputeProgressController {
     @Autowired
     private DisputecaseRepository disputecaseRepository;
 
-    // 10/12 20:55 添加 wj
-    // 请求纠纷要素功能
-    @PostMapping(value = "/mediator/getKeyWordList")
-    public ResultVO getKeyWordList(@RequestBody Map<String, String> map){
-        String id = map.get("id");//操作人id
-        String caseId = map.get("caseId");
-        JSONArray jsonArray = JSONArray.parseArray(disputecaseRepository.getOne(caseId).getMedicalProcess());
-
-        JSONArray result = JSONArray.parseArray("[]");
-
-
-        for(Object stage : jsonArray){
-
-
-            //获取resultOfRegConflict列表
-            JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
-            for(Object eachResult: resultOfRegConflict){
-                JSONObject jsonObject = JSONObject.parseObject("{}");
-                if(
-                        ((JSONObject)eachResult).getString("test").isEmpty()
-
-
-                                && ((List<String>)((JSONObject)eachResult).get("operation")).size() == 0
-
-                                && ((JSONObject)eachResult).getString("medicine").isEmpty()
-
-                                && ((JSONObject)eachResult).getString("added").isEmpty()
-
-                                && ((JSONObject)eachResult).getString("syndrome").isEmpty()
-
-
-                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() ==0
-
-
-                                && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() ==0
-
-                                && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() ==0
-
-                                && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() ==0
-
-                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() ==0)
-
-                    continue;
-                if( ((JSONObject)eachResult).get("test") != null && !((JSONObject)eachResult).getString("test").isEmpty() ){
-                    jsonObject = JSONObject.parseObject("{}");
-                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                    jsonObject.put("subRegConfKind", "检验内容");
-                    jsonObject.put("value", ((JSONObject)eachResult).getString("test"));
-                    result.add(jsonObject);
-                }
-                if( ((JSONObject)eachResult).get("operation") != null && !((JSONObject)eachResult).getString("operation").isEmpty() && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
-
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("operation")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "手术名称");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-
-                if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
-                    jsonObject = JSONObject.parseObject("{}");
-                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                    jsonObject.put("subRegConfKind", "药品名称");
-                    jsonObject.put("value", ((JSONObject)eachResult).getString("medicine"));
-                    result.add(jsonObject);
-                }
-                if( ((JSONObject)eachResult).get("added") != null && !((JSONObject)eachResult).getString("added").isEmpty() ){
-                    jsonObject = JSONObject.parseObject("{}");
-                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                    jsonObject.put("subRegConfKind", "补充说明");
-                    jsonObject.put("value", ((JSONObject)eachResult).getString("added"));
-                    result.add(jsonObject);
-                }
-
-                if( ((JSONObject)eachResult).get("syndrome") != null && !((JSONObject)eachResult).getString("syndrome").isEmpty() ){
-
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "并发症");
-                        jsonObject.put("value", ((JSONObject)eachResult).getString("syndrome"));
-                        result.add(jsonObject);
-
-                }
-
-                if( ((JSONObject)eachResult).get("diseasesymptomAfter") != null && !((JSONObject)eachResult).getString("diseasesymptomAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() !=0){
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomAfter")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "症状(医疗行为后)");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-
-                if (((JSONObject) eachResult).get("diseasemAfter") != null && !((JSONObject) eachResult).getString("diseasemAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasemAfter")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为后)");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-
-
-                if (((JSONObject) eachResult).get("defaultBehavior") != null && !((JSONObject) eachResult).getString("defaultBehavior").isEmpty() && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() !=0) {
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("defaultBehavior")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "过失类型");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-
-                if (((JSONObject) eachResult).get("diseaseBefore") != null && !((JSONObject) eachResult).getString("diseaseBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() !=0) {
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseaseBefore")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为前)");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-
-                if (((JSONObject) eachResult).get("diseasesymptomBefore") != null && !((JSONObject) eachResult).getString("diseasesymptomBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() !=0 ) {
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomBefore")){
-                        jsonObject = JSONObject.parseObject("{}");
-                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
-                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                        jsonObject.put("subRegConfKind", "症状(医疗行为前)");
-                        jsonObject.put("value", eachOperation);
-                        result.add(jsonObject);
-                    }
-                }
-            }
-        }
-        Map<String, Object> map11 = new HashMap<>();
-        result.stream().filter(each->((JSONObject)each).getString("value").isEmpty());
-        map11.put("keyWordList", result);
-        map11.put("brief", disputecaseRepository.getOne(caseId).getBriefCase());
-        return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
-    }
+//    // 10/12 20:55 添加 wj
+//    // 请求纠纷要素功能
+//    @PostMapping(value = "/mediator/getKeyWordList")
+//    public ResultVO getKeyWordList(@RequestBody Map<String, String> map){
+//        String id = map.get("id");//操作人id
+//        String caseId = map.get("caseId");
+//        JSONArray jsonArray = JSONArray.parseArray(disputecaseRepository.findOne(caseId).getMedicalProcess());
+//
+//        JSONArray result = JSONArray.parseArray("[]");
+//
+//
+//        for(Object stage : jsonArray){
+//
+//
+//            //获取resultOfRegConflict列表
+//            JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
+//            for(Object eachResult: resultOfRegConflict){
+//                JSONObject jsonObject = JSONObject.parseObject("{}");
+//                if(
+//                        ((JSONObject)eachResult).getString("test").isEmpty()
+//
+//
+//                                && ((List<String>)((JSONObject)eachResult).get("operation")).size() == 0
+//
+//                                && ((JSONObject)eachResult).getString("medicine").isEmpty()
+//
+//                                && ((JSONObject)eachResult).getString("added").isEmpty()
+//
+//                                && ((JSONObject)eachResult).getString("syndrome").isEmpty()
+//
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() ==0
+//
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() ==0)
+//
+//                    continue;
+//                if( ((JSONObject)eachResult).get("test") != null && !((JSONObject)eachResult).getString("test").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "检验内容");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("test"));
+//                    result.add(jsonObject);
+//                }
+//                if( ((JSONObject)eachResult).get("operation") != null && !((JSONObject)eachResult).getString("operation").isEmpty() && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
+//
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("operation")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "手术名称");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "药品名称");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("medicine"));
+//                    result.add(jsonObject);
+//                }
+//                if( ((JSONObject)eachResult).get("added") != null && !((JSONObject)eachResult).getString("added").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "补充说明");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("added"));
+//                    result.add(jsonObject);
+//                }
+//
+//                if( ((JSONObject)eachResult).get("syndrome") != null && !((JSONObject)eachResult).getString("syndrome").isEmpty() ){
+//
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "并发症");
+//                        jsonObject.put("value", ((JSONObject)eachResult).getString("syndrome"));
+//                        result.add(jsonObject);
+//
+//                }
+//
+//                if( ((JSONObject)eachResult).get("diseasesymptomAfter") != null && !((JSONObject)eachResult).getString("diseasesymptomAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() !=0){
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomAfter")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "症状(医疗行为后)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseasemAfter") != null && !((JSONObject) eachResult).getString("diseasemAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasemAfter")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为后)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//
+//                if (((JSONObject) eachResult).get("defaultBehavior") != null && !((JSONObject) eachResult).getString("defaultBehavior").isEmpty() && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("defaultBehavior")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "过失类型");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseaseBefore") != null && !((JSONObject) eachResult).getString("diseaseBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseaseBefore")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为前)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseasesymptomBefore") != null && !((JSONObject) eachResult).getString("diseasesymptomBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() !=0 ) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomBefore")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "症状(医疗行为前)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//            }
+//        }
+//        Map<String, Object> map11 = new HashMap<>();
+//        result.stream().filter(each->((JSONObject)each).getString("value").isEmpty());
+//        map11.put("keyWordList", result);
+//        map11.put("brief", disputecaseRepository.getOne(caseId).getBriefCase());
+//        return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
+//    }
 
 
     /** 发送预约数据 */
@@ -612,6 +617,10 @@ public class DisputeProgressController {
         Map<String, Object> var = new HashMap<>();
         var.put("profesorVerify", exportAppointCheck);
 
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(disputeId);
+        disputecaseProcess.setIsSuspended(0);
+        disputecaseProcessRepository.save(disputecaseProcess);
+
         Task currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
         disputeProgressService.completeCurrentTask(currentTask.getId(), var);
 
@@ -682,4 +691,329 @@ public class DisputeProgressController {
         return disputeProgressService.getExpertManageList(pageRequest);
     }
 
+
+//    @Autowired
+//    private DisputecaseApplyRepository disputecaseApplyRepository;
+//
+//    // 10/12 20:55 添加 wj
+//    // 详情页，用户登记信息展示
+//    @PostMapping(value = "/mediator/getUserRegister")
+//    public ResultVO getUserRegister(@RequestBody Map<String, String> map){
+//        //String id = map.get("id");//操作人id
+//        String caseId = map.get("caseId");
+//
+//        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+//        //获取患者姓名
+//        String[] temp=disputecase.getProposerId().trim().split(",");
+//        List<String> names=new ArrayList<>();
+//        for(String s:temp){
+//            names.add(disputecaseApplyRepository.findOne(s).getName());
+//        }
+//
+//
+//
+//        JSONArray jsonArray = JSONArray.parseArray(disputecaseRepository.findOne(caseId).getMedicalProcess());
+//
+//        JSONArray result = JSONArray.parseArray("[]");
+//
+//
+//        for(Object stage : jsonArray){
+//
+//
+//            //获取resultOfRegConflict列表
+//            JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
+//            for(Object eachResult: resultOfRegConflict){
+//                JSONObject jsonObject = JSONObject.parseObject("{}");
+//                if(
+//                        ((JSONObject)eachResult).getString("test").isEmpty()
+//
+//
+//                                && ((List<String>)((JSONObject)eachResult).get("operation")).size() == 0
+//
+//                                && ((JSONObject)eachResult).getString("medicine").isEmpty()
+//
+//                                && ((JSONObject)eachResult).getString("added").isEmpty()
+//
+//                                && ((JSONObject)eachResult).getString("syndrome").isEmpty()
+//
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() ==0
+//
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() ==0
+//
+//                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() ==0)
+//
+//                    continue;
+//                if( ((JSONObject)eachResult).get("test") != null && !((JSONObject)eachResult).getString("test").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "检验内容");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("test"));
+//                    result.add(jsonObject);
+//                }
+//                if( ((JSONObject)eachResult).get("operation") != null && !((JSONObject)eachResult).getString("operation").isEmpty() && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
+//
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("operation")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "手术名称");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "药品名称");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("medicine"));
+//                    result.add(jsonObject);
+//                }
+//                if( ((JSONObject)eachResult).get("added") != null && !((JSONObject)eachResult).getString("added").isEmpty() ){
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "补充说明");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("added"));
+//                    result.add(jsonObject);
+//                }
+//
+//                if( ((JSONObject)eachResult).get("syndrome") != null && !((JSONObject)eachResult).getString("syndrome").isEmpty() ){
+//
+//                    jsonObject = JSONObject.parseObject("{}");
+//                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                    jsonObject.put("subRegConfKind", "并发症");
+//                    jsonObject.put("value", ((JSONObject)eachResult).getString("syndrome"));
+//                    result.add(jsonObject);
+//
+//                }
+//
+//                if( ((JSONObject)eachResult).get("diseasesymptomAfter") != null && !((JSONObject)eachResult).getString("diseasesymptomAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() !=0){
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomAfter")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "症状(医疗行为后)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseasemAfter") != null && !((JSONObject) eachResult).getString("diseasemAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasemAfter")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为后)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//
+//                if (((JSONObject) eachResult).get("defaultBehavior") != null && !((JSONObject) eachResult).getString("defaultBehavior").isEmpty() && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("defaultBehavior")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "过失类型");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseaseBefore") != null && !((JSONObject) eachResult).getString("diseaseBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() !=0) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseaseBefore")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为前)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//
+//                if (((JSONObject) eachResult).get("diseasesymptomBefore") != null && !((JSONObject) eachResult).getString("diseasesymptomBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() !=0 ) {
+//                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomBefore")){
+//                        jsonObject = JSONObject.parseObject("{}");
+//                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+//                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+//                        jsonObject.put("subRegConfKind", "症状(医疗行为前)");
+//                        jsonObject.put("value", eachOperation);
+//                        result.add(jsonObject);
+//                    }
+//                }
+//            }
+//        }
+//        Map<String, Object> map11 = new HashMap<>();
+//        result.stream().filter(each->((JSONObject)each).getString("value").isEmpty());
+//        map11.put("keyWordList", result);
+//        map11.put("brief", disputecaseRepository.getOne(caseId).getBriefCase());
+//        return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
+//    }
+
+
+    //发送医疗过程信息，获取纠纷要素列表
+    @PostMapping(value = "/mediator/getKeyWordList")
+    public ResultVO getKeyWordList(Map<String, String> map){
+        String id = map.get("id");//操作人id
+        String stageContent = map.get("stageContent");
+        JSONArray jsonArray = JSONArray.parseArray(stageContent);
+
+        JSONArray result = JSONArray.parseArray("[]");
+
+
+        for(Object stage : jsonArray){
+
+
+            //获取resultOfRegConflict列表
+            JSONArray resultOfRegConflict = ((JSONObject) stage).getJSONArray("resultOfRegConflict");
+            for(Object eachResult: resultOfRegConflict){
+                JSONObject jsonObject = JSONObject.parseObject("{}");
+                if(
+                        ((JSONObject)eachResult).getString("test").isEmpty()
+
+
+                                && ((List<String>)((JSONObject)eachResult).get("operation")).size() == 0
+
+                                && ((JSONObject)eachResult).getString("medicine").isEmpty()
+
+                                && ((JSONObject)eachResult).getString("added").isEmpty()
+
+                                && ((JSONObject)eachResult).getString("syndrome").isEmpty()
+
+
+                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() ==0
+
+
+                                && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() ==0
+
+                                && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() ==0
+
+                                && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() ==0
+
+                                && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() ==0)
+
+                    continue;
+                if( ((JSONObject)eachResult).get("test") != null && !((JSONObject)eachResult).getString("test").isEmpty() ){
+                    jsonObject = JSONObject.parseObject("{}");
+                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                    jsonObject.put("subRegConfKind", "检验内容");
+                    jsonObject.put("value", ((JSONObject)eachResult).getString("test"));
+                    result.add(jsonObject);
+                }
+                if( ((JSONObject)eachResult).get("operation") != null && !((JSONObject)eachResult).getString("operation").isEmpty() && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
+
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("operation")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "手术名称");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+
+                if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
+                    jsonObject = JSONObject.parseObject("{}");
+                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                    jsonObject.put("subRegConfKind", "药品名称");
+                    jsonObject.put("value", ((JSONObject)eachResult).getString("medicine"));
+                    result.add(jsonObject);
+                }
+                if( ((JSONObject)eachResult).get("added") != null && !((JSONObject)eachResult).getString("added").isEmpty() ){
+                    jsonObject = JSONObject.parseObject("{}");
+                    jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                    jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                    jsonObject.put("subRegConfKind", "补充说明");
+                    jsonObject.put("value", ((JSONObject)eachResult).getString("added"));
+                    result.add(jsonObject);
+                }
+
+                if( ((JSONObject)eachResult).get("syndrome") != null && !((JSONObject)eachResult).getString("syndrome").isEmpty() ){
+
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "并发症");
+                        jsonObject.put("value", ((JSONObject)eachResult).getString("syndrome"));
+                        result.add(jsonObject);
+
+                }
+
+                if( ((JSONObject)eachResult).get("diseasesymptomAfter") != null && !((JSONObject)eachResult).getString("diseasesymptomAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomAfter")).size() !=0){
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomAfter")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "症状(医疗行为后)");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+
+                if (((JSONObject) eachResult).get("diseasemAfter") != null && !((JSONObject) eachResult).getString("diseasemAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasemAfter")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为后)");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+
+
+                if (((JSONObject) eachResult).get("defaultBehavior") != null && !((JSONObject) eachResult).getString("defaultBehavior").isEmpty() && ((List<String>)((JSONObject) eachResult).get("defaultBehavior")).size() !=0) {
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("defaultBehavior")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "过失类型");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+
+                if (((JSONObject) eachResult).get("diseaseBefore") != null && !((JSONObject) eachResult).getString("diseaseBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseBefore")).size() !=0) {
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseaseBefore")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "疾病名称(医疗行为前)");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+
+                if (((JSONObject) eachResult).get("diseasesymptomBefore") != null && !((JSONObject) eachResult).getString("diseasesymptomBefore").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseasesymptomBefore")).size() !=0 ) {
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasesymptomBefore")){
+                        jsonObject = JSONObject.parseObject("{}");
+                        jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
+                        jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
+                        jsonObject.put("subRegConfKind", "症状(医疗行为前)");
+                        jsonObject.put("value", eachOperation);
+                        result.add(jsonObject);
+                    }
+                }
+            }
+        }
+
+        Map<String, Object> map11 = new HashMap<>();
+        result.stream().filter(each->((JSONObject)each).getString("value").isEmpty());
+        map11.put("keyWordList", result);
+        map11.put("brief", (GetTitleAndAbstract.generateCaseTitleDetail(stageContent,new ArrayList<>())).get("detail"));
+        return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
+    }
 }

@@ -96,38 +96,67 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
     }
 
     @Override
-    public Map<String, Object> getSimilarCases(String caseId) {
+    public Map<String, Object> getSimilarCases(String keyWordList) {//todo: 修改医疗行为
         /** 先获取关键词,包括科室、手术、疾病、症状 */
         Set<String> keywords=new HashSet<>();
-        Disputecase currentCase=disputecaseRepository.getOne(caseId);
-        JSONArray medical_process=JSONArray.parseArray(currentCase.getMedicalProcess());
+        String caseId = "";
+        Disputecase currentCase=disputecaseRepository.findOne(caseId);
+        JSONArray medical_process=JSONArray.parseArray(currentCase.getMedicalProcess());//todo: 修改医疗行为
         for(int i=0;i<medical_process.size();++i){
             JSONObject obj=medical_process.getJSONObject(i);
-            JSONArray involvedInstitute=obj.getJSONArray("InvolvedInstitute");
+            JSONObject involvedInstitute=obj.getJSONObject("InvolvedInstitute");
             /** 科室 */
-            for(int j=0;j<involvedInstitute.size();++j){
-                JSONObject institute=involvedInstitute.getJSONObject(j);
-                keywords.add(institute.getString("Department").trim());
+
+            keywords.add(involvedInstitute.getString("Department").trim());
+
+            //resultOfRegConflict列表获取
+            JSONArray resultOfRegConflict = obj.getJSONArray("resultOfRegConflict");
+
+
+            for (Object eachResultOfRegConflict: resultOfRegConflict){
+
+
+                keywords.add(((JSONObject)eachResultOfRegConflict).getString("test"));
+
+                keywords.add(((JSONObject)eachResultOfRegConflict).getString("added"));
+
+                keywords.add(((JSONObject)eachResultOfRegConflict).getString("medicine"));
+
+                keywords.add(((JSONObject)eachResultOfRegConflict).getString("syndrome"));
+
+                List<String> operationList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("operation");
+                for (i=0;i<operationList.size();++i){
+                    keywords.add(operationList.get(i));
+                }
+
+                List<String> diseaseAfterList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("diseaseAfter");
+                for (i=0;i<diseaseAfterList.size();++i){
+                    keywords.add(diseaseAfterList.get(i));
+                }
+
+                List<String> diseaseBeforeList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("diseaseBefore");
+                for (i=0;i<diseaseBeforeList.size();++i){
+                    keywords.add(diseaseBeforeList.get(i));
+                }
+
+                List<String> defaultBehaviorList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("defaultBehavior");
+                for (i=0;i<defaultBehaviorList.size();++i){
+                    keywords.add(defaultBehaviorList.get(i));
+                }
+
+                List<String> diseasesymptomAfterList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("diseasesymptomAfter");
+                for (i=0;i<diseasesymptomAfterList.size();++i){
+                    keywords.add(diseasesymptomAfterList.get(i));
+                }
+                List<String> diseasesymptomBeforeList = (List<String>) ((JSONObject)eachResultOfRegConflict).get("diseasesymptomBefore");
+                for (i=0;i<diseasesymptomBeforeList.size();++i){
+                    keywords.add(diseasesymptomBeforeList.get(i));
+                }
+
+
+
             }
-            /** 疾病，症状 */
-            JSONArray diseaseList=obj.getJSONArray("DiseaseListAfter");
-            for(int j=0;j<diseaseList.size();++j) {
-                JSONObject disease=diseaseList.getJSONObject(j);
-                keywords.add(disease.getString("DiseaseName").trim());
-            }
-            diseaseList=obj.getJSONArray("DiseaseListBefore");
-            for(int j=0;j<diseaseList.size();++j) {
-                JSONObject disease=diseaseList.getJSONObject(j);
-                keywords.add(disease.getString("DiseaseName").trim());
-            }
-            keywords.add(obj.getString("DiseasesymptomAfter"));
-            keywords.add(obj.getString("DiseasesymptomBefore"));
-            /** 手术 */
-            JSONObject resultList=obj.getJSONObject("ResultList");
-            if(!resultList.getJSONObject("operator").isEmpty()){
-                JSONObject operator=resultList.getJSONObject("operator");
-                keywords.add(operator.getString("operation").trim());
-            }
+
         }
 
         ESIndexSearcher esIndexSearcher=new ESIndexSearcher();
@@ -140,11 +169,11 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
         /** 获取三类文书，并JSON格式保存在disputecase */
         try {
             List<SimpleRecord> result=esIndexSearcher.searchMS(keyWords);
-            results.put("裁判文书",result);
+            results.put("dissension_ms",result); //裁判文书
             result=esIndexSearcher.searchDX(keyWords);
-            results.put("典型案例",result);
+            results.put("dissension_dx",result); //典型案例
             result=esIndexSearcher.search(keyWords);
-            results.put("纠纷调解",result);
+            results.put("dissension",result); // 纠纷案例
             /** 保存类案索引 */
             currentCase.setRecommendedPaper(results.toString());
             disputecaseRepository.save(currentCase);
@@ -160,9 +189,9 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
         TitleSearch titleSearch=new TitleSearch();
         Object result=null;
         try {
-            if(type.trim()=="裁判文书" || type.trim().equals("裁判文书"))
+            if(type.trim()=="dissension_ms" || type.trim().equals("dissension_ms"))
                 result=titleSearch.titleSearchMS(caseName);
-            else if(type.trim()=="典型案例" || type.trim().equals("典型案例"))
+            else if(type.trim()=="dissension_dx" || type.trim().equals("dissension_dx"))
                 result=titleSearch.titleSearchDX(caseName);
             else
                 result=titleSearch.titleSearch(caseName);

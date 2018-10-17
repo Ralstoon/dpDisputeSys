@@ -15,4 +15,6 @@ import java.util.List;
 public interface ContactListRepository extends JpaRepository<ContactList,Integer> {
 
     List<ContactList> findAllByCityAndZoneAndName(String city,String zone,String hospital);
+
+    List<ContactList> findByName(String hospital);
 }
