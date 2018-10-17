@@ -205,7 +205,6 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
     }
 
     @Override
-    @Transactional
     public ResultVO sendInvolvedPeopleInfo(String involvedPeople){
 
         //生成caseid
@@ -315,18 +314,60 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         String[] temp=disputecase.getProposerId().trim().split(",");
         List<String> names=new ArrayList<>();
         for(String s:temp){
-            names.add(disputecaseApplyRepository.getOne(s).getName());
+            names.add(disputecaseApplyRepository.findOne(s).getName());
         }
         Map<String,String> result=GetTitleAndAbstract.generateCaseTitleDetail(stageContent,names);
         disputecase.setCaseName(result.get("title"));
         disputecase.setBriefCase(result.get("detail"));
+        disputecaseRepository.save(disputecase);
 
-        /** 开启流程，并完成纠纷登记 */
+    }
+
+    @Override
+    @Transactional
+    public ResultVO getAllMessage(JSONObject obj) {
+        /** 先进行涉事人员信息登记，返回caseId */
+        String involvedPeople=obj.getString("InvolvedPeople");
+        ResultVO res=sendInvolvedPeopleInfo(involvedPeople);
+        if(res.getCode()<0)
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
+        String caseId=JSONObject.parseObject(res.getData().toString()).getString("CaseId");
+        /** 进行医疗行为登记 */
+        JSONObject basicDivideInfo=obj.getJSONObject("BasicDivideInfo");
+        String stageContent=basicDivideInfo.getString("stageContent");
+        Integer mainRecStage=basicDivideInfo.getInteger("mainRecStage");
+        String require=basicDivideInfo.getString("Require");
+        Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
+        getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        log.info("\n医疗行为接受完成\n");
+        /** 添加所选择的的调解员 */
+        JSONArray pickedList=obj.getJSONArray("InfoOfMediator");
+        if(!pickedList.isEmpty()){
+            String mediatorList="";
+            for(int i = 0; i<pickedList.size(); i++){
+                mediatorList = mediatorList + pickedList.getString(i) + ",";
+            }
+            mediatorList=mediatorList.substring(0,mediatorList.length()-1);
+            disputeProgressService.updateUserChoose(caseId,mediatorList);
+        }
+        /** 添加要素信息，直接作为字符串输入 */
+        String keywordList=obj.getString("KeyWordList");
+        Disputecase disputecase=disputecaseRepository.findOne(caseId);
+        disputecase.setKeywordList(keywordList);
+        /** 添加类案推荐内容 */
+        disputecase.setRecommendedPaper(obj.getString("RelatedCase"));
+        /** 添加调解员评判 */
+        disputecase.setModeratorRegister(obj.getString("ModeratorRegister"));
+        disputecase=disputecaseRepository.save(disputecase);
+        /** 最后：开启流程，并完成纠纷登记流程 */
         Map<String,Object> var =new HashMap<>();
         var.put("disputeId",caseId);
         var.put("paramProfesor",0);
         var.put("paramAuthenticate",0);
         disputeProgressService.startProcess(caseId,var);
-        System.out.println("point 1");
+        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+        log.info("\n纠纷登记任务完成\n");
+        return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getCode(),DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getMsg());
     }
 }

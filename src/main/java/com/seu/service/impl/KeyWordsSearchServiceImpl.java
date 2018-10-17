@@ -174,9 +174,9 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
             results.put("dissension_dx",result); //典型案例
             result=esIndexSearcher.search(keyWords);
             results.put("dissension",result); // 纠纷案例
-            /** 保存类案索引 */
-            currentCase.setRecommendedPaper(results.toString());
-            disputecaseRepository.save(currentCase);
+//            /** 保存类案索引 */
+//            currentCase.setRecommendedPaper(results.toString());
+//            disputecaseRepository.save(currentCase);
         }catch (Exception e){
             e.printStackTrace();
         }finally {

@@ -1,3 +1,4 @@
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.DpdisputesysApplication;
 import com.seu.common.RedisConstant;
@@ -71,6 +72,13 @@ public class test {
 //        redisTemplate.opsForList().leftPush("qwe123","B");
         List<String> list=redisTemplate.opsForList().range("qwe123",0,7);
         System.out.println(list.toString());
+    }
+
+    @Test
+    public void jsarray(){
+        JSONArray arr=JSONArray.parseArray("[123,321,534]");
+        for(int i=0;i<arr.size();++i)
+            System.out.println(arr.getString(i));
     }
 
 

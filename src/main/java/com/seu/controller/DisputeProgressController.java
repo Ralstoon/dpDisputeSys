@@ -169,29 +169,24 @@ public class DisputeProgressController {
     }
 
 
-    /** 用户选择调解员列表 */
-    @PostMapping(value = "user/postMediatorList")
-    public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
-
-        List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
-
-
-        //String pickedList = map.get("MediatorPickedlist");
-        String disputeId = (String) map.get("CaseId");
-
-        String mediatorList="";
-        for(int i = 0; i<pickedList.size(); i++){
-            mediatorList = mediatorList + pickedList.get(i) + ",";
-        }
+//    /** 用户选择调解员列表 */
+//    @PostMapping(value = "user/postMediatorList")
+//    public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
 //
-//        pickedList=pickedList.substring(1,pickedList.length()-1);
-//        for(String s:pickedList.split(",")){
-//            mediatorList+=(s.substring(1,s.length()-1))+",";
+//        List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
+//
+//
+//        //String pickedList = map.get("MediatorPickedlist");
+//        String disputeId = (String) map.get("CaseId");
+//
+//        String mediatorList="";
+//        for(int i = 0; i<pickedList.size(); i++){
+//            mediatorList = mediatorList + pickedList.get(i) + ",";
 //        }
-        mediatorList=mediatorList.substring(0,mediatorList.length()-1);
-        disputeProgressService.updateUserChoose(disputeId,mediatorList);
-        return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
-    }
+//        mediatorList=mediatorList.substring(0,mediatorList.length()-1);
+//        disputeProgressService.updateUserChoose(disputeId,mediatorList);
+//        return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
+//    }
 
     /** 获取调解大厅中的数据 */
     @PostMapping(value = "/mediator/GetMediationHallData")

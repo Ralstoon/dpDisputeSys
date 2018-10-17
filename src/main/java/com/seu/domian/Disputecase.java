@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  **/
 
-    //TODO disputeInfo表中userId和disputeId是一一一对应的，但是同一个用户可能先后多次做纠纷流程，因而在根据userId查询该表时可能会出现问题，这个要记得留意
 @Data
 @Entity
 //@Lazy(value = true)
@@ -49,4 +48,8 @@ public class Disputecase {
     private String mediatorId;
     /** 表示主要纠纷场景是第几个 */
     private String mainRecStage;
+    /** 表示排序后的纠纷要素信息 */
+    private String keywordList;
+    /** 表示调解员评判 */
+    private String moderatorRegister;
 }

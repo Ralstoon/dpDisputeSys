@@ -1,5 +1,6 @@
 package com.seu.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 
 /**
@@ -29,4 +30,7 @@ public interface DisputeRegisterService {
     void getBasicDivideInfo(String stageContent,String caseId,Integer mainRecStage,String require,Integer claimAmount);
 
     ResultVO getMediatorList(String id);
+
+    /** 整体一次性登记 */
+    ResultVO getAllMessage(JSONObject obj);
 }

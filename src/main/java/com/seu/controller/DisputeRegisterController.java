@@ -77,7 +77,7 @@ public class DisputeRegisterController {
 
     /**
      *@Author 吴宇航
-     *@Description  //TODO仅考虑单个keyword和room，为加入redis缓存
+     *@Description  //TODO仅考虑单个keyword和room，未加入redis缓存
      *@Date 20:40 2018/8/28
      *@Param [keywords, room]
      *@return com.seu.ViewObject.ResultVO
@@ -101,35 +101,35 @@ public class DisputeRegisterController {
 //        return disputeRegisterService.getCaseId();
 //    }
 
-    /** 发送涉事人员信息 */
-    @PostMapping(value = "/InvolvedPeopleInfo")  //@RequestBody Map<String,String> map
-    public ResultVO sendInvolvedPeopleInfo(HttpServletRequest request){
+//    /** 发送涉事人员信息 */
+//    @PostMapping(value = "/InvolvedPeopleInfo")  //@RequestBody Map<String,String> map
+//    public ResultVO sendInvolvedPeopleInfo(HttpServletRequest request){
+//
+//
+//        JSONObject map=Request2JSONobjUtil.convert(request);
+//        //String caseId=map.getString("CaseId");
+//        String involvedPeople=map.getString("InvolvedPeople");
+//        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
+//    }
 
-
-        JSONObject map=Request2JSONobjUtil.convert(request);
-        //String caseId=map.getString("CaseId");
-        String involvedPeople=map.getString("InvolvedPeople");
-        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
-    }
-
-    /** 发送医疗过程数据 */
-    @PostMapping(value = "/BasicDivideInfo")
-    public ResultVO getBasicDivideInfo(HttpServletRequest request){
-        JSONObject map=Request2JSONobjUtil.convert(request);
-        String stageContent=map.getString("stageContent");
-        String caseId=map.getString("CaseId");
-        Integer mainRecStage=map.getInteger("mainRecStage");
-        String require=map.getString("Require");
-        Integer claimAmount=map.getInteger("claimAmount");
-
-        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
-        log.info("\n医疗行为接受完成\n");
-        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-        disputeProgressService.completeCurrentTask(currentTask.getId());
-        log.info("\n医疗行为任务完成\n");
-        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
-    }
+//    /** 发送医疗过程数据 */
+//    @PostMapping(value = "/BasicDivideInfo")
+//    public ResultVO getBasicDivideInfo(HttpServletRequest request){
+//        JSONObject map=Request2JSONobjUtil.convert(request);
+//        String stageContent=map.getString("stageContent");
+//        String caseId=map.getString("CaseId");
+//        Integer mainRecStage=map.getInteger("mainRecStage");
+//        String require=map.getString("Require");
+//        Integer claimAmount=map.getInteger("claimAmount");
+//
+//        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+//        log.info("\n医疗行为接受完成\n");
+//        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+//        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+//        disputeProgressService.completeCurrentTask(currentTask.getId());
+//        log.info("\n医疗行为任务完成\n");
+//        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+//    }
 
     @Autowired
     private ConstantDataRepository constantDataRepository;
@@ -182,5 +182,11 @@ public class DisputeRegisterController {
         Map map = new HashMap();
         map.put("departmentList", new HashSet<>(departmentList));
         return ResultVOUtil.ReturnBack(map, 1, "获取科室列表成功");
+    }
+
+    /** 发送纠纷登记数据，进行案件登记 */
+    @PostMapping(value = "/allMessage")
+    public ResultVO getAllMessage(@RequestBody JSONObject obj){
+        return disputeRegisterService.getAllMessage(obj);
     }
 }
