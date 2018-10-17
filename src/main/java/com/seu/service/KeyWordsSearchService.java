@@ -1,5 +1,7 @@
 package com.seu.service;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public interface KeyWordsSearchService {
 
     // TODO 欠完善
     /** 类案推荐 */
-    Map<String,Object> getSimilarCases(String caseId);
+    Map<String,Object> getSimilarCases(JSONArray caseId);
 
     /** 通过类案的名字查询案件具体内容 */
     Object getCaseDetails(String caseName,String type);

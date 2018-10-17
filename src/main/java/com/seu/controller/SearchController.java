@@ -1,11 +1,14 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.service.KeyWordsSearchService;
+import com.seu.utils.Request2JSONobjUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -48,9 +51,10 @@ public class SearchController {
     }
 
     @PostMapping(value = "/similarCases")
-    public Map<String,Object> getSimilarCases(@RequestBody JSONObject map){
-        String caseId=map.getString("caseId");
-        Map<String,Object> results=keyWordsSearchService.getSimilarCases(caseId);
+    public Map<String,Object> getSimilarCases(HttpServletRequest request){
+        JSONObject map= Request2JSONobjUtil.convert(request);
+        JSONArray keyWordList=map.getJSONArray("keyWordList");
+        Map<String,Object> results=keyWordsSearchService.getSimilarCases(keyWordList);
         return results;
     }
 
@@ -61,11 +65,12 @@ public class SearchController {
         return keyWordsSearchService.getCaseDetails(caseName,type);
     }
 
-    @PostMapping(value = "/postKeyWordList")
-    public Map<String,Object> postKeyWordList(@RequestBody JSONObject map){
-        String keyWordList = map.getString("keyWordList");//todo:记录
-        Map<String,Object> results=keyWordsSearchService.getSimilarCases(keyWordList);
-        return results;
-    }
+//    @PostMapping(value = "/postKeyWordList")
+//    public Map<String,Object> postKeyWordList(@RequestBody JSONObject map){
+//        String keyWordList = map.getString("keyWordList");//todo:记录
+//        Map<String,Object> results=keyWordsSearchService.getSimilarCases(keyWordList);
+//        return results;
+//    }
+
 
 }
