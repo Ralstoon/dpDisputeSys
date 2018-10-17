@@ -52,7 +52,7 @@ public class DisputecaseAccessoryController {
     }
 
     @PostMapping(value = "DisputeWeb/Mediation/MediationUpload")
-    public ResultVO uploadNomralUserFile(@RequestParam(value = "formData", required=false) MultipartFile[] multipartFiles,
+    public ResultVO uploadNomralUserFile(@RequestParam(value = "files", required=false) MultipartFile[] multipartFiles,
                                          @RequestParam("caseId") String disputeID) throws IOException {
         List<NormalUserUploadListForm> normalUserUploadListFormList = new ArrayList<>();
         JSONArray save=JSONArray.parseArray("[]");

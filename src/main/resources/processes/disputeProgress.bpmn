@@ -115,8 +115,12 @@
     <sequenceFlow id="sid-190AC2FD-7FC7-4AC9-A3EC-65C1DF8029D4" sourceRef="sid-7CC128D2-7049-4434-8C2B-2FA55A4740D4" targetRef="_6"/>
     <sequenceFlow id="sid-3914F429-DFD7-4B10-8A4C-2BF439B3E7CA" sourceRef="sid-B6B10947-F3E6-4BCC-8CCB-4928EE14CCB3" targetRef="sid-19C41E14-98BA-4C66-AC49-2106B3F9C4B1"/>
     <sequenceFlow id="sid-A0FE06E3-80DE-4FEC-9F3D-0163EFACF67E" sourceRef="sid-1B2E5B95-6BF4-4E61-83E7-2C691D85E9BD" targetRef="sid-18B708AD-454E-4CB7-AD28-C0FF1E2DD2C8"/>
-    <sequenceFlow id="sid-A6357AD5-DB5D-4DB0-A620-CE5D6DACC647" name="成功" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-992FED66-72E1-4CEA-85EA-F374E9C450A0"/>
-    <sequenceFlow id="sid-04D93124-0DEF-4D63-AAA3-59859CBBCDE2" name="诉讼处理" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-AE3539B0-BAFB-45B7-A65B-BA4CE423DCD4"/>
+    <sequenceFlow id="sid-A6357AD5-DB5D-4DB0-A620-CE5D6DACC647" name="成功" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-992FED66-72E1-4CEA-85EA-F374E9C450A0">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramMediateResult==0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-04D93124-0DEF-4D63-AAA3-59859CBBCDE2" name="诉讼处理" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-AE3539B0-BAFB-45B7-A65B-BA4CE423DCD4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${paramMediateResult==1}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="sid-BC12E552-1F05-4FBE-A17E-39C3E528887D" sourceRef="sid-992FED66-72E1-4CEA-85EA-F374E9C450A0" targetRef="sid-FBACFE1A-238A-4A9A-9AA8-37E794D626E4"/>
     <sequenceFlow id="sid-813C4A38-427C-460C-8558-1FA14B74A0BB" sourceRef="sid-AE3539B0-BAFB-45B7-A65B-BA4CE423DCD4" targetRef="sid-07FF97CD-28E2-4D54-BC14-540719110F9F"/>
     <sequenceFlow id="sid-936DDDD2-DA5E-458B-81D3-58CF8260D7EF" name="走撤销" sourceRef="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetRef="sid-FCF0E8F1-F4FC-4431-9C63-B0D593E7649E">
@@ -516,8 +520,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-252A0C8F-1312-4F06-92D6-7BE3A69D64AC" id="BPMNEdge_sid-252A0C8F-1312-4F06-92D6-7BE3A69D64AC" sourceElement="sid-4D8D2D1A-E17B-4F21-B465-983381508A01" targetElement="sid-19C41E14-98BA-4C66-AC49-2106B3F9C4B1">
         <omgdi:waypoint x="1407.0" y="409.0"/>
-        <omgdi:waypoint x="1407.0" y="625.0"/>
-        <omgdi:waypoint x="558.0" y="625.0"/>
+        <omgdi:waypoint x="1351.0" y="636.0"/>
+        <omgdi:waypoint x="502.0" y="636.0"/>
         <omgdi:waypoint x="566.0" y="428.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>

@@ -6,6 +6,7 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.UserService;
+import com.seu.service.impl.DisputeProgressServiceImpl;
 import com.seu.util.MD5Util;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.GetWorkingTimeUtil;
@@ -343,4 +344,23 @@ public class test {
 //        Map d = GetTitleAndAbstract.generateCaseTitleDetail(g, names);
 //        int a;
 //    }
+
+
+
+    @Test
+    public void mmmm(){
+        disputeProgressService.updateUserChoose("1539604432004672067", "11,22222");
+    }
+
+    @Test
+    public void mm(){
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId("1539667777946795348");
+        System.out.println(currentProcess.getStatus());
+    }
+
+    @Test
+    public void mmmmm() throws Exception {
+        System.out.println(getWorkingTimeUtil.calWorkingTime(new Date(),30));
+        System.out.println(getWorkingTimeUtil.getResult(new Date()));
+    }
 }

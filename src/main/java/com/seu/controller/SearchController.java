@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(("/DisputeWeb"))
+@RequestMapping(("/DisputeWeb/search"))
 public class SearchController {
     @Autowired
     private KeyWordsSearchService keyWordsSearchService;
@@ -59,6 +59,13 @@ public class SearchController {
         String caseName=map.getString("caseName");
         String type=map.getString("type");
         return keyWordsSearchService.getCaseDetails(caseName,type);
+    }
+
+    @PostMapping(value = "/postKeyWordList")
+    public Map<String,Object> postKeyWordList(@RequestBody JSONObject map){
+        String keyWordList = map.getString("keyWordList");//todo:记录
+        Map<String,Object> results=keyWordsSearchService.getSimilarCases(keyWordList);
+        return results;
     }
 
 }
