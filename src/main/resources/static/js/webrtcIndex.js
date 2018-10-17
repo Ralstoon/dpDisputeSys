@@ -159,12 +159,13 @@ function initRTC(opts) {
         "userSig": opts.userSig,
         "sdkAppId": opts.sdkappid
     });
-    
-    
-    RTC.createRoom({
-        roomid : opts.roomid * 1,
-        privMap: 255
-    },function(){
+    RTC.enterRoom({
+        roomid: opts.roomid * 1,
+        privMap: 255,
+        pureAudioPushMod: 1,
+        recordId: 1234567890
+    },function() {
+        // 进房成功
         if(opts && opts.closeLocalMedia ) return;
         gotStream({
             audio:true,
@@ -174,29 +175,29 @@ function initRTC(opts) {
                 stream: stream,
                 role: 'user'
             });
-            
-            // // 想后端发送请求，开启混流
-            // var time=0  // 后台等待时间：在推流后应等待数秒再申请云端混流
-            // $.ajax({
-        		// type: "POST",
-        		// url: 'https://www.wangj1106.top:443/webrtc/mixStream',
-        		// dataType: 'json',
-				// data:{roomid:parseInt(time)},
-        		// success: function (json) {
-            // 		if (json && json.errorCode === 0) {
-            //     		console.log('已开启混流');
-            // 		} else {
-            //        		console.error(json);
-            // 		}
-        		// },
-        		// error: function (err) {
-            //    		console.error(err);
-        		// }
-            // })
-            // //开启混流结束
-            
         })
+
+    },function(data){
+        // 进房失败
+        console.log(data.toString())
     });
+
+    
+    // RTC.createRoom({
+    //     roomid : opts.roomid * 1,
+    //     privMap: 255
+    // },function(){
+    //     if(opts && opts.closeLocalMedia ) return;
+    //     gotStream({
+    //         audio:true,
+    //         video:true
+    //     },function(stream){
+    //         RTC.startRTC({
+    //             stream: stream,
+    //             role: 'user'
+    //         });
+    //     })
+    // });
 
     // 远端流新增/更新
     RTC.on("onRemoteStreamUpdate", onRemoteStreamUpdate)
@@ -322,7 +323,7 @@ function startLiveTape(){
 		data:{roomid:parseInt($("#roomid").val()),userid:userId},
         success: function (json) {
             if (json && json.errorCode === 0) {
-            	alert("视频录制开始！");
+            	console.log("视频录制开始！");
                 channel_id = json.channel_id;
                 task_id=json.task_id;
             } else {
@@ -344,8 +345,51 @@ function endLiveTape(){
         data:{channel_id:channel_id,task_id:task_id},
         success: function (json) {
             if (json && json.errorCode === 0) {
-                alert("视频录制结束！");
+                console.log("视频录制结束！");
 
+            } else {
+                console.error(json);
+            }
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    })
+}
+
+function startLiveChannel(){
+    userId = $("#userId").val();
+    //请使用英文半角/数字作为用户名
+    $.ajax({
+        type: "POST",
+        url: 'https://www.wangj1106.top:443/webrtc/startLiveChannel',
+        dataType: 'json',
+        data:{roomid:parseInt($("#roomid").val()),userid:userId},
+        success: function (json) {
+            if (json && json.errorCode === 0) {
+                console.log("设置开启直播流")
+                console.log(json.res);
+            } else {
+                console.error(json);
+            }
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    })
+}
+
+function endLiveChannel(){
+    userId = $("#userId").val();
+    $.ajax({
+        type: "POST",
+        url: 'https://www.wangj1106.top:443/webrtc/endLiveChannel',
+        dataType: 'json',
+        data:{roomid:parseInt($("#roomid").val()),userid:userId},
+        success: function (json) {
+            if (json && json.errorCode === 0) {
+                console.log("设置关闭直播流");
+                console.log(json.res);
             } else {
                 console.error(json);
             }

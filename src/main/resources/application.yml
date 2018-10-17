@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://wangj1106.imwork.net:50456/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+    url: jdbc:mysql://139.199.166.125:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
     username: root
     password: 123456
   jpa:
@@ -13,7 +13,7 @@ spring:
             hbm2ddl:
               auto: update
   redis:
-    host: 223.3.79.0
+    host: 139.199.166.125
     port: 6379
 
 server:
@@ -42,8 +42,5 @@ qiniu:
 #  require-ssl: true
 
 #自定义路径
-py:
-  path: ./src/main/resources/pyfiles/
 
-webrtcKeys:
-  path: ./src/main/resources/webrtcKeys/
+

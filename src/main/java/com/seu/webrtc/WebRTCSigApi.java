@@ -34,7 +34,7 @@ public class WebRTCSigApi {
         String privateKeyPEM = privateKey.replace("-----BEGIN PRIVATE KEY-----", "")
         .replace("-----END PRIVATE KEY-----", "")
         .replace("\n", "");
-
+        System.out.println(privateKeyPEM);
         byte[] encodedKey = Base64.getDecoder().decode(privateKeyPEM.getBytes());
         
         try {
@@ -287,8 +287,7 @@ public class WebRTCSigApi {
         obj.put("errorCode",0);
         obj.put("sdkappid",sdkappid);
         return obj;
-//        System.out.println("userSig:\n" + userSig);
-//        System.out.println("privateMapKey:\n" + privateMapKey);
+
     }
     
 }

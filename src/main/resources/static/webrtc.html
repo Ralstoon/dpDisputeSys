@@ -23,9 +23,9 @@
           <label for="sdkappid">SDKAPPID:&nbsp;</label>
           <input class="form-control" id="sdkappid" type="text" value="1400037025" />
         </div>
-          <label for="userId">用户名:</label>
+          <label for="userId">手机号:</label>
           <!--<select class="form-control" id="userId"></select>-->
-          <input class="form-control" id="userId" type="text" value="" /> 
+          <input class="form-control" id="userId" type="text" readonly="readonly" value="" />
           <label for="room-number">房间号:</label>
           <input class="form-control" id="roomid" type="text" value="113355">
       </div>
@@ -42,8 +42,10 @@
     <button class="btn btn-default" type="button" onclick="quitRTC()">退房</button>
     <button class="btn btn-default" type="button" onclick="stopRTC()">停止推流</button>
     <button class="btn btn-default" type="button" onclick="startRTC()">开始推流</button>
+    <button class="btn btn-default" type="button" onclick="startLiveChannel()">开启直播流</button>
+    <button class="btn btn-default" type="button" onclick="endLiveChannel()">关闭直播流</button>
     <button class="btn btn-default" type="button" onclick="startLiveTape()">开始录制</button>
-    <button class="btn btn-default" type="button" onclick="">结束录制</button>
+    <button class="btn btn-default" type="button" onclick="endLiveTape()">结束录制</button>
         <div id="remote-video-wrap">
 
         </div>
@@ -56,8 +58,8 @@
   <!-- demo 部分 -->
   <script src="https://sqimg.qq.com/expert_qq/webrtc/2.6.2/WebRTCAPI.min.js"></script>
   <script>
-    document.write('<script src="./js/config.js?v='+new Date()+'" type="text/javascript"></scr'+'ipt>')
-    document.write('<script src="./js/index2.js?v='+new Date()+'" type="text/javascript"></scr'+'ipt>')
+    document.write('<script src='+new Date()+'"js/webrtcConfig.js?v=" type="text/javascript"></scr'+'ipt>')
+    document.write('<script src='+new Date()+'"js/webrtcIndex.js?v=" type="text/javascript"></scr'+'ipt>')
   </script>
     <script>
         var _mtac = {"senseHash":0};
