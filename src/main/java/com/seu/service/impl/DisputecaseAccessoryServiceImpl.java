@@ -246,15 +246,23 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         log.info("\n专家预约 文件转储开始\n");
 
         /** 设置流程参数 */
-        Integer appointResult=0,paramBeforeMediate=0;
-        if(application!=null){
+        Integer appointResult=0,paramBeforeMediate=1;
+        if(application!=null ){
             paramBeforeMediate=1;
             appointResult=1;
         }
+
+//        //查看是否有鉴定资格
+//        Disputecase disputecase = disputecaseRepository.findOne(disputeId);
+//        if( Integer.parseInt(disputecase.getClaimMoney())<1){
+//            paramBeforeMediate=1;
+//        }
+
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         runtimeService.setVariable(pid,"paramBeforeMediate",paramBeforeMediate);
         runtimeService.setVariable(pid,"appointResult",appointResult);
-        runtimeService.setVariable(pid,"paramProfesor",1);
+        if(runtimeService.getVariable(pid,"paramProfesor")==null || runtimeService.getVariable(pid,"paramProfesor").equals("0"))
+            runtimeService.setVariable(pid,"paramProfesor",0);
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
         if(application!=null){
@@ -279,9 +287,11 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             }
             System.out.println(save.toString());
             disputecaseAccessory.setAppointExpert(save.toString());
+            //有文件，申预约，在此处挂起
+            /** 将流程挂起为专家预约 2 */
+            disputeProgressService.setSuspended(disputeId,2);
         }
-        /** 将流程挂起为专家预约 2 */
-        disputeProgressService.setSuspended(disputeId,2);
+
         disputecaseAccessoryRepository.save(disputecaseAccessory);
         log.info("\n专家预约 文件转储成功\n");
     }

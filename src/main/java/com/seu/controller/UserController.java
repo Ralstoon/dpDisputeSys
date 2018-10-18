@@ -6,15 +6,15 @@ import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
+import com.seu.domian.Comment;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.LoginForm;
 import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
-import com.seu.service.DisputeProgressService;
-import com.seu.service.DisputeRegisterService;
-import com.seu.service.UserService;
-import com.seu.service.NormalUserService;
+import com.seu.repository.CommentRepository;
+import com.seu.service.*;
+import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -150,5 +153,80 @@ public class UserController {
 //        System.out.println(var.toString());
         JSONArray map=var.getJSONArray("addMeditorList");
         return userService.registerMediator(map);
+    }
+
+    //用户撤销申请
+    @PostMapping(value = "caseCancelApply")
+    public ResultVO caseCancelApply(@RequestBody Map<String,String> map){
+        String userId = map.get("id");
+        String caseId = map.get("caseId");
+        return disputeProgressService.setCaseCancelApply(caseId);
+    }
+
+    //用户撤销调解
+    @PostMapping(value = "caseCancellMediation")
+    public ResultVO caseCancellMediation(@RequestBody Map<String,String> map){
+        String userId = map.get("id");
+        String caseId = map.get("caseId");
+        return disputeProgressService.setCaseCancellMediation(caseId);
+    }
+
+    //申请结案
+    @PostMapping(value = "caseSettle")
+    public ResultVO caseSettle(@RequestBody Map<String,String> map){
+        String userId = map.get("id");
+        String caseId = map.get("caseId");
+        return disputeProgressService.setCaseSettle(caseId);
+    }
+
+    //申请再次调解
+    @PostMapping(value = "reMediation")
+    public ResultVO reMediation(@RequestBody Map<String,String> map){
+        String userId = map.get("id");
+        String caseId = map.get("caseId");
+        return disputeProgressService.setCasereMediation(caseId);
+    }
+
+    //用户撤销申请
+    @PostMapping(value = "changeMediator")
+    public ResultVO changeMediator(@RequestBody Map<String,String> map){
+        String userId = map.get("id");
+        String caseId = map.get("caseId");
+        String mediatorId = map.get("mediatorId");
+        return disputeProgressService.changeMediator(caseId, mediatorId);
+    }
+
+    @Autowired
+    private CommentService commentService;
+
+    //用户添加评价
+    @PostMapping(value = "addComment")
+    public ResultVO addComment(@RequestBody Map<String,String> map){
+        String caseId = map.get("caseId");
+        String userId = map.get("userId");
+        String otherEvaluation = map.get("otherEvaluation");
+        String mediatorEvaluation = map.get("mediatorEvaluation");
+        String state = map.get("status");
+        Comment comment = new Comment(KeyUtil.genUniqueKey(),caseId,otherEvaluation,userId, mediatorEvaluation,state);
+        return commentService.addComment(comment);
+    }
+
+    @Autowired
+    DisputecaseAccessoryService disputecaseAccessoryService;
+    //用户中心上传资料
+    @PostMapping(value = "uploadFile")
+    public ResultVO uploadFile(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                               @RequestParam("caseId") String caseId,
+                               @RequestParam("id") String userId,
+                               @RequestParam("fileMessage") String fileMessage,
+                               @RequestParam("status") String state) throws IOException {
+
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
+
+        //todo:保存
+        //return disputecaseAccessoryService.addNormalUserUpload(userId,caseId,state,"",fileMessage,url);
+        return ResultVOUtil.ReturnBack(123,"上传成功");
     }
 }

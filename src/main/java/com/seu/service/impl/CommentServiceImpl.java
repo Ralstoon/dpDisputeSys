@@ -1,21 +1,24 @@
 package com.seu.service.impl;
 
+import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.Comment;
 import com.seu.repository.CommentRepository;
 import com.seu.service.CommentService;
-import com.seu.utils.KeyUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
 
     @Override
-    public int addComment(String task_id, String comment,String user_id) {
-        String comment_id = KeyUtil.genUniqueKey();
-        commentRepository.addComment(comment_id,task_id,comment,user_id);
-        return 1;
+    public ResultVO addComment(Comment comment) {
+        commentRepository.save(comment);
+        return ResultVOUtil.ReturnBack(123, "添加评价成功");
     }
 }

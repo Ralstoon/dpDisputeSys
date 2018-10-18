@@ -1,5 +1,9 @@
 package com.seu.service;
 
+import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
+import com.seu.domian.Comment;
+
 public interface CommentService {
-    int addComment(String task_id, String comment, String user_id);
+    ResultVO addComment(Comment comment);
 }

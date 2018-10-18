@@ -2,24 +2,30 @@ package com.seu.domian;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
+@Entity
 public class Comment {
+    @Id
     private String commentId;
-    private String taskId;
-    private String comment;
+    private String caseId;
+    private String otherEvaluation;
     private String userId;
-    private Date createTime;
+    private String mediatorEvalution;
+    private String state;
 
     public Comment() {
     }
 
-    public Comment(String commentId, String taskId, String comment, String userId, Date createTime) {
+    public Comment(String commentId, String caseId, String otherEvaluation, String userId, String mediatorEvalution, String state) {
         this.commentId = commentId;
-        this.taskId = taskId;
-        this.comment = comment;
+        this.caseId = caseId;
+        this.otherEvaluation = otherEvaluation;
         this.userId = userId;
-        this.createTime = createTime;
+        this.mediatorEvalution = mediatorEvalution;
+        this.state=state;
     }
 }

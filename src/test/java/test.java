@@ -117,18 +117,18 @@ public class test {
         System.out.println("asd");
     }
 
-    @Test
-    public void addCommentTest() {
-        commentRepository.addComment("123", "123", "qwe", "123");
-    }
+//    @Test
+//    public void addCommentTest() {
+//        commentRepository.addComment("123", "123", "qwe", "123");
+//    }
 
-    @Test
-    public void findCommentByTaskIdTest() {
-        Comment comment = commentRepository.findCommentByTaskId("123");
-//        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
-        System.out.println(comment.getComment());
-        //historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey("s").singleResult().
-    }
+//    @Test
+//    public void findCommentByTaskIdTest() {
+//        Comment comment = commentRepository.findCommentByTaskId("123");
+////        NormalUser normalUser = normalUserRepository.findNormalUserByUserId("1532005285945799016");
+//        System.out.println(comment.getComment());
+//        //historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey("s").singleResult().
+//    }
 
     @Test
     public void roomListTest() {
@@ -371,15 +371,24 @@ public class test {
     @Autowired
     public DisputeRegisterService disputeRegisterService;
 
+
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+
     @Test
     public void mmmmm() throws Exception {
-        String involvedPeople = "[{\n" +
-                "    \"name\":\"王某\",\n" +
-                "    \"cardID\":\"321002111111111111\",\n" +
-                "    \"picked\":\"申请人\",\n" +
-                "    \"phone\":\"15651632376\"\n" +
-                "  }]";
-        ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
-        res.getData();
+        String pid=disputecaseActivitiRepository.getOne("1539771803477266846").getProcessId();
+        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();  // 调解结果处理
+        Map<String,Object> var=new HashMap<>();
+        var.put("paramMediateResult",3);
+        taskService.complete(currentTask.getId(), var);
+    }
+
+    @Test
+    @Deployment(resources = "processes/disputeProgress.bpmn")
+    public void mmm(){
+        String pid=disputecaseActivitiRepository.getOne("1539784887233415740").getProcessId();
+        Task currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        System.out.println(currentTask.getName());
     }
 }
