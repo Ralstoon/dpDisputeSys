@@ -15,7 +15,6 @@ import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.*;
-import groovy.transform.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -26,13 +25,10 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.hibernate.annotations.Synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -1648,5 +1644,86 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         disputecase.setId(mediatorId);
         disputecaseRepository.save(disputecase);
         return ResultVOUtil.ReturnBack(114,"更换调解员");
+    }
+
+    @Override
+    public ResultVO getcaseDetail(String caseId) {
+
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        String[] temp=disputecase.getProposerId().trim().split(",");
+        List<String> names=new ArrayList<>();
+        for(String s:temp){
+            names.add(disputecaseApplyRepository.findOne(s).getName());
+        }
+
+        JSONObject result = JSONObject.parseObject("{}");
+        result.put("involvedPeople", names);
+
+        result.put("require", disputecase.getAppeal());
+
+        String cA = disputecase.getClaimMoney();
+        String claimAmount = "";
+        if(cA.equals("0")){
+            claimAmount = "2万以下";
+        }
+        if(cA.equals("1")){
+            claimAmount = "2万至10万";
+        }
+        if(cA.equals("2")){
+            claimAmount = "10万以上";
+        }
+        result.put("claimAmount", claimAmount);
+        result.put("relatedCases", disputecase.getRecommendedPaper());
+
+
+        JSONArray medicalProcess = JSONArray.parseArray(disputecase.getMedicalProcess());
+        JSONArray stage = JSONArray.parseArray("[]");
+
+        for(int i = 0; i < medicalProcess.size(); i++){
+
+            JSONObject jsonObject = JSONObject.parseObject("{}");
+
+            jsonObject.put("name",((JSONObject)medicalProcess.get(i)).getString("name"));
+
+            JSONArray resultOfRegConflict = ((JSONObject)medicalProcess.get(i)).getJSONArray("resultOfRegConflict");
+            List<String> behaviorListTemp = new ArrayList<>();
+
+
+
+            String diseaseBefore="";
+            String diseaseAfter="";
+
+            String diseasesymptomBefore = "";
+            String diseasesymptomAfter = "";
+            for(int j = 0; j < resultOfRegConflict.size(); j++){
+                String resultOfRegConflictName = ((JSONObject)resultOfRegConflict.get(j)).getString("name");
+                List<String> dB = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("defaultBehavior");
+                List<String> diseaseAfterList = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("diseaseAfter");
+                List<String> diseaseBeforeList = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("diseaseBefore");
+                List<String> diseasesymptomAfterList = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("diseasesymptomAfter");
+                List<String> diseasesymptomBeforeList = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("diseasesymptomBefore");
+
+                diseasesymptomBefore = diseasesymptomBefore + String.join(",", diseasesymptomBeforeList);
+                diseasesymptomAfter = diseasesymptomAfter + String.join(",", diseasesymptomAfterList);
+
+                diseaseAfter = diseaseAfter + String.join(",", diseaseAfterList);
+                diseaseBefore = diseaseBefore + String.join(",", diseaseBeforeList);
+
+                for (int k=0; k< dB.size();k++){
+                    behaviorListTemp.add(resultOfRegConflictName+dB.get(j));
+                }
+            }
+            jsonObject.put("behaviorList", behaviorListTemp);
+
+            jsonObject.put("resultOfDamage",((JSONObject)medicalProcess.get(i)).getString("ResultOfDamageDetail"));
+
+            jsonObject.put("diseasesBefore","症状："+diseasesymptomBefore+ "。疾病："+diseaseBefore);
+            jsonObject.put("diseaseAfter","症状："+diseasesymptomAfter+ "。疾病："+diseaseAfter);
+            stage.add(jsonObject);
+        }
+        result.put("stage", stage);
+        Map<String, JSONObject> registerData = new HashMap<>();
+        registerData.put("registerData", result);
+        return ResultVOUtil.ReturnBack(result,123, "详情中查看用户登记信息 以及 相关案例推荐");
     }
 }

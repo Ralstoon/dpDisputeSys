@@ -847,5 +847,14 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(map11,111,"请求纠纷要素");
     }
 
+    //详情中查看用户登记信息 以及 相关案例推荐
+    @PostMapping(value = "/caseDetail")
+    public ResultVO getcaseDetail(Map<String, String> map){
+
+        String caseId = map.get("caseId");
+
+        return null;
+    }
+
 
 }

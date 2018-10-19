@@ -166,4 +166,6 @@ public interface DisputeProgressService {
     //更换调解员
     ResultVO changeMediator(String caseId,String mediatorId);
 
+    ResultVO getcaseDetail(String caseId);
+
 }
