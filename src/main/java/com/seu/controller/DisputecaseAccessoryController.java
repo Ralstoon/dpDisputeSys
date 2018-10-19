@@ -55,8 +55,10 @@ public class DisputecaseAccessoryController {
     public ResultVO uploadNomralUserFile(@RequestParam(value = "files", required=false) MultipartFile[] multipartFiles,
                                          @RequestParam("caseId") String disputeID) throws IOException {
         List<NormalUserUploadListForm> normalUserUploadListFormList = new ArrayList<>();
-        JSONArray save=JSONArray.parseArray("[]");
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeID);
+        JSONArray save=JSONArray.parseArray(disputecaseAccessory.getNormaluserUpload());
+        if(save==null || save.isEmpty())
+            save=JSONArray.parseArray("[]");
         for (MultipartFile multipartFile: multipartFiles){
             JSONObject obj=JSONObject.parseObject("{}");
             FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();

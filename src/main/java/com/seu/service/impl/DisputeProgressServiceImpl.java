@@ -1577,8 +1577,17 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getExpertManageList(PageRequest pageRequest) {
-        Page<Object[]> pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+    public ResultVO getExpertManageList(PageRequest pageRequest,Integer filterStatus) {
+        /**
+          filterstatus 0 1 2 待审批 通过 不通过
+         待审批找参数is_suspended
+         其他找参数paramProfessor
+         */
+        Page<Object[]> pages=null;
+        if(filterStatus==0)
+            pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+        else
+            pages=disputecaseAccessoryRepository.findByParamProfessor(filterStatus,pageRequest);
         List<ExpertAppointForm> list=new ArrayList<>();
         for(Object[] obj:pages.getContent()){
             ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()));

@@ -29,8 +29,7 @@ public class DisputecaseProcess {
     private String disputecaseId;
     /** 进程状态 */
     private String status="0";
-    /** 进程参数 */
-    private String param="{\"paramProfesor\": \"0\",\"paramAuthen\": \"0\"}";
+
     /** 调解员回避状态 */
     private String avoidStatus="";
     /** 调解员申请状态 */
@@ -45,15 +44,17 @@ public class DisputecaseProcess {
     private Date endtimeDisputecase;
     /** 进程是否挂起 */
     private Integer isSuspended = 0;
+    /** 专家预约参数 */
+    private String paramProfessor;
 
     public DisputecaseProcess() {
     }
 
-    public DisputecaseProcess(String id, String disputecaseId, String status, String param, String avoidStatus, String applyStatus, String userChoose, String mediateStage, Date startimeDisputecase, Date endtimeDisputecase, Integer isSuspended) {
+    public DisputecaseProcess(String id, String disputecaseId, String status, String paramProfessor, String avoidStatus, String applyStatus, String userChoose, String mediateStage, Date startimeDisputecase, Date endtimeDisputecase, Integer isSuspended) {
         this.id = id;
         this.disputecaseId = disputecaseId;
         this.status = status;
-        this.param = param;
+        this.paramProfessor = paramProfessor;
         this.avoidStatus = avoidStatus;
         this.applyStatus = applyStatus;
         this.userChoose = userChoose;

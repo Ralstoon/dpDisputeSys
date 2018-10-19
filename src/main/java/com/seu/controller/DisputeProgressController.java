@@ -27,6 +27,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -611,13 +612,23 @@ public class DisputeProgressController {
     @Autowired
     private RuntimeService runtimeService;
 
-
     //专家预约审核
     @PostMapping("/exportAppointCheck")
-    public ResultVO ExportAppointCheck(@RequestBody Map<String, String> map){
+    public ResultVO ExportAppointCheck(@RequestBody Map<String, String> map) throws Exception{
         String disputeId = map.get("caseId");
 
         String exportAppointCheck = map.get("profesorVerify");//意见， 同意或不同意1/0
+        {
+            // 修改process表状态
+            DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputeId);
+            if(Integer.parseInt(exportAppointCheck.trim())==1)
+                disputecaseProcess.setParamProfessor("1");
+            else if(Integer.parseInt(exportAppointCheck.trim())==0)
+                disputecaseProcess.setParamProfessor("2");
+            else
+                throw new Exception("专家申请审核对process表paramProfessor字段修改出错！");
+            disputecaseProcessRepository.save(disputecaseProcess);
+        }
         Map<String, Object> var = new HashMap<>();
         var.put("profesorVerify", exportAppointCheck);
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
@@ -683,7 +694,8 @@ public class DisputeProgressController {
         int size=map.getInteger("size");
         int page=map.getInteger("page")-1;
         PageRequest pageRequest=new PageRequest(page,size);
-        return disputeProgressService.getExpertManageList(pageRequest);
+        int filterStatus=map.getInteger("filterStatus");
+        return disputeProgressService.getExpertManageList(pageRequest,filterStatus);
     }
 
 
