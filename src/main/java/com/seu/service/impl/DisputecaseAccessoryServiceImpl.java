@@ -243,11 +243,9 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
     @Override
     public void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
-        log.info("\n专家预约 文件转储开始\n");
-
         /** 设置流程参数 */
-        Integer appointResult=0,paramBeforeMediate=1;
-        if(application!=null ){
+        Integer appointResult=0,paramBeforeMediate=0;
+        if(application!=null){
             paramBeforeMediate=1;
             appointResult=1;
         }
@@ -266,6 +264,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
         if(application!=null){
+            log.info("\n专家预约 文件转储开始\n");
             FileInputStream inputStream = (FileInputStream) application.getInputStream();
             String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
             com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
@@ -290,10 +289,10 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             //有文件，申预约，在此处挂起
             /** 将流程挂起为专家预约 2 */
             disputeProgressService.setSuspended(disputeId,2);
+            log.info("\n专家预约 文件转储成功\n");
         }
 
         disputecaseAccessoryRepository.save(disputecaseAccessory);
-        log.info("\n专家预约 文件转储成功\n");
     }
 
     @Override
