@@ -769,6 +769,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     public ResultVO setMediationFailure(String caseId) {
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
         disputecaseProcess.setStatus("3");
+        disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(113,"调解失败");
     }
 
@@ -776,6 +777,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     public ResultVO setCaseSuccess(String caseId) {
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
         disputecaseProcess.setStatus("4");
+        disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(114,"调解成功");
     }
 
@@ -967,14 +969,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             currentStatus=1;
         }
         /** 能否预约专家,  先看金额，后看是否已预约过*/
-        if(runtimeService.getVariable(pid,"paramProfesor")==null)
+        if(runtimeService.getVariable(pid,"paramProfesor")==null || (runtimeService.getVariable(pid,"paramProfesor")).equals("0"))
             runtimeService.setVariable(pid,"paramProfesor",0);
         Integer pP= Integer.parseInt(runtimeService.getVariable(pid,"paramProfesor").toString());
         if(pP==0)
             mediationStageForm.setExpertAppoint("0");
         else
             mediationStageForm.setExpertAppoint("1");
-        if((cm!="0"|| !cm.equals("0")))
+        //if((cm!="0"|| !cm.equals("0")))
+        if((!cm.equals("0")))
             mediationStageForm.setExpert(true);
         else
             mediationStageForm.setExpert(false);
@@ -1163,18 +1166,18 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     @Override
     public ResultVO reMediation(String caseId) {
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-//        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"三方调解,专家调解"); todo 10/16 19:23 ??????????????
-//        Task currentTask=null;
-//        for(Task taskOne:tasks)
-//            if(taskOne.getName().equals("三方调解")){
-//                currentTask=taskOne;
-//                break;
-//            }else if(taskOne.getName().equals("专家调解")){
-//                currentTask=taskOne;
-//                break;
-//            }
-        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解结果处理");//todo 10/16 19:23 ?????????????????????
-        Task currentTask = tasks.get(0);
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"三方调解,专家调解"); //todo 10/16 19:23 ??????????????
+        Task currentTask=null;
+        for(Task taskOne:tasks)
+            if(taskOne.getName().equals("三方调解")){
+                currentTask=taskOne;
+                break;
+            }else if(taskOne.getName().equals("专家调解")){
+                currentTask=taskOne;
+                break;
+            }
+//        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解结果处理");//todo 10/16 19:23 ?????????????????????
+//        Task currentTask = tasks.get(0);
 
 
         /** 修改状态为调解中、同时阶段也要增加，调解过程页面直接获取新阶段 */
@@ -1194,11 +1197,14 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          *  设置流程参数paramMediateResult  0成功；1诉讼；2走撤销；3走其他
          * */
 //        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        //currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();  // 调解结果处理
+        currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();  // 调解结果处理
         Map<String,Object> var=new HashMap<>();
         var.put("paramMediateResult",3);
-        disputeProgressService.completeCurrentTask(currentTask.getId(), var);
-        //taskService.complete(currentTask.getId(),var);
+        //disputeProgressService.completeCurrentTask(currentTask.getId(), var);
+        taskService.complete(currentTask.getId(),var);
+        //二跳
+        currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        taskService.complete(currentTask.getId(),var);
         return getMediationStage(caseId);
     }
 
@@ -1279,7 +1285,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             userCaseListForm.setName(disputecase.getCaseName());
             userCaseListForm.setDate(disputecase.getApplyTime());
 
-            userCaseListForm.setNameId(disputecase.getId());
+            userCaseListForm.setCaseId(disputecase.getId());
 
 
             com.alibaba.fastjson.JSONArray arr= com.alibaba.fastjson.JSONArray.parseArray(disputecase.getMedicalProcess()); //todo test 设施医院
@@ -1602,5 +1608,45 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         mediateStage.put("stageContent",stageContent);
         currentProcess.setMediateStage(mediateStage.toString());
         disputecaseProcessRepository.save(currentProcess);
+    }
+
+    @Override
+    public ResultVO setCaseCancelApply(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("6");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(114,"撤销申请");
+    }
+
+    @Override
+    public ResultVO setCaseCancellMediation(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("7");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(114,"撤销调解");
+    }
+
+    @Override
+    public ResultVO setCaseSettle(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("4");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(114,"申请结案");
+    }
+
+    @Override
+    public ResultVO setCasereMediation(String caseId) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("2");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(114,"申请再次调解");
+    }
+
+    @Override
+    public ResultVO changeMediator(String caseId, String mediatorId) {
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setId(mediatorId);
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(114,"更换调解员");
     }
 }

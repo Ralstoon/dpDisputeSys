@@ -442,7 +442,7 @@ public class DisputeProgressController {
                                @RequestParam("id") String id,
                                @RequestParam("currentStageContent") String currentStageContent,
                                @RequestParam(value = "application", required=false) MultipartFile application,
-                               @RequestParam(value = "applicationDetail") MultipartFile[] applicationDetail) throws Exception {
+                               @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail) throws Exception {
         disputecaseAccessoryService.addExportApply(application, applicationDetail, caseId);
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }
@@ -605,6 +605,13 @@ public class DisputeProgressController {
 //        return ResultVOUtil.ReturnBack(disputecaseAccessoryRepository.findByDisputecaseId(disputeId).getAppointExpert(),112, "获取用户 专家申请资料。");
 //    }
 
+    @Autowired
+    private DisputecaseActivitiRepository disputecaseActivitiRepository;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+
     //专家预约审核
     @PostMapping("/exportAppointCheck")
     public ResultVO ExportAppointCheck(@RequestBody Map<String, String> map){
@@ -613,7 +620,8 @@ public class DisputeProgressController {
         String exportAppointCheck = map.get("profesorVerify");//意见， 同意或不同意1/0
         Map<String, Object> var = new HashMap<>();
         var.put("profesorVerify", exportAppointCheck);
-
+        String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
+        runtimeService.setVariable(pid,"paramProfesor",1);
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(disputeId);
         disputecaseProcess.setIsSuspended(0);
         disputecaseProcessRepository.save(disputecaseProcess);
@@ -783,8 +791,8 @@ public class DisputeProgressController {
                     }
                 }
 
-                if (((JSONObject) eachResult).get("diseasemAfter") != null && !((JSONObject) eachResult).getString("diseasemAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
-                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseasemAfter")){
+                if (((JSONObject) eachResult).get("diseaseAfter") != null && !((JSONObject) eachResult).getString("diseaseAfter").isEmpty() && ((List<String>)((JSONObject) eachResult).get("diseaseAfter")).size() !=0) {
+                    for(String eachOperation: (List<String>)((JSONObject)eachResult).get("diseaseAfter")){
                         jsonObject = JSONObject.parseObject("{}");
                         jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
                         jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));

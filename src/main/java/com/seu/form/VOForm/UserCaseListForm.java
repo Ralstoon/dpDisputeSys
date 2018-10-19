@@ -8,7 +8,7 @@ import java.util.Date;
 public class UserCaseListForm {
     Date date;
     String name;//case name
-    String nameId;//case id
+    String caseId;//case id
     String status;
     String applicant;
     String respondent;

@@ -151,4 +151,19 @@ public interface DisputeProgressService {
     /** 根据caseId和video_url存入进展表的当前阶段中 */
     void saveMediateVideo(String caseId,String video_url);
 
+    //撤销申请
+    ResultVO setCaseCancelApply(String caseId);
+
+    //撤销调解
+    ResultVO setCaseCancellMediation(String caseId);
+
+    //申请结案
+    ResultVO setCaseSettle(String caseId);
+
+    //申请再次调解
+    ResultVO setCasereMediation(String caseId);
+
+    //更换调解员
+    ResultVO changeMediator(String caseId,String mediatorId);
+
 }
