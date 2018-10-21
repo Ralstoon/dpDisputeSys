@@ -4,12 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
+import com.seu.domian.Disputecase;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
-import com.seu.repository.ConstantDataRepository;
-import com.seu.repository.DisputecaseActivitiRepository;
-import com.seu.repository.DisputecaseProcessRepository;
-import com.seu.repository.MediatorRepository;
+import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
@@ -126,11 +124,11 @@ public class DisputeRegisterController {
         String caseId = ((Map<String,String>)res.getData()).get("CaseId");
 
 
-        String stageContent=basicDivideInfo.getJSONObject("stageContent").toJSONString();
+        String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
         //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
         Integer mainRecStage=basicDivideInfo.getInteger("mainRecStage");
         String require=basicDivideInfo.getString("Require");
-        Integer claimAmount=map.getInteger("claimAmount");
+        Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
 
         disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
         log.info("\n医疗行为接受完成\n");
@@ -147,7 +145,10 @@ public class DisputeRegisterController {
         disputeProgressService.completeCurrentTask(currentTask.getId());
 
         log.info("\n医疗行为任务完成\n");
-        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+
+        Map<String, String> result = new HashMap<>();
+        result.put("caseId",caseId);
+        return  ResultVOUtil.ReturnBack(result ,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
     }
 
     @Autowired
@@ -208,5 +209,19 @@ public class DisputeRegisterController {
     public ResultVO getAllMessage(@RequestBody JSONObject obj){
 
         return disputeRegisterService.getAllMessage(obj.getJSONObject("regConflictData"));
+    }
+
+
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
+    //收藏类案推荐成功
+    @PostMapping(value = "/similarCasesCollect")
+    public ResultVO similarCasesCollect(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String list = obj.getJSONObject("list").toJSONString();
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setRecommendedPaper(list);
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(123, "收藏类案推荐成功");
     }
 }

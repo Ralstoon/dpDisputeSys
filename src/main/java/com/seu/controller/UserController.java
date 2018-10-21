@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -160,7 +161,8 @@ public class UserController {
     public ResultVO caseCancelApply(@RequestBody Map<String,String> map){
         String userId = map.get("id");
         String caseId = map.get("caseId");
-        return disputeProgressService.setCaseCancelApply(caseId);
+        String reason = map.get("reason");
+        return disputeProgressService.setCaseCancelApply(caseId, reason);
     }
 
     //用户撤销调解
@@ -168,7 +170,8 @@ public class UserController {
     public ResultVO caseCancellMediation(@RequestBody Map<String,String> map){
         String userId = map.get("id");
         String caseId = map.get("caseId");
-        return disputeProgressService.setCaseCancellMediation(caseId);
+        String reason = map.get("reason");
+        return disputeProgressService.setCaseCancellMediation(caseId, reason);
     }
 
     //申请结案
@@ -189,11 +192,12 @@ public class UserController {
 
     //用户撤销申请
     @PostMapping(value = "changeMediator")
-    public ResultVO changeMediator(@RequestBody Map<String,String> map){
-        String userId = map.get("id");
-        String caseId = map.get("caseId");
-        String mediatorId = map.get("mediatorId");
-        return disputeProgressService.changeMediator(caseId, mediatorId);
+    public ResultVO changeMediator(@RequestBody JSONObject obj){
+        String userId = obj.getString("id");
+        String caseId = obj.getString("caseId");
+        String reason = obj.getString("reason");
+        List<String> mediatorId = (List<String>) obj.get("mediatorIdList");
+        return disputeProgressService.changeMediator(caseId, mediatorId, reason);
     }
 
     @Autowired

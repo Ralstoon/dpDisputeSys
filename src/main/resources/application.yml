@@ -14,19 +14,19 @@ spring:
             hbm2ddl:
               auto: update
   redis:
-    host: 139.199.166.125
-#    host: 223.3.79.0
+#    host: 139.199.166.125
+    host: 223.3.79.0
     port: 6379
 
 server:
-#  port: 8080
-  port: 443
-  ssl:
-    key-store-type: JKS
-    key-store: classpath:1541430928812.jks
-    key-store-password: 1541430928812
-    # 证书别名
-    key-alias: alias
+  port: 8080
+#  port: 443
+#  ssl:
+#    key-store-type: JKS
+#    key-store: classpath:1541430928812.jks
+#    key-store-password: 1541430928812
+#    # 证书别名
+#    key-alias: alias
 
 
 

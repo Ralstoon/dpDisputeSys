@@ -84,9 +84,10 @@ public interface DisputeProgressService {
 
     /** 进入调解时 获取当前调解阶段、是否具备医疗鉴定资格、医疗鉴定与否、是否具备专家预约资格，当前阶段中的当前步骤（医疗鉴定中、预约中、正在调解中、调解结束）*/
     ResultVO getMediationStage(String caseId);
+    ResultVO getReMediationStage(String caseId);
 
     /** 发送鉴定结果数据 */
-    ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles);
+    ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles, String stage);
 
     /** 发送预约数据 */
     ResultVO setAppoint(String caseId,String currentStageContent);
@@ -152,10 +153,10 @@ public interface DisputeProgressService {
     void saveMediateVideo(String caseId,String video_url);
 
     //撤销申请
-    ResultVO setCaseCancelApply(String caseId);
+    ResultVO setCaseCancelApply(String caseId, String reason);
 
     //撤销调解
-    ResultVO setCaseCancellMediation(String caseId);
+    ResultVO setCaseCancellMediation(String caseId, String reason);
 
     //申请结案
     ResultVO setCaseSettle(String caseId);
@@ -164,7 +165,7 @@ public interface DisputeProgressService {
     ResultVO setCasereMediation(String caseId);
 
     //更换调解员
-    ResultVO changeMediator(String caseId,String mediatorId);
+    ResultVO changeMediator(String caseId,List<String> mediatorId, String reason);
 
     ResultVO getcaseDetail(String caseId);
 

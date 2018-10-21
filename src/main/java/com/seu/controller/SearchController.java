@@ -62,8 +62,11 @@ public class SearchController {
     public Object getCaseDetails(@RequestBody JSONObject map){
         String caseName=map.getString("caseName");
         String type=map.getString("type");
-        return keyWordsSearchService.getCaseDetails(caseName,type);
+        String caseId = map.getString("caseId");
+        return keyWordsSearchService.getCaseDetails(caseName,type,caseId);
     }
+
+
 
 //    @PostMapping(value = "/postKeyWordList")
 //    public Map<String,Object> postKeyWordList(@RequestBody JSONObject map){

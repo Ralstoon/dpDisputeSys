@@ -47,22 +47,27 @@ public class DisputecaseProcess {
     /** 专家预约参数 */
     private String paramProfessor;
 
+    private String reason = "{\n" +
+            "\t\"caseCancelApply \": [],\n" +
+            "\t\"caseCancelMediation \": [],\n" +
+            "\t\"changeMediator \": []\n" +
+            "}";
+
     public DisputecaseProcess() {
     }
 
-    public DisputecaseProcess(String id, String disputecaseId, String status, String paramProfessor, String avoidStatus, String applyStatus, String userChoose, String mediateStage, Date startimeDisputecase, Date endtimeDisputecase, Integer isSuspended) {
+    public DisputecaseProcess(String id, String disputecaseId, String status, String avoidStatus, String applyStatus, String userChoose, String mediateStage, Date startimeDisputecase, Date endtimeDisputecase, Integer isSuspended, String paramProfessor, String reason) {
         this.id = id;
         this.disputecaseId = disputecaseId;
         this.status = status;
-        this.paramProfessor = paramProfessor;
         this.avoidStatus = avoidStatus;
         this.applyStatus = applyStatus;
         this.userChoose = userChoose;
         this.mediateStage = mediateStage;
         this.startimeDisputecase = startimeDisputecase;
         this.endtimeDisputecase = endtimeDisputecase;
-
+        this.isSuspended = isSuspended;
+        this.paramProfessor = paramProfessor;
+        this.reason = reason;
     }
-
-
 }
