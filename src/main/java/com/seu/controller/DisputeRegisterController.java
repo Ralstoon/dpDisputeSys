@@ -112,24 +112,43 @@ public class DisputeRegisterController {
 //        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
 //    }
 
-//    /** 发送医疗过程数据 */
-//    @PostMapping(value = "/BasicDivideInfo")
-//    public ResultVO getBasicDivideInfo(HttpServletRequest request){
-//        JSONObject map=Request2JSONobjUtil.convert(request);
-//        String stageContent=map.getString("stageContent");
-//        String caseId=map.getString("CaseId");
-//        Integer mainRecStage=map.getInteger("mainRecStage");
-//        String require=map.getString("Require");
-//        Integer claimAmount=map.getInteger("claimAmount");
-//
-//        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
-//        log.info("\n医疗行为接受完成\n");
-//        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-//        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-//        disputeProgressService.completeCurrentTask(currentTask.getId());
-//        log.info("\n医疗行为任务完成\n");
-//        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
-//    }
+    /** 发送医疗过程数据 */
+    @PostMapping(value = "/BasicDivideInfo")
+    public ResultVO getBasicDivideInfo(HttpServletRequest request){
+        JSONObject map=Request2JSONobjUtil.convert(request);
+
+        String involvedPeople = map.getString("InvolvedPeople");
+        JSONObject basicDivideInfo = map.getJSONObject("basicDivideInfo");
+
+        ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
+        if(res.getCode()<0)
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
+        String caseId = ((Map<String,String>)res.getData()).get("CaseId");
+
+
+        String stageContent=basicDivideInfo.getJSONObject("stageContent").toJSONString();
+        //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
+        Integer mainRecStage=basicDivideInfo.getInteger("mainRecStage");
+        String require=basicDivideInfo.getString("Require");
+        Integer claimAmount=map.getInteger("claimAmount");
+
+        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        log.info("\n医疗行为接受完成\n");
+        //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        //Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        //disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        Map<String,Object> var =new HashMap<>();
+        var.put("disputeId",caseId);
+        var.put("paramProfesor",0);
+        var.put("paramAuthenticate",0);
+        disputeProgressService.startProcess(caseId,var);
+        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        log.info("\n医疗行为任务完成\n");
+        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+    }
 
     @Autowired
     private ConstantDataRepository constantDataRepository;

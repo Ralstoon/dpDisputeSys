@@ -705,8 +705,10 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/getKeyWordList")
     public ResultVO getKeyWordList(HttpServletRequest request){
         JSONObject map= Request2JSONobjUtil.convert(request);
-        String id = map.getString("id");//操作人id
-        String stageContent=map.getString("stageContent");
+        String caseId = map.getString("caseId");//操作人id
+        //String stageContent=map.getString("stageContent");
+        String stageContent=disputecaseRepository.findOne(caseId).getMedicalProcess();
+
         JSONArray jsonArray = JSONArray.parseArray(stageContent);
 
         JSONArray result = JSONArray.parseArray("[]");
@@ -866,6 +868,17 @@ public class DisputeProgressController {
         String caseId = map.get("caseId");
 
         return null;
+    }
+
+    //收藏类案推荐成功
+    @PostMapping(value = "/similarCasesCollect")
+    public ResultVO similarCasesCollect(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String list = obj.getJSONObject("list").toJSONString();
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setRecommendedPaper(list);
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(123, "收藏类案推荐成功");
     }
 
 
