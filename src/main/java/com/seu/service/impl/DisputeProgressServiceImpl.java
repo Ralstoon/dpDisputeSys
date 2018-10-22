@@ -1782,7 +1782,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             pages=disputecaseAccessoryRepository.findByParamProfessor(filterStatus,pageRequest);
         List<ExpertAppointForm> list=new ArrayList<>();
         for(Object[] obj:pages.getContent()){
-            ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()));
+            ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), obj[3].toString());
             list.add(form);
         }
         return ResultVOUtil.ReturnBack(list,200,"管理员获取专家管理界面数据成功");

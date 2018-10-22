@@ -695,8 +695,11 @@ public class DisputeProgressController {
         int size=map.getInteger("size");
         int page=map.getInteger("page")-1;
         PageRequest pageRequest=new PageRequest(page,size);
-        int filterStatus=map.getInteger("filterStatus");
-        return disputeProgressService.getExpertManageList(pageRequest,filterStatus);
+        String filterStatus=map.getString("filterStatus");
+        Integer status = 0;
+        if(filterStatus.equals(""))
+            status = 0;
+        return disputeProgressService.getExpertManageList(pageRequest,status);
     }
 
 
