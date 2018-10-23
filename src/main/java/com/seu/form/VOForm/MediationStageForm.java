@@ -52,4 +52,7 @@ public class MediationStageForm implements Serializable{
     /** 挂起状态 */
     private Integer isSuspended;
 
+    //本轮是否可预约
+    private boolean appoint;
+
 }

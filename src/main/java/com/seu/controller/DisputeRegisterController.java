@@ -1,15 +1,17 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
+import com.seu.domian.Disputecase;
+import com.seu.domian.DisputecaseApply;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
-import com.seu.repository.ConstantDataRepository;
-import com.seu.repository.DisputecaseActivitiRepository;
-import com.seu.repository.DisputecaseProcessRepository;
-import com.seu.repository.MediatorRepository;
+import com.seu.form.ExpertAppointForm;
+import com.seu.form.HistoryCaseForm;
+import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
@@ -21,6 +23,8 @@ import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,24 +116,46 @@ public class DisputeRegisterController {
 //        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
 //    }
 
-//    /** 发送医疗过程数据 */
-//    @PostMapping(value = "/BasicDivideInfo")
-//    public ResultVO getBasicDivideInfo(HttpServletRequest request){
-//        JSONObject map=Request2JSONobjUtil.convert(request);
-//        String stageContent=map.getString("stageContent");
-//        String caseId=map.getString("CaseId");
-//        Integer mainRecStage=map.getInteger("mainRecStage");
-//        String require=map.getString("Require");
-//        Integer claimAmount=map.getInteger("claimAmount");
-//
-//        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
-//        log.info("\n医疗行为接受完成\n");
-//        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-//        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-//        disputeProgressService.completeCurrentTask(currentTask.getId());
-//        log.info("\n医疗行为任务完成\n");
-//        return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
-//    }
+    /** 发送医疗过程数据 */
+    @PostMapping(value = "/BasicDivideInfo")
+    public ResultVO getBasicDivideInfo(HttpServletRequest request){
+        JSONObject map=Request2JSONobjUtil.convert(request);
+
+        String involvedPeople = map.getString("InvolvedPeople");
+        JSONObject basicDivideInfo = map.getJSONObject("basicDivideInfo");
+
+        ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
+        if(res.getCode()<0)
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
+        String caseId = ((Map<String,String>)res.getData()).get("CaseId");
+
+
+        String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
+        //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
+        Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
+        String require=basicDivideInfo.getString("Require");
+        Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
+
+        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        log.info("\n医疗行为接受完成\n");
+        //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        //Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        //disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        Map<String,Object> var =new HashMap<>();
+        var.put("disputeId",caseId);
+        var.put("paramProfesor",0);
+        var.put("paramAuthenticate",0);
+        disputeProgressService.startProcess(caseId,var);
+        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+        disputeProgressService.completeCurrentTask(currentTask.getId());
+
+        log.info("\n医疗行为任务完成\n");
+
+        Map<String, String> result = new HashMap<>();
+        result.put("caseId",caseId);
+        return  ResultVOUtil.ReturnBack(result ,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+    }
 
     @Autowired
     private ConstantDataRepository constantDataRepository;
@@ -190,4 +216,75 @@ public class DisputeRegisterController {
 
         return disputeRegisterService.getAllMessage(obj.getJSONObject("regConflictData"));
     }
+
+
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
+    //收藏类案推荐成功
+    @PostMapping(value = "/similarCasesCollect")
+    public ResultVO similarCasesCollect(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String list = obj.getJSONObject("list").toJSONString();
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setRecommendedPaper(list);
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(123, "收藏类案推荐成功");
+    }
+
+    @Autowired
+    private DisputecaseApplyRepository disputecaseApplyRepository;
+
+    @PostMapping(value = "/getHistoryCase")
+    public ResultVO getHistoryCase(@RequestBody JSONObject map){
+        List<String> InvolvedPeople = (List<String>) map.get("cardId");
+        int size= map.getInteger("size");
+        int page=map.getInteger("page") -1;
+        PageRequest pageRequest=new PageRequest(page,size);
+        Page<Object[]> pages=null;
+        Integer totalPages=null;
+        List<HistoryCaseForm> HistoryCaseFormList = new ArrayList<>();
+        for (int i = 0; i < InvolvedPeople.size(); i++){
+            pages = disputecaseRepository.findHistoryCaseByUserId(InvolvedPeople.get(i),pageRequest);
+            for(Object[] obj:pages.getContent()){
+
+                Disputecase disputecase = disputecaseRepository.findOne(obj[2].toString());
+
+                JSONArray arr = JSONArray.parseArray(disputecase.getMedicalProcess());
+                List<String> hospitalList = new ArrayList<>();
+                String hospitals = "";
+
+                for (Object stage:arr){
+                    Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
+
+//            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
+//
+//                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
+//            }
+                    hospitalList.add(((JSONObject)involvedInstitute).getString("Hospital"));
+                }
+
+                for(String hospital: hospitalList){
+                    hospitals = hospitals + hospital + "、";
+                }
+
+                String[] temp=disputecase.getProposerId().trim().split(",");
+                List<String> names=new ArrayList<>();
+                for(String s:temp){
+                    names.add(disputecaseApplyRepository.findOne(s).getName());
+                }
+
+
+                HistoryCaseForm form=new HistoryCaseForm(obj[0].toString(),obj[1].toString(), obj[2].toString(), obj[3].toString(),String.join("、", names) ,hospitals.substring(0,hospitals.length()-1) );
+                HistoryCaseFormList.add(form);
+            }
+            totalPages = pages.getTotalPages();
+        }
+
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalPages", totalPages);
+        result.put("HistoryCaseFormList",HistoryCaseFormList);
+        return ResultVOUtil.ReturnBack(result,123,"历史案件");
+    }
+
 }

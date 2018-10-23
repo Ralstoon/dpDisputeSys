@@ -25,5 +25,5 @@ public interface KeyWordsSearchService {
     Map<String,Object> getSimilarCases(JSONArray caseId);
 
     /** 通过类案的名字查询案件具体内容 */
-    Object getCaseDetails(String caseName,String type);
+    Map<String, Object> getCaseDetails(String caseName,String type, String caseId);
 }

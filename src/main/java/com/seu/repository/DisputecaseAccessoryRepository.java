@@ -17,13 +17,18 @@ import org.springframework.data.jpa.repository.Query;
 public interface DisputecaseAccessoryRepository extends JpaRepository<DisputecaseAccessory,String> {
     DisputecaseAccessory findByDisputecaseId(String id);
 
-    @Query(value = "SELECT a.id,a.case_name,c.appoint_expert from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.is_suspended=?1 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT a.id,a.case_name,c.appoint_expert from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.is_suspended=?1",
+    @Query(value = "SELECT a.id,a.case_name,c.appoint_expert,b.status from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.is_suspended=?1 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT a.id,a.case_name,c.appoint_expert,b.status from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.is_suspended=?1",
             nativeQuery = true)
     Page<Object[]> findBySuspended(Integer isSuspended, Pageable pageable);
 
-    @Query(value = "SELECT a.id,a.case_name,c.appoint_expert from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.paramProfessor=?1 ORDER BY ?#{#pageable}",
-            countQuery = "SELECT a.id,a.case_name,c.appoint_expert from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.paramProfessor=?1",
+    @Query(value = "SELECT a.id,a.case_name,c.appoint_expert,b.status from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.param_professor=?1 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT a.id,a.case_name,c.appoint_expert,b.status from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.param_professor=?1",
             nativeQuery = true)
-    Page<Object[]> findByParamProfessor(Integer filterStatus, Pageable pageable);
+    Page<Object[]> findByParamProfessor(String filterStatus, Pageable pageable);
+
+    @Query(value = "SELECT a.id,a.case_name,c.appoint_expert,b.param_professor from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.param_professor=1 or b.param_professor=2 or b.is_suspended=2  ORDER BY ?#{#pageable}",
+            countQuery = "SELECT a.id,a.case_name,c.appoint_expert,b.param_professor from disputecase a inner join disputecase_process b on a.id=b.disputecase_id inner join disputecase_accessory c on b.disputecase_id=c.disputecase_id  where b.param_professor=1 or b.param_professor=2 or b.is_suspended=2",
+            nativeQuery = true)
+    Page<Object[]> findBySuspendedAndParamProfessor(Pageable pageable);
 }

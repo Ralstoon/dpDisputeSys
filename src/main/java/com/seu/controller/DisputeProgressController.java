@@ -172,24 +172,24 @@ public class DisputeProgressController {
     }
 
 
-//    /** 用户选择调解员列表 */
-//    @PostMapping(value = "user/postMediatorList")
-//    public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
-//
-//        List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
-//
-//
-//        //String pickedList = map.get("MediatorPickedlist");
-//        String disputeId = (String) map.get("CaseId");
-//
-//        String mediatorList="";
-//        for(int i = 0; i<pickedList.size(); i++){
-//            mediatorList = mediatorList + pickedList.get(i) + ",";
-//        }
-//        mediatorList=mediatorList.substring(0,mediatorList.length()-1);
-//        disputeProgressService.updateUserChoose(disputeId,mediatorList);
-//        return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
-//    }
+    /** 用户选择调解员列表 */
+    @PostMapping(value = "user/postMediatorList")
+    public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
+
+        List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
+
+
+        //String pickedList = map.get("MediatorPickedlist");
+        String disputeId = (String) map.get("CaseId");
+
+        String mediatorList="";
+        for(int i = 0; i<pickedList.size(); i++){
+            mediatorList = mediatorList + pickedList.get(i) + ",";
+        }
+        mediatorList=mediatorList.substring(0,mediatorList.length()-1);
+        disputeProgressService.updateUserChoose(disputeId,mediatorList);
+        return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
+    }
 
     /** 获取调解大厅中的数据 */
     @PostMapping(value = "/mediator/GetMediationHallData")
@@ -273,9 +273,10 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/resultOfIndent")
     public ResultVO setResultOfIndent(@RequestParam("caseId") String caseId,
                                       @RequestParam("text") String text,
-                                      @RequestParam(value = "files") MultipartFile[] multipartFiles){
+                                      @RequestParam(value = "files") MultipartFile[] multipartFiles,
+                                      @RequestParam(value = "stage") String stage){
 
-        return disputeProgressService.setResultOfIndent(caseId,text,multipartFiles);
+        return disputeProgressService.setResultOfIndent(caseId,text,multipartFiles,stage);
     }
 
     @Autowired
@@ -632,7 +633,10 @@ public class DisputeProgressController {
         Map<String, Object> var = new HashMap<>();
         var.put("profesorVerify", exportAppointCheck);
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
-        runtimeService.setVariable(pid,"paramProfesor",1);
+        if(exportAppointCheck.equals("1"))
+            runtimeService.setVariable(pid,"paramProfesor",1);
+        if(exportAppointCheck.equals("0"))
+            runtimeService.setVariable(pid,"paramProfesor",2);
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(disputeId);
         disputecaseProcess.setIsSuspended(0);
         disputecaseProcessRepository.save(disputecaseProcess);
@@ -694,8 +698,20 @@ public class DisputeProgressController {
         int size=map.getInteger("size");
         int page=map.getInteger("page")-1;
         PageRequest pageRequest=new PageRequest(page,size);
-        int filterStatus=map.getInteger("filterStatus");
-        return disputeProgressService.getExpertManageList(pageRequest,filterStatus);
+        String filterStatus=map.getString("filterStatus");
+        Integer status = 0;
+        if(filterStatus.equals("0"))
+            status = 0;
+
+        if(filterStatus.equals("1"))
+            status = 1;
+
+        if(filterStatus.equals("2"))
+            status = 2;
+
+        if(filterStatus.equals(""))
+            status = 3;
+        return disputeProgressService.getExpertManageList(pageRequest,status);
     }
 
 
@@ -705,8 +721,10 @@ public class DisputeProgressController {
     @PostMapping(value = "/mediator/getKeyWordList")
     public ResultVO getKeyWordList(HttpServletRequest request){
         JSONObject map= Request2JSONobjUtil.convert(request);
-        String id = map.getString("id");//操作人id
-        String stageContent=map.getString("stageContent");
+        String caseId = map.getString("caseId");//操作人id
+        //String stageContent=map.getString("stageContent");
+        String stageContent=disputecaseRepository.findOne(caseId).getMedicalProcess();
+
         JSONArray jsonArray = JSONArray.parseArray(stageContent);
 
         JSONArray result = JSONArray.parseArray("[]");
@@ -861,12 +879,175 @@ public class DisputeProgressController {
 
     //详情中查看用户登记信息 以及 相关案例推荐
     @PostMapping(value = "/caseDetail")
-    public ResultVO getcaseDetail(Map<String, String> map){
+    public ResultVO getcaseDetail(@RequestBody Map<String, String> map){
 
         String caseId = map.get("caseId");
 
-        return null;
+        return disputeProgressService.getcaseDetail(caseId);
     }
 
+
+
+    @Autowired
+    private KeyWordsSearchService keyWordsSearchService;
+
+    //类案详情页面的收藏
+    @PostMapping(value = "/caseCollect")
+    public ResultVO caseCollect(@RequestBody Map<String, String> map){
+        String caseId = map.get("caseId");
+        String caseName = map.get("caseName");
+        String type = map.get("type");
+
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        JSONObject recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
+        JSONArray dissension = recommendedPaper.getJSONArray(type);
+        keyWordsSearchService.getCaseDetails(caseName,type,caseId).get("result");
+
+
+        return ResultVOUtil.ReturnBack(123,"类案详情收藏成功");
+    }
+
+    //类案详情页面的收藏
+    @PostMapping(value = "/cancelCaseCollect")
+    public ResultVO cancelCaseCollect(@RequestBody Map<String, String> map){
+        String caseId = map.get("caseId");
+        String caseName = map.get("caseName");
+        String type = map.get("type");
+
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+
+        if (!disputecase.getRecommendedPaper().isEmpty()){
+            JSONObject recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
+            JSONArray dissension = recommendedPaper.getJSONArray("dissension");
+            JSONArray dissension_dx = recommendedPaper.getJSONArray("dissension_dx");
+            JSONArray dissension_ms = recommendedPaper.getJSONArray("dissension_ms");
+
+            for(int i = 0; i< dissension.size();i++){
+                if(dissension.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    dissension.remove(i);
+                }
+            }
+            for(int i = 0; i< dissension_dx.size();i++){
+                if(dissension_dx.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    dissension_dx.remove(i);
+                }
+            }
+            for(int i = 0; i< dissension_ms.size();i++){
+                if(dissension_ms.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    dissension_ms.remove(i);
+                }
+            }
+        }
+
+
+
+        return ResultVOUtil.ReturnBack(123,"类案详情取消收藏成功");
+    }
+
+    //2.审批 撤销申请
+    @PostMapping(value = "/feedBackCaseCancelApply")
+    public ResultVO feedBackCaseCancelApply(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String id = obj.getString("id");
+        String repealApplyReason =obj.getString("repealApplyReason");//todo:db保存
+        String repealApplyResult = obj.getString("repealApplyResult");
+
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        if(repealApplyResult.equals("0"))
+            disputecaseProcess.setStatus("0");
+        if(repealApplyResult.equals("1"))
+            disputecaseProcess.setStatus("6");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(123, ".审批 撤销申请");
+    }
+
+    //3.审批撤销调解\
+    @PostMapping(value = "/feedBackCaseCancelMediate")
+    public ResultVO feedBackCaseCancelMediate(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String id = obj.getString("id");
+        String repealApplyReason =obj.getString("repealMediationReason");//todo:db保存
+        String repealApplyResult = obj.getString("repealMediationResult");
+
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        if(repealApplyResult.equals("0"))
+            disputecaseProcess.setStatus("2");
+        if(repealApplyResult.equals("1"))
+            disputecaseProcess.setStatus("7");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(123, ".审批 撤销调解");
+    }
+
+    //4.审批更换调解员
+    @PostMapping(value = "/changeMediatorResult")
+    public ResultVO feedBackChangeMediator(@RequestBody JSONObject obj){
+        String caseId = obj.getString("caseId");
+        String id = obj.getString("id");
+        String changeMediatorReason =obj.getString("changeMediatorReason");//todo:db保存
+        String changeMediatorResult = obj.getString("changeMediatorResult");
+        String mediatorId = obj.getString("mediatorId");
+
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+
+        if(changeMediatorResult.equals("0"))
+            disputecaseProcess.setStatus("2");
+        if(changeMediatorResult.equals("1")){
+            disputecase.setMediatorId(mediatorId);
+            disputecaseProcess.setStatus("2");
+        }
+        disputecaseRepository.save(disputecase);
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(123, ".审批 撤销申请");
+    }
+
+    //5.生成协议
+    @PostMapping(value = "/protocal")
+    public ResultVO protocal(@RequestParam(value = "id") String id,
+                              @RequestParam(value = "caseId") String caseId,
+                              @RequestParam(value = "protocalFile") MultipartFile multipartFile) throws IOException {
+
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        disputecaseAccessory.setProtocal(url);
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+        return ResultVOUtil.ReturnBack(123, "协议上传");
+    }
+
+    //6.司法确认
+    @PostMapping(value = "/judicialConfirm")
+    public ResultVO judicialConfirm(@RequestParam(value = "id") String id,
+                                    @RequestParam(value = "caseId") String caseId,
+                                    @RequestParam(value = "judicialConfirmText") String judicialConfirmText,
+                                    @RequestParam(value = "judicialConfirmFile") MultipartFile multipartFile) throws IOException {
+        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+        String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        JSONObject result = JSONObject.parseObject("{}");
+        result.put("judicialConfirmText", judicialConfirmText);
+        result.put("judicialConfirmFile", url);
+        disputecaseAccessory.setJudicialConfirm(result.toJSONString());
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("5");
+        disputecaseProcessRepository.save(disputecaseProcess);
+        return ResultVOUtil.ReturnBack(123, "司法确认上传");
+    }
+
+    //7.立案审批添加参数
+
+    //调解员评判
+    @PostMapping(value = "/postEvaluateOfMediator")
+    public ResultVO postEvaluateOfMediator(@RequestBody JSONObject object){
+        String caseId = object.getString("caseId");
+        JSONObject ModeratorRegister = object.getJSONObject("moderatorRegister");
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        disputecase.setModeratorRegister(ModeratorRegister.toJSONString());
+        disputecaseRepository.save(disputecase);
+        return ResultVOUtil.ReturnBack(123,"调解员评判成功");
+    }
+
+    //
 
 }

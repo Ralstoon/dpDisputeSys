@@ -15,13 +15,15 @@ public class ExpertAppointForm {
     private String caseId;
     private String caseName;
     private JSONObject appointExpert;
+    private String status;
 
     public ExpertAppointForm() {
     }
 
-    public ExpertAppointForm(String caseId,String caseName, JSONObject appointExpert) {
+    public ExpertAppointForm(String caseId,String caseName, JSONObject appointExpert, String status) {
         this.caseId=caseId;
         this.caseName = caseName;
         this.appointExpert = appointExpert;
+        this.status = status;
     }
 }

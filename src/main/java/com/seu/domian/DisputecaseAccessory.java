@@ -16,7 +16,7 @@ public class DisputecaseAccessory {
     private String disputecaseId;
     /** 医疗损害鉴定json */
     private String medicaldamageAssessment;
-    /** 用户上传json */
+    /** 用户上传json *///实际为调解员上传
     private String normaluserUpload;
     /** 问询医院json */
     private String inquireHospital;
@@ -29,16 +29,27 @@ public class DisputecaseAccessory {
     /** 受理通知书 */
     private String acceptanceNotice;
 
+    //协议
+    private String protocal;
 
+    //司法确认
+    private String judicialConfirm;
 
-    public DisputecaseAccessory(String id, String disputecaseId, String medicaldamageAssessment, String normaluserUpload, String inquireHospital, String appointExpert, String proxyCertification) {
+    //用户上传
+    private String userUpload;
+
+    public DisputecaseAccessory(String id, String disputecaseId, String medicaldamageAssessment, String normaluserUpload, String inquireHospital, String proxyCertification, String notificationAffirm, String appointExpert, String acceptanceNotice, String protocal, String judicialConfirm) {
         this.id = id;
         this.disputecaseId = disputecaseId;
         this.medicaldamageAssessment = medicaldamageAssessment;
         this.normaluserUpload = normaluserUpload;
         this.inquireHospital = inquireHospital;
-        this.appointExpert = appointExpert;
         this.proxyCertification = proxyCertification;
+        this.notificationAffirm = notificationAffirm;
+        this.appointExpert = appointExpert;
+        this.acceptanceNotice = acceptanceNotice;
+        this.protocal = protocal;
+        this.judicialConfirm = judicialConfirm;
     }
 
     public DisputecaseAccessory() {

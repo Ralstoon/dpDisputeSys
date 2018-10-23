@@ -191,7 +191,36 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
     }
 
     @Override
-    public Object getCaseDetails(String caseName,String type) {
+    public Map<String, Object> getCaseDetails(String caseName,String type, String caseId) {
+
+        //判断是否收藏过
+        boolean collect = false;
+        Disputecase disputecase = disputecaseRepository.findOne(caseId);
+        if(!disputecase.getRecommendedPaper().isEmpty()){
+            JSONObject recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
+            JSONArray dissension = recommendedPaper.getJSONArray("dissension");
+            JSONArray dissension_dx = recommendedPaper.getJSONArray("dissension_dx");
+            JSONArray dissension_ms = recommendedPaper.getJSONArray("dissension_ms");
+
+
+            for(int i = 0; i< dissension.size();i++){
+                if(dissension.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    collect = true;
+                }
+            }
+            for(int i = 0; i< dissension_dx.size();i++){
+                if(dissension_dx.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    collect = true;
+                }
+            }
+            for(int i = 0; i< dissension_ms.size();i++){
+                if(dissension_ms.getJSONObject(i).getString("disputeName").equals(caseName)){
+                    collect = true;
+                }
+            }
+        }
+
+
         TitleSearch titleSearch=new TitleSearch();
         Object result=null;
         try {
@@ -204,7 +233,11 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            return result;
+            Map<String, Object> map = new HashMap<>();
+            map.put("result",result);
+            map.put("collect",collect);
+
+            return map;
         }
     }
 }

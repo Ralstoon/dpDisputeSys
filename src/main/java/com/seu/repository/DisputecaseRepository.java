@@ -23,6 +23,13 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
     List<Disputecase> findByMediatorId(String id);
 
 
+    //根据涉事者Idcard，查看历史纪录
+    @Query(value = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1 ORDER BY ?#{#pageable}",
+            countQuery = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1",
+            nativeQuery = true)
+    Page<Object[]> findHistoryCaseByUserId(String userId,Pageable pageable);
+
+
 
     /**
      * GetCaseList
@@ -110,10 +117,15 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
      * GetMediationHallData 默认案件状态为0或1
      */
     /** 获取所有案件 */
+    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9' or b.status='10' or b.status='11' ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9' or b.status='10' or b.status='11'",
+            nativeQuery = true)
+    Page<Disputecase> findAll_HallData(Pageable pageable);
+
     @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9' ORDER BY ?#{#pageable}",
             countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status='1' or b.status='0' or b.status='9'",
             nativeQuery = true)
-    Page<Disputecase> findAll_HallData(Pageable pageable);
+    Page<Disputecase> findAll_HallData_ByLow(Pageable pageable);
 
     @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1 ORDER BY ?#{#pageable}",
             countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where (b.status='1' or b.status='0' or b.status='9') and a.mediator_id=?1",

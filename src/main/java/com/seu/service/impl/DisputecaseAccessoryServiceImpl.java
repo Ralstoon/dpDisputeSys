@@ -244,7 +244,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     @Override
     public void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
         /** 设置流程参数 */
-        Integer appointResult=0,paramBeforeMediate=0;
+        Integer appointResult=0,paramBeforeMediate=1;
         if(application!=null){
             paramBeforeMediate=1;
             appointResult=1;

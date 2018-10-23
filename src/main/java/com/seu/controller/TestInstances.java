@@ -2,10 +2,14 @@ package com.seu.controller;
 
 import com.seu.domian.Admin;
 import com.seu.domian.One;
+import com.seu.utils.GetWorkingTimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @ClassName TestInstances
@@ -44,5 +48,26 @@ public class TestInstances {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Autowired
+    private GetWorkingTimeUtil getWorkingTimeUtil;
+
+    @PostMapping(value = "/endTime")
+    public void endTime() throws Exception {
+        System.out.println(getWorkingTimeUtil.calWorkingTime(new Date(),30));
+        Date endTime=new Date();
+        int limitTime = 30;
+        Calendar c=Calendar.getInstance();
+        while (limitTime!=0){
+            Integer result=getWorkingTimeUtil.getResult(endTime);
+            if(result==0){
+                limitTime=limitTime-1;
+            }
+            c.setTime(endTime);
+            c.add(Calendar.DAY_OF_MONTH,1);
+            endTime=c.getTime();
+        }
+
     }
 }

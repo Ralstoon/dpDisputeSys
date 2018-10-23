@@ -45,7 +45,7 @@ public class GetWorkingTimeUtil {
      * @param limitTime
      * @return
      */
-    @Async
+    //@Async
     public Date calWorkingTime(Date curTime,int limitTime) throws Exception{
         Date endTime=curTime;
         Calendar c=Calendar.getInstance();

@@ -43,7 +43,11 @@ public class Disputecase {
     /** 案件相关的accessory表id号 */
     private String accessoryId;
     /** 案件相关类案推荐 */
-    private String recommendedPaper;
+    private String recommendedPaper="{\n" +
+            "\t\"dissension_ms\": [],\n" +
+            "\t\"dissension_dx\": [],\n" +
+            "\t\"dissension\": []\n" +
+            "}";
     /** 案件确定的调解员id号 */
     private String mediatorId;
     /** 表示主要纠纷场景是第几个 */

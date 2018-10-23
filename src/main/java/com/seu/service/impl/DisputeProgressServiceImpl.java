@@ -389,6 +389,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 //        String filterMediator=map.getString("filterMediator").trim();
         Date startTime=map.getDate("startTime");
         Date endTime=map.getDate("endTime");
+
+        String authorityConfirm = map.getString("authorityConfirm");
+
+
         if(endTime!=null){
             // endTime+1
             Calendar calendar=Calendar.getInstance();
@@ -412,7 +416,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-                disputecasePage=disputecaseRepository.findAll_HallData(pageRequest);
+                if(authorityConfirm.equals("1"))
+                    disputecasePage=disputecaseRepository.findAll_HallData(pageRequest);
+                if(authorityConfirm.equals("0"))
+                    disputecasePage= disputecaseRepository.findAll_HallData_ByLow(pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
@@ -469,6 +476,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+
+            mediationHallDataForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
 
             mediationHallDataFormList.add(mediationHallDataForm);
 
@@ -553,7 +563,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             mediationHallDataForm.setDate(disputecase.getApplyTime());
             mediationHallDataForm.setName(disputecase.getCaseName());
             mediationHallDataForm.setCaseId(disputecase.getId());
-            mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+
+            //mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            //todo:倒计时
+            mediationHallDataForm.setCountdown(null);
+
+
             /** 案件进程到process表中查询 */
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
             mediationHallDataForm.setStatus(status);
@@ -581,6 +596,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
+
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+            if(disputecaseAccessory.getProtocal()!=null)
+                mediationHallDataForm.setProtocal(true);
+
+            mediationHallDataForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
 
             mediationHallDataFormList.add(mediationHallDataForm);
         }
@@ -675,7 +696,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             managerCaseForm.setDate(disputecase.getApplyTime());
             managerCaseForm.setName(disputecase.getCaseName());
             managerCaseForm.setCaseId(disputecase.getId());
-            managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+
+
+            //managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            //todo:倒计时
+            managerCaseForm.setCountdown(null);
+
+
             /** 案件进程到process表中查询 */
             String status = disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
             managerCaseForm.setStatus(status);
@@ -734,6 +761,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                     managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),mediatorIntention);
                 }
             }
+
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+
+            managerCaseForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
             managerCaseFormList.add(managerCaseForm);
         }
         Map<String,Object> var=new HashMap<>();
@@ -957,7 +988,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 mediationStageForm.setIdentified(true);
                 currentStatus=1;
 //                mediationStageForm.setResultOfIdentify(disputecaseAccessory.getMedicaldamageAssessment());
-                JSONObject tempp=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
+                //JSONObject tempp=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
             }
         }else{
             mediationStageForm.setIdentified(false);
@@ -970,8 +1001,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Integer pP= Integer.parseInt(runtimeService.getVariable(pid,"paramProfesor").toString());
         if(pP==0)
             mediationStageForm.setExpertAppoint("0");
-        else
+        if(pP==1)
             mediationStageForm.setExpertAppoint("1");
+        if(pP==2)
+            mediationStageForm.setExpertAppoint("2");
         //if((cm!="0"|| !cm.equals("0")))
         if((!cm.equals("0")))
             mediationStageForm.setExpert(true);
@@ -1030,11 +1063,206 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         /**  stageContent直接取出来 */
 //        String currentStageContent=currentStage.toString();
         JSONObject currentStageContent=JSONObject.parseObject(currentStage.toString());
+
+
+        //温要求修改
         if(StrIsEmptyUtil.isEmpty(disputecaseAccessory.getMedicaldamageAssessment())){
-            currentStageContent.put("resultOfIdentify",InitConstant.init_identify);
+
+            JSONObject jsonObject = JSONObject.parseObject("{\n" +
+                    "\t\"identified\": \"0\"\n" +
+                    "}");
+            currentStageContent.put("resultOfIdentify", jsonObject);
+
         }else{
-            currentStageContent.put("resultOfIdentify",JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment()));
+
+            JSONArray jsonArray = JSONArray.parseArray(disputecaseAccessory.getMedicaldamageAssessment());
+            JSONObject temp = JSONObject.parseObject("{}");
+            temp.put("identified","0");
+            for(int i = 0; i< jsonArray.size(); i++){
+                if(Integer.parseInt(jsonArray.getJSONObject(i).getString("stage")) == stage){
+                    temp = jsonArray.getJSONObject(i);
+                    temp.put("identified","1");
+                }
+            }
+
+
+            currentStageContent.put("resultOfIdentify",temp);
         }
+        //currentStageContent.put("resultOfIdentify",InitConstant.init_identify);
+
+
+
+
+
+        if( disputecaseAccessoryRepository.findByDisputecaseId(caseId).getNormaluserUpload() != null)
+            currentStageContent.getJSONObject("particopateContact").put("currentFiles", JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(caseId).getNormaluserUpload()));
+        mediationStageForm.setCurrentStageContent(currentStageContent);
+        /** currentStageContent */
+        String tmp=currentStage.getJSONObject("particopateContact").getString("mediationPlace").trim();
+        if(tmp==null||tmp=="" || tmp.equals("")) // 说明页面2没有填
+            currentStatus=1;
+        else
+            currentStatus=2;
+
+        mediationStageForm.setCurrentStatus(currentStatus);
+        /** 挂起状态输入 */
+
+        mediationStageForm.setIsSuspended(currentProcess.getIsSuspended());
+
+
+
+
+        //是否可预约
+        mediationStageForm.setAppoint(true);
+        //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task tasks=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        if (tasks.getName().equals("专家预约审核") || tasks.getName().equals("三方调解") || tasks.getName().equals("三方调解") || tasks.getName().equals("调解结果处理")){
+            mediationStageForm.setAppoint(false);
+        }
+
+
+        return ResultVOUtil.ReturnBack(mediationStageForm,DisputeProgressEnum.GETMEDIATIONSTAGE_SUCCESS.getCode(),DisputeProgressEnum.GETMEDIATIONSTAGE_SUCCESS.getMsg());
+
+    }
+
+    @Override
+    @Transactional
+    public ResultVO getReMediationStage(String caseId) {
+        caseId=caseId.trim();
+        MediationStageForm mediationStageForm=new MediationStageForm();
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        /** 防止该json字段初始化的时候没有值 */
+
+        if(StrIsEmptyUtil.isEmpty(currentProcess.getMediateStage())) {
+            currentProcess.setMediateStage(InitConstant.init_mediateStage);
+            currentProcess=disputecaseProcessRepository.save(currentProcess);
+        }
+
+
+        /** 获取当前调解阶段 */
+        JSONObject mediateStage=JSONObject.parseObject(currentProcess.getMediateStage());
+        JSONArray stageContent=mediateStage.getJSONArray("stageContent");
+        Integer stage=stageContent.size();
+        mediationStageForm.setStage(stage);
+        JSONObject currentStage=stageContent.getJSONObject(stage-1);
+        /** 获取当前步骤0 鉴定中  1 预约中  2调解中，并决定下面那些操作不要做 */
+        Integer currentStatus=null;
+        /** accessory表查询鉴定结果 */
+
+
+        /** 是否具备鉴定资格以及是否做过鉴定,先从案件表的金额判断，后从流程图的参数判断 */
+        Disputecase disputecase=disputecaseRepository.getOne(caseId);
+        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        String cm=disputecase.getClaimMoney().trim();
+        if(cm=="2" || cm.equals("2") || cm=="1" || cm.equals("1")) {  // 10w以上
+            mediationStageForm.setIdentiQualify(true);
+            Integer temp= Integer.parseInt(runtimeService.getVariable(pid,"paramAuthenticate").toString());
+            if(temp==0) {  //尚未做过鉴定
+                mediationStageForm.setIdentified(false);
+                currentStatus=0;
+            }
+            else{
+                mediationStageForm.setIdentified(true);
+                currentStatus=1;
+//                mediationStageForm.setResultOfIdentify(disputecaseAccessory.getMedicaldamageAssessment());
+                //JSONObject tempp=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
+            }
+        }else{
+            mediationStageForm.setIdentified(false);
+            mediationStageForm.setIdentiQualify(false);
+            currentStatus=1;
+        }
+        /** 能否预约专家,  先看金额，后看是否已预约过*/
+        if(runtimeService.getVariable(pid,"paramProfesor")==null || (runtimeService.getVariable(pid,"paramProfesor")).equals("0"))
+            runtimeService.setVariable(pid,"paramProfesor",0);
+        Integer pP= Integer.parseInt(runtimeService.getVariable(pid,"paramProfesor").toString());
+        if(pP==0)
+            mediationStageForm.setExpertAppoint("0");
+        else
+            mediationStageForm.setExpertAppoint("1");
+        //if((cm!="0"|| !cm.equals("0")))
+        if((!cm.equals("0")))
+            mediationStageForm.setExpert(true);
+        else
+            mediationStageForm.setExpert(false);
+
+        /** applicant`respondent数组 */
+        /** 1、申请人.如果 mediateStage中数据为空则读表该数据*/
+        JSONArray applicants=mediateStage.getJSONArray("applicants");
+        if(applicants.isEmpty()){
+            JSONArray apps=JSONArray.parseArray("[]");
+            for(String s:disputecase.getProposerId().trim().split(",")){
+                // name , phone ,email
+                DisputecaseApply disputecaseApply=disputecaseApplyRepository.getOne(s);
+                String name=disputecaseApply.getName();
+                String phone=disputecaseApply.getPhone();
+                String specificId=userRepository.findByPhone(phone).getSpecificId();
+                String email=normalUserRepository.getOne(specificId).getEmail();
+                if(email==null)
+                    email="";
+                JSONObject obj=JSONObject.parseObject("{}");
+                obj.put("name",name);
+                obj.put("phone",phone);
+                obj.put("email",email);
+                apps.add(obj);
+            }
+            mediationStageForm.setApplicants(apps);
+        }else
+            mediationStageForm.setApplicants(applicants);
+        /** 2、院方,如果 mediateStage中数据为空则读表该数据 */
+        JSONArray respondents=mediateStage.getJSONArray("respondents");
+        if(respondents.isEmpty()){
+            List<String> res=new ArrayList<>();
+            res=GetHospitalUtil.extract(disputecase.getMedicalProcess());//todo:涉事医院
+//            JSONObject hosJS=JSONObject.parseObject(constantDataRepository.findByName("hospital_list").getData());//todo:市 区
+
+
+
+            JSONArray respo=JSONArray.parseArray("[]");
+            for(String hos:res){
+
+                List<ContactList> contactList = contactListRepository.findByName(hos);
+                ContactList contact = contactList.get(0);
+
+                String phone=contact.getTele();
+                if(phone==null)
+                    phone="";
+                JSONObject obj=JSONObject.parseObject("{}");
+                obj.put("name",hos);
+                obj.put("phone",phone);
+                respo.add(obj);
+            }
+            mediationStageForm.setRespondents(respo);
+        }else
+            mediationStageForm.setRespondents(respondents);
+        /**  stageContent直接取出来 */
+//        String currentStageContent=currentStage.toString();
+        JSONObject currentStageContent=JSONObject.parseObject(currentStage.toString());
+
+        //温要求修改
+//        if(StrIsEmptyUtil.isEmpty(disputecaseAccessory.getMedicaldamageAssessment())){
+//            //currentStageContent.put("resultOfIdentify",InitConstant.init_identify);
+//            currentStageContent.put("resultOfIdentify","[]");
+//        }else{
+//            JSONArray jsonArray = JSONArray.parseArray(disputecaseAccessory.getMedicaldamageAssessment());
+//            JSONObject temp = JSONObject.parseObject("{}");
+//            for(int i = 0; i< jsonArray.size(); i++){
+//                if(Integer.parseInt(jsonArray.getJSONObject(i).getString("num")) == jsonArray.size() - 1){
+//                    temp = jsonArray.getJSONObject(i);
+//                }
+//            }
+//
+//            currentStageContent.put("resultOfIdentify",temp.toJSONString());
+//        }
+        currentStageContent.put("resultOfIdentify",JSONObject.parseObject("{\n" +
+                "\t\"num\": \"\",\n" +
+                "\t\"text\": \"\",\n" +
+                "\t\"files\": [{\n" +
+                "\t\t\"url\": \"\",\n" +
+                "\t\t\"name\": \"\"\n" +
+                "\t}]\n" +
+                "}"));
 
         if( disputecaseAccessoryRepository.findByDisputecaseId(caseId).getNormaluserUpload() != null)
             currentStageContent.getJSONObject("particopateContact").put("currentFiles", JSONArray.parseArray(disputecaseAccessoryRepository.findByDisputecaseId(caseId).getNormaluserUpload()));
@@ -1059,7 +1287,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
     @Override
     @Transactional
-    public ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles) {
+    public ResultVO setResultOfIndent(String caseId, String text, MultipartFile[] multipartFiles, String stage) {
         /** 目前处于主流程:损害/医疗鉴定 */
         Task task=null;
         List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"损害/医疗鉴定");
@@ -1071,10 +1299,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(caseId);
         if(StrIsEmptyUtil.isEmpty(disputecaseAccessory.getMedicaldamageAssessment()))
-            disputecaseAccessory.setMedicaldamageAssessment("{}");
-        JSONObject md=JSONObject.parseObject(disputecaseAccessory.getMedicaldamageAssessment());
+            disputecaseAccessory.setMedicaldamageAssessment("[]");
+        JSONArray md=JSONArray.parseArray(disputecaseAccessory.getMedicaldamageAssessment());
+
+        JSONObject each = JSONObject.parseObject("{}");
         if(!StrIsEmptyUtil.isEmpty(text))
-            md.put("text",text);
+            each.put("text",text);
         String title=disputecaseRepository.getOne(caseId).getCaseName();
         JSONArray files= JSONArray.parseArray("[]");
         for (MultipartFile multipartFile: multipartFiles){
@@ -1090,7 +1320,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 obj.put("name","");
             }
         }
-        md.put("files",files);
+        each.put("files",files);
+
+
+        each.put("stage", stage);
+        md.add(each);
+
         disputecaseAccessory.setMedicaldamageAssessment(md.toString());
         disputecaseAccessoryRepository.save(disputecaseAccessory);
         /** 将挂起的流程返回正常状态 */
@@ -1584,15 +1819,31 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          其他找参数paramProfessor
          */
         Page<Object[]> pages=null;
-        if(filterStatus==0)
-            pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
-        else
-            pages=disputecaseAccessoryRepository.findByParamProfessor(filterStatus,pageRequest);
         List<ExpertAppointForm> list=new ArrayList<>();
-        for(Object[] obj:pages.getContent()){
-            ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()));
-            list.add(form);
+        if(filterStatus!=3){
+            if(filterStatus==0)
+                pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+            else if(filterStatus==1 || filterStatus==2)
+                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus), pageRequest);
+
+            for(Object[] obj:pages.getContent()){
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), String.valueOf(filterStatus));
+                list.add(form);
+            }
+        }else{
+            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(pageRequest);
+            for(Object[] obj:pages.getContent()){
+                String result="";
+                if(obj[3].toString().equals("0"))
+                    result="0";
+                else
+                    result=obj[3].toString();
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), result);
+                list.add(form);
+            }
         }
+
+
         return ResultVOUtil.ReturnBack(list,200,"管理员获取专家管理界面数据成功");
     }
 
@@ -1616,17 +1867,35 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO setCaseCancelApply(String caseId) {
+    public ResultVO setCaseCancelApply(String caseId, String reason) {
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
-        disputecaseProcess.setStatus("6");
+        disputecaseProcess.setStatus("10");
+
+        JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
+        JSONArray changeMediator = reasonJSON.getJSONArray("caseCancelApply ");
+        JSONObject each = JSONObject.parseObject("{}");
+        each.put("reason", reason);
+        each.put("num", changeMediator.size());
+        changeMediator.add(each);
+        disputecaseProcess.setReason(reasonJSON.toJSONString());
+
         disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(114,"撤销申请");
     }
 
     @Override
-    public ResultVO setCaseCancellMediation(String caseId) {
+    public ResultVO setCaseCancellMediation(String caseId, String reason) {
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
-        disputecaseProcess.setStatus("7");
+        disputecaseProcess.setStatus("11");
+
+        JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
+        JSONArray changeMediator = reasonJSON.getJSONArray("caseCancelMediation ");
+        JSONObject each = JSONObject.parseObject("{}");
+        each.put("reason", reason);
+        each.put("num", changeMediator.size());
+        changeMediator.add(each);
+        disputecaseProcess.setReason(reasonJSON.toJSONString());
+
         disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(114,"撤销调解");
     }
@@ -1648,10 +1917,20 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO changeMediator(String caseId, String mediatorId) {
-        Disputecase disputecase = disputecaseRepository.findOne(caseId);
-        disputecase.setId(mediatorId);
-        disputecaseRepository.save(disputecase);
+    public ResultVO changeMediator(String caseId, List<String> mediatorId, String reason) {
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("12");
+
+        JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
+        JSONArray changeMediator = reasonJSON.getJSONArray("changeMediator ");
+        JSONObject each = JSONObject.parseObject("{}");
+        each.put("reason", reason);
+        each.put("num", changeMediator.size());
+        changeMediator.add(each);
+        disputecaseProcess.setReason(reasonJSON.toJSONString());
+
+        disputecaseProcess.setUserChoose(String.join(",", mediatorId));
+        disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(114,"更换调解员");
     }
 
@@ -1682,17 +1961,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             claimAmount = "10万以上";
         }
         result.put("claimAmount", claimAmount);
-        result.put("relatedCases", disputecase.getRecommendedPaper());
+        result.put("relatedCases", JSONObject.parseObject(disputecase.getRecommendedPaper()));
 
+
+        String mainRecSatgeName="";
 
         JSONArray medicalProcess = JSONArray.parseArray(disputecase.getMedicalProcess());
         JSONArray stage = JSONArray.parseArray("[]");
 
         for(int i = 0; i < medicalProcess.size(); i++){
 
+            if(disputecase.getMainRecStage().equals(String.valueOf(i+1))){
+                mainRecSatgeName = ((JSONObject)medicalProcess.get(i)).getString("name");
+            }
+
             JSONObject jsonObject = JSONObject.parseObject("{}");
 
             jsonObject.put("name",((JSONObject)medicalProcess.get(i)).getString("name"));
+
+            JSONObject involvedInstituteJson = ((JSONObject)medicalProcess.get(i)).getJSONObject("InvolvedInstitute");
+
+            String involvedInstitute = involvedInstituteJson.getString("City")+involvedInstituteJson.getString("Zone")+involvedInstituteJson.getString("Hospital");
+
 
             JSONArray resultOfRegConflict = ((JSONObject)medicalProcess.get(i)).getJSONArray("resultOfRegConflict");
             List<String> behaviorListTemp = new ArrayList<>();
@@ -1728,8 +2018,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             jsonObject.put("diseasesBefore","症状："+diseasesymptomBefore+ "。疾病："+diseaseBefore);
             jsonObject.put("diseaseAfter","症状："+diseasesymptomAfter+ "。疾病："+diseaseAfter);
+
+            jsonObject.put("involvedInstitute",involvedInstitute);
+            jsonObject.put("resultOfDamage",((JSONObject)medicalProcess.get(i)).getString("ResultOfDamage"));
             stage.add(jsonObject);
         }
+
+        result.put("mainRecSatge",mainRecSatgeName);
         result.put("stage", stage);
         Map<String, JSONObject> registerData = new HashMap<>();
         registerData.put("registerData", result);
