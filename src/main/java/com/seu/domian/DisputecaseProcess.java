@@ -45,7 +45,7 @@ public class DisputecaseProcess {
     /** 进程是否挂起 */
     private Integer isSuspended = 0;
     /** 专家预约参数 */
-    private String paramProfessor;
+    private String paramProfessor = "0";
 
     private String reason = "{\n" +
             "\t\"caseCancelApply \": [],\n" +

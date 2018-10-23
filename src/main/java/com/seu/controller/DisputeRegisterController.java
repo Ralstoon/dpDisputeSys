@@ -126,7 +126,7 @@ public class DisputeRegisterController {
 
         String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
         //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
-        Integer mainRecStage=basicDivideInfo.getInteger("mainRecStage");
+        Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
         String require=basicDivideInfo.getString("Require");
         Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
 

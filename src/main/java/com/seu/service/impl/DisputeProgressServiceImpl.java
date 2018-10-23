@@ -389,6 +389,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 //        String filterMediator=map.getString("filterMediator").trim();
         Date startTime=map.getDate("startTime");
         Date endTime=map.getDate("endTime");
+
+        String authorityConfirm = map.getString("authorityConfirm");
+
+
         if(endTime!=null){
             // endTime+1
             Calendar calendar=Calendar.getInstance();
@@ -412,7 +416,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-                disputecasePage=disputecaseRepository.findAll_HallData(pageRequest);
+                if(authorityConfirm.equals("1"))
+                    disputecasePage=disputecaseRepository.findAll_HallData(pageRequest);
+                if(authorityConfirm.equals("0"))
+                    disputecasePage= disputecaseRepository.findAll_HallData_ByLow(pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
@@ -970,8 +977,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Integer pP= Integer.parseInt(runtimeService.getVariable(pid,"paramProfesor").toString());
         if(pP==0)
             mediationStageForm.setExpertAppoint("0");
-        else
+        if(pP==1)
             mediationStageForm.setExpertAppoint("1");
+        if(pP==2)
+            mediationStageForm.setExpertAppoint("2");
         //if((cm!="0"|| !cm.equals("0")))
         if((!cm.equals("0")))
             mediationStageForm.setExpert(true);
@@ -1076,6 +1085,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         mediationStageForm.setIsSuspended(currentProcess.getIsSuspended());
 
+
+
+
+        //是否可预约
+        mediationStageForm.setAppoint(true);
+        //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        Task tasks=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        if (tasks.getName().equals("专家预约审核") || tasks.getName().equals("三方调解") || tasks.getName().equals("三方调解") || tasks.getName().equals("调解结果处理")){
+            mediationStageForm.setAppoint(false);
+        }
 
 
         return ResultVOUtil.ReturnBack(mediationStageForm,DisputeProgressEnum.GETMEDIATIONSTAGE_SUCCESS.getCode(),DisputeProgressEnum.GETMEDIATIONSTAGE_SUCCESS.getMsg());
@@ -1776,15 +1795,31 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          其他找参数paramProfessor
          */
         Page<Object[]> pages=null;
-        if(filterStatus==0)
-            pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
-        else
-            pages=disputecaseAccessoryRepository.findByParamProfessor(filterStatus,pageRequest);
         List<ExpertAppointForm> list=new ArrayList<>();
-        for(Object[] obj:pages.getContent()){
-            ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), obj[3].toString());
-            list.add(form);
+        if(filterStatus!=3){
+            if(filterStatus==0)
+                pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+            else if(filterStatus==1 || filterStatus==2)
+                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus), pageRequest);
+
+            for(Object[] obj:pages.getContent()){
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), String.valueOf(filterStatus));
+                list.add(form);
+            }
+        }else{
+            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(pageRequest);
+            for(Object[] obj:pages.getContent()){
+                String result="";
+                if(obj[3].toString().equals("0"))
+                    result="0";
+                else
+                    result=obj[3].toString();
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), result);
+                list.add(form);
+            }
         }
+
+
         return ResultVOUtil.ReturnBack(list,200,"管理员获取专家管理界面数据成功");
     }
 
@@ -1813,7 +1848,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         disputecaseProcess.setStatus("10");
 
         JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
-        JSONArray changeMediator = reasonJSON.getJSONArray("changeMediator");
+        JSONArray changeMediator = reasonJSON.getJSONArray("caseCancelApply ");
         JSONObject each = JSONObject.parseObject("{}");
         each.put("reason", reason);
         each.put("num", changeMediator.size());
@@ -1830,7 +1865,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         disputecaseProcess.setStatus("11");
 
         JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
-        JSONArray changeMediator = reasonJSON.getJSONArray("changeMediator");
+        JSONArray changeMediator = reasonJSON.getJSONArray("caseCancelMediation ");
         JSONObject each = JSONObject.parseObject("{}");
         each.put("reason", reason);
         each.put("num", changeMediator.size());
@@ -1863,7 +1898,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         disputecaseProcess.setStatus("12");
 
         JSONObject reasonJSON= JSONObject.parseObject(disputecaseProcess.getReason());
-        JSONArray changeMediator = reasonJSON.getJSONArray("changeMediator");
+        JSONArray changeMediator = reasonJSON.getJSONArray("changeMediator ");
         JSONObject each = JSONObject.parseObject("{}");
         each.put("reason", reason);
         each.put("num", changeMediator.size());
@@ -1902,17 +1937,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             claimAmount = "10万以上";
         }
         result.put("claimAmount", claimAmount);
-        result.put("relatedCases", disputecase.getRecommendedPaper());
+        result.put("relatedCases", JSONObject.parseObject(disputecase.getRecommendedPaper()));
 
+
+        String mainRecSatgeName="";
 
         JSONArray medicalProcess = JSONArray.parseArray(disputecase.getMedicalProcess());
         JSONArray stage = JSONArray.parseArray("[]");
 
         for(int i = 0; i < medicalProcess.size(); i++){
 
+            if(disputecase.getMainRecStage().equals(String.valueOf(i+1))){
+                mainRecSatgeName = ((JSONObject)medicalProcess.get(i)).getString("name");
+            }
+
             JSONObject jsonObject = JSONObject.parseObject("{}");
 
             jsonObject.put("name",((JSONObject)medicalProcess.get(i)).getString("name"));
+
+            JSONObject involvedInstituteJson = ((JSONObject)medicalProcess.get(i)).getJSONObject("InvolvedInstitute");
+
+            String involvedInstitute = involvedInstituteJson.getString("City")+involvedInstituteJson.getString("Zone")+involvedInstituteJson.getString("Hospital");
+
 
             JSONArray resultOfRegConflict = ((JSONObject)medicalProcess.get(i)).getJSONArray("resultOfRegConflict");
             List<String> behaviorListTemp = new ArrayList<>();
@@ -1948,8 +1994,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             jsonObject.put("diseasesBefore","症状："+diseasesymptomBefore+ "。疾病："+diseaseBefore);
             jsonObject.put("diseaseAfter","症状："+diseasesymptomAfter+ "。疾病："+diseaseAfter);
+
+            jsonObject.put("involvedInstitute",involvedInstitute);
+            jsonObject.put("resultOfDamage",((JSONObject)medicalProcess.get(i)).getString("ResultOfDamage"));
             stage.add(jsonObject);
         }
+
+        result.put("mainRecSatge",mainRecSatgeName);
         result.put("stage", stage);
         Map<String, JSONObject> registerData = new HashMap<>();
         registerData.put("registerData", result);

@@ -308,7 +308,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         disputecase.setAppeal(require);
-        disputecase.setMainRecStage(mainRecStage+"");
+        disputecase.setMainRecStage(String.valueOf(mainRecStage)+"");
         disputecase.setClaimMoney(claimAmount+"");
         disputecase.setMedicalProcess(stageContent);
         String[] temp=disputecase.getProposerId().trim().split(",");

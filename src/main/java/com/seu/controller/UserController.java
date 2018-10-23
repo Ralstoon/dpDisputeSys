@@ -7,12 +7,14 @@ import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.domian.Comment;
+import com.seu.domian.DisputecaseAccessory;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.LoginForm;
 import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
 import com.seu.repository.CommentRepository;
+import com.seu.repository.DisputecaseAccessoryRepository;
 import com.seu.service.*;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
@@ -166,7 +168,7 @@ public class UserController {
     }
 
     //用户撤销调解
-    @PostMapping(value = "caseCancellMediation")
+    @PostMapping(value = "caseCancelMediation")
     public ResultVO caseCancellMediation(@RequestBody Map<String,String> map){
         String userId = map.get("id");
         String caseId = map.get("caseId");
@@ -216,7 +218,10 @@ public class UserController {
     }
 
     @Autowired
-    DisputecaseAccessoryService disputecaseAccessoryService;
+    private DisputecaseAccessoryService disputecaseAccessoryService;
+
+    @Autowired
+    private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
     //用户中心上传资料
     @PostMapping(value = "uploadFile")
     public ResultVO uploadFile(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
@@ -229,8 +234,25 @@ public class UserController {
         FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
         String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
 
-        //todo:保存
-        //return disputecaseAccessoryService.addNormalUserUpload(userId,caseId,state,"",fileMessage,url);
+
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        JSONObject each = JSONObject.parseObject("{}");
+        each.put("id", userId);
+        each.put("fileMessage", fileMessage);
+        each.put("status", state);
+        each.put("file", url);
+
+        JSONArray jsonArray = null;
+
+        if (disputecaseAccessory.getUserUpload()==null){
+            jsonArray = JSONArray.parseArray("[]");
+        } else {
+            jsonArray = JSONArray.parseArray(disputecaseAccessory.getUserUpload());
+        }
+        jsonArray.add(each);
+        disputecaseAccessory.setUserUpload(jsonArray.toJSONString());
+
+        disputecaseAccessoryRepository.save(disputecaseAccessory);
         return ResultVOUtil.ReturnBack(123,"上传成功");
     }
 }
