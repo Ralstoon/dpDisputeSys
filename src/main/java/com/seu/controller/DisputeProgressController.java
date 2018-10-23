@@ -1029,7 +1029,9 @@ public class DisputeProgressController {
         result.put("judicialConfirmFile", url);
         disputecaseAccessory.setJudicialConfirm(result.toJSONString());
         disputecaseAccessoryRepository.save(disputecaseAccessory);
-
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputecaseProcess.setStatus("5");
+        disputecaseProcessRepository.save(disputecaseProcess);
         return ResultVOUtil.ReturnBack(123, "司法确认上传");
     }
 
@@ -1045,5 +1047,7 @@ public class DisputeProgressController {
         disputecaseRepository.save(disputecase);
         return ResultVOUtil.ReturnBack(123,"调解员评判成功");
     }
+
+    //
 
 }

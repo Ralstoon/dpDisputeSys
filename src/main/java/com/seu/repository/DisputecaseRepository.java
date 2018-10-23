@@ -23,6 +23,13 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
     List<Disputecase> findByMediatorId(String id);
 
 
+    //根据涉事者Idcard，查看历史纪录
+    @Query(value = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1 ORDER BY ?#{#pageable}",
+            countQuery = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1",
+            nativeQuery = true)
+    Page<Object[]> findHistoryCaseByUserId(String userId,Pageable pageable);
+
+
 
     /**
      * GetCaseList

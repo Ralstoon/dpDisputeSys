@@ -1,12 +1,16 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
 import com.seu.domian.Disputecase;
+import com.seu.domian.DisputecaseApply;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
+import com.seu.form.ExpertAppointForm;
+import com.seu.form.HistoryCaseForm;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
@@ -19,6 +23,8 @@ import org.activiti.engine.task.Task;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -224,4 +230,61 @@ public class DisputeRegisterController {
         disputecaseRepository.save(disputecase);
         return ResultVOUtil.ReturnBack(123, "收藏类案推荐成功");
     }
+
+    @Autowired
+    private DisputecaseApplyRepository disputecaseApplyRepository;
+
+    @PostMapping(value = "/getHistoryCase")
+    public ResultVO getHistoryCase(@RequestBody JSONObject map){
+        List<String> InvolvedPeople = (List<String>) map.get("cardId");
+        int size= map.getInteger("size");
+        int page=map.getInteger("page") -1;
+        PageRequest pageRequest=new PageRequest(page,size);
+        Page<Object[]> pages=null;
+        Integer totalPages=null;
+        List<HistoryCaseForm> HistoryCaseFormList = new ArrayList<>();
+        for (int i = 0; i < InvolvedPeople.size(); i++){
+            pages = disputecaseRepository.findHistoryCaseByUserId(InvolvedPeople.get(i),pageRequest);
+            for(Object[] obj:pages.getContent()){
+
+                Disputecase disputecase = disputecaseRepository.findOne(obj[2].toString());
+
+                JSONArray arr = JSONArray.parseArray(disputecase.getMedicalProcess());
+                List<String> hospitalList = new ArrayList<>();
+                String hospitals = "";
+
+                for (Object stage:arr){
+                    Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
+
+//            for(Object hospital: (com.alibaba.fastjson.JSONArray)involvedInstitute){
+//
+//                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)hospital).get("Hospital")));
+//            }
+                    hospitalList.add(((JSONObject)involvedInstitute).getString("Hospital"));
+                }
+
+                for(String hospital: hospitalList){
+                    hospitals = hospitals + hospital + "、";
+                }
+
+                String[] temp=disputecase.getProposerId().trim().split(",");
+                List<String> names=new ArrayList<>();
+                for(String s:temp){
+                    names.add(disputecaseApplyRepository.findOne(s).getName());
+                }
+
+
+                HistoryCaseForm form=new HistoryCaseForm(obj[0].toString(),obj[1].toString(), obj[2].toString(), obj[3].toString(),String.join("、", names) ,hospitals.substring(0,hospitals.length()-1) );
+                HistoryCaseFormList.add(form);
+            }
+            totalPages = pages.getTotalPages();
+        }
+
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalPages", totalPages);
+        result.put("HistoryCaseFormList",HistoryCaseFormList);
+        return ResultVOUtil.ReturnBack(result,123,"历史案件");
+    }
+
 }

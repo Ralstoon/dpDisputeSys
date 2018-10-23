@@ -1,5 +1,7 @@
 package com.seu.form.VOForm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -46,6 +48,9 @@ public class ManagerCaseForm {
     private List<intentionOne> userIntention=new ArrayList<>();
     /** 剩余工作日 */
     private Object countdown;
+
+    //用户上传文件
+    private JSONArray userUpload;
 
     public void addUserIntention(String mediatorName,String mediatorId,String mediatorIntention){
         if(userIntention==null)

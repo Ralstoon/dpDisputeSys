@@ -476,6 +476,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+
+            mediationHallDataForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
 
             mediationHallDataFormList.add(mediationHallDataForm);
 
@@ -560,7 +563,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             mediationHallDataForm.setDate(disputecase.getApplyTime());
             mediationHallDataForm.setName(disputecase.getCaseName());
             mediationHallDataForm.setCaseId(disputecase.getId());
-            mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+
+            //mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            //todo:倒计时
+            mediationHallDataForm.setCountdown(null);
+
+
             /** 案件进程到process表中查询 */
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
             mediationHallDataForm.setStatus(status);
@@ -588,6 +596,12 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             }
             mediationHallDataForm.setRespondent(new ArrayList<>(respondentList));
 
+
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+            if(disputecaseAccessory.getProtocal()!=null)
+                mediationHallDataForm.setProtocal(true);
+
+            mediationHallDataForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
 
             mediationHallDataFormList.add(mediationHallDataForm);
         }
@@ -682,7 +696,13 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             managerCaseForm.setDate(disputecase.getApplyTime());
             managerCaseForm.setName(disputecase.getCaseName());
             managerCaseForm.setCaseId(disputecase.getId());
-            managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+
+
+            //managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            //todo:倒计时
+            managerCaseForm.setCountdown(null);
+
+
             /** 案件进程到process表中查询 */
             String status = disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
             managerCaseForm.setStatus(status);
@@ -741,6 +761,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                     managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),mediatorIntention);
                 }
             }
+
+            DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
+
+            managerCaseForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
             managerCaseFormList.add(managerCaseForm);
         }
         Map<String,Object> var=new HashMap<>();

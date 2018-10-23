@@ -1,5 +1,7 @@
 package com.seu.form.VOForm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.seu.common.RedisConstant;
 import lombok.Data;
 
@@ -33,5 +35,11 @@ public class MediationHallDataForm {
     private Object countdown;
     //
     private String fordebarb;
+
+    //是否生成协议
+    private boolean isProtocal = false;
+
+    //用户上传文件
+    private JSONArray userUpload;
 
 }
