@@ -8,6 +8,7 @@ import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.domian.Comment;
 import com.seu.domian.DisputecaseAccessory;
+import com.seu.domian.User;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
 import com.seu.form.LoginForm;
@@ -15,7 +16,9 @@ import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
 import com.seu.repository.CommentRepository;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.repository.UserRepository;
 import com.seu.service.*;
+import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -56,26 +59,19 @@ public class UserController {
      *@Param [phone, password, httpServletResponse]
      *@return com.seu.common.ServerResponse<com.seu.domian.NormalUser>
      **/
-    @RequestMapping(value = "login",method = RequestMethod.POST)
-    public ServerResponse<UserForm> login(@RequestBody JSONObject map) {
+    @Autowired
+    private UserRepository userRepository;
+    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
+    public ResultVO login(@RequestBody JSONObject map) {
         String phone=map.getString("phone");
         String password=map.getString("password");
-//        System.out.println(password+"  "+phone);
-        //TODO 没有处理用户反复登陆以及换账户登录,希望该功能由前端检查，若反复登陆和切换账户，则可以推荐用户先注销
-//        session.getAttribute("NormalUser");
-        ServerResponse<UserForm> response = userService.login(phone, password);
 
-        if (response.isSuccess()) {
-//            NormalUser currentUser=(NormalUser)response.getData();
-//            session.setAttribute(Const.CURRENT_USER, response.getData());
-            UserForm userForm=response.getData();
-            // 先放入redis服务器，设置key为token_
-            String ID=userForm.getId();
-            String role=userForm.getRole();
-            Integer expire=RedisConstant.EXPIRE;
-            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
-        }
-        return response;
+        User user = userRepository.findByPhone(phone);
+        user.setPassword(MD5Util.MD5EncodeUtf8(password));
+
+        userRepository.save(user);
+
+        return ResultVOUtil.ReturnBack(112, "密码修改成功");
     }
 
     /*
@@ -254,5 +250,27 @@ public class UserController {
 
         disputecaseAccessoryRepository.save(disputecaseAccessory);
         return ResultVOUtil.ReturnBack(123,"上传成功");
+    }
+
+    @RequestMapping(value = "login",method = RequestMethod.POST)
+    public ServerResponse<UserForm> updatePassword(@RequestBody JSONObject map) {
+        String phone=map.getString("phone");
+        String password=map.getString("password");
+//        System.out.println(password+"  "+phone);
+        //TODO 没有处理用户反复登陆以及换账户登录,希望该功能由前端检查，若反复登陆和切换账户，则可以推荐用户先注销
+//        session.getAttribute("NormalUser");
+        ServerResponse<UserForm> response = userService.login(phone, password);
+
+        if (response.isSuccess()) {
+//            NormalUser currentUser=(NormalUser)response.getData();
+//            session.setAttribute(Const.CURRENT_USER, response.getData());
+            UserForm userForm=response.getData();
+            // 先放入redis服务器，设置key为token_
+            String ID=userForm.getId();
+            String role=userForm.getRole();
+            Integer expire=RedisConstant.EXPIRE;
+            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
+        }
+        return response;
     }
 }
