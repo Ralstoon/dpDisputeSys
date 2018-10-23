@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://139.199.166.125:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
-    url: jdbc:mysql://223.3.72.234:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+    url: jdbc:mysql://172.16.0.16:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+#    url: jdbc:mysql://223.3.72.234:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
     username: root
     password: 123456
   jpa:
@@ -14,19 +14,19 @@ spring:
             hbm2ddl:
               auto: update
   redis:
-#    host: 139.199.166.125
-    host: 223.3.79.0
+    host: 172.16.0.16
+#    host: 223.3.79.0
     port: 6379
 
 server:
-  port: 8080
-#  port: 443
-#  ssl:
-#    key-store-type: JKS
-#    key-store: classpath:1541430928812.jks
-#    key-store-password: 1541430928812
-#    # 证书别名
-#    key-alias: alias
+#  port: 8080
+  port: 443
+  ssl:
+    key-store-type: JKS
+    key-store: classpath:1541430928812.jks
+    key-store-password: 1541430928812
+    # 证书别名
+    key-alias: alias
 
 
 
