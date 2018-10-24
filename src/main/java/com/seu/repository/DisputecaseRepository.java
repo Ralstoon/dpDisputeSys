@@ -24,8 +24,8 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
 
 
     //根据涉事者Idcard，查看历史纪录
-    @Query(value = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1 ORDER BY ?#{#pageable},a.apply_time desc",
-            countQuery = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1 order by a.apply_time desc",
+    @Query(value = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1 ORDER BY ?#{#pageable}",
+            countQuery = "select a.apply_time, a.case_name, a.id, a.brief_case from disputecase a inner join disputecase_apply b on a.id = b.disputecase_id where b.id_card=?1",
             nativeQuery = true)
     Page<Object[]> findHistoryCaseByUserId(String userId,Pageable pageable);
 
@@ -35,14 +35,14 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
      * GetCaseList
      */
     /** 返回所有案件列表,4个查询条件 */
-    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 AND a.mediator_id=?2 AND a.apply_time >= ?3 AND a.apply_time<?4 ORDER BY ?#{#pageable},a.apply_time desc",
-            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 AND a.mediator_id=?2 AND a.apply_time >= ?3 AND a.apply_time<?4 order by a.apply_time desc",
+    @Query(value = "SELECT a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 AND a.mediator_id=?2 AND a.apply_time >= ?3 AND a.apply_time<?4 ORDER BY ?#{#pageable}",
+            countQuery = "SELECT count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 AND a.mediator_id=?2 AND a.apply_time >= ?3 AND a.apply_time<?4",
             nativeQuery = true)
     Page<Disputecase> findWith4Conditions(String filterStatus, String filterMediator, Date startTime,Date endTime,Pageable pageable);
 
     /** 返回所有案件列表,1个查询条件 */
-    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 ORDER BY ?#{#pageable},a.apply_time desc",
-            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 order by a.apply_time desc",
+    @Query(value ="select a.* from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1 ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from disputecase a inner join disputecase_process b on a.id=b.disputecase_id where b.status=?1",
             nativeQuery = true)
     Page<Disputecase> findWithProcessStatus(String filterStatus,Pageable pageable);
 

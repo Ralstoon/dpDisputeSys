@@ -21,13 +21,17 @@ public class temp {
         dateList.add(sdf.parse("2019-09-03"));
         dateList.add(sdf.parse("2018-09-03"));
 
-        List<Date> templist=dateList;
-        Collections.sort(templist, new Comparator<Date>() {
+        List<Disputecase> templist=new ArrayList<>();
+        templist.add(new Disputecase(sdf.parse("2018-09-03")));
+        templist.add(new Disputecase(sdf.parse("2019-09-03")));
+        templist.add(new Disputecase(sdf.parse("2020-09-03")));
+
+        Collections.sort(templist, new Comparator<Disputecase>() {
             @Override
-            public int compare(Date o1, Date o2) {
+            public int compare(Disputecase o1, Disputecase o2) {
                 try{
-                    Date dt1 = o1;
-                    Date dt2 = o2;
+                    Date dt1 = o1.getApplyTime();
+                    Date dt2 = o2.getApplyTime();
                     if (dt1.getTime() > dt2.getTime()) {
                         return -1;
                     } else if (dt1.getTime() < dt2.getTime()) {

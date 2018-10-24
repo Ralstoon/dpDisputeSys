@@ -445,7 +445,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
-        List<Disputecase> templist=disputecasePage.getContent();
+        ArrayList<Disputecase> templist=new ArrayList<>();
+        for(Disputecase dp:disputecasePage.getContent())
+            templist.add(dp);
         Collections.sort(templist, new Comparator<Disputecase>() {
             @Override
             public int compare(Disputecase o1, Disputecase o2) {
@@ -579,7 +581,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
-        List<Disputecase> templist=disputecasePage.getContent();
+        List<Disputecase> templist=new ArrayList<>();
+        for(Disputecase dp:disputecasePage.getContent())
+            templist.add(dp);
         Collections.sort(templist, new Comparator<Disputecase>() {
             @Override
             public int compare(Disputecase o1, Disputecase o2) {
