@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -444,6 +445,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
+        {
+            List<Disputecase> templist=disputecasePage.getContent();
+            Collections.sort(templist, new Comparator<Disputecase>() {
+                @Override
+                public int compare(Disputecase o1, Disputecase o2) {
+                    try{
+                        Date dt1 = o1.getApplyTime();
+                        Date dt2 = o2.getApplyTime();
+                        if (dt1.getTime() > dt2.getTime()) {
+                            return 1;
+                        } else if (dt1.getTime() < dt2.getTime()) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+        }
         for(Disputecase disputecase:disputecasePage.getContent()){
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
 
