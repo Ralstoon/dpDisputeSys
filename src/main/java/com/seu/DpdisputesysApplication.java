@@ -1,6 +1,7 @@
 package com.seu;
 
 import com.seu.service.FrameStartUpService;
+import jnr.ffi.Struct;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

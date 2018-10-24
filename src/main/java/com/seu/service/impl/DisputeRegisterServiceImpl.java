@@ -285,7 +285,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
                 disputecaseApplyRepository.save(applyOne);
             }
-            if(!StrIsEmptyUtil.isEmpty(processId))
+            if(!StrIsEmptyUtil.isEmpty(proposerId))
                 disputecase.setProposerId(proposerId.substring(0, proposerId.length() - 1));
             if (agentId == "")
                 disputecase.setAgnetId("");

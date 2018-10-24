@@ -55,8 +55,8 @@ public class ESIndex {
     public static void main(String[] args){
 
         try{
-            new ESIndex().createESIndex("疾病_index");
-//            new ESIndex().searchESIndex("operation_index","operation_index_type");
+//            new ESIndex().createESIndex("疾病_index");
+            new ESIndex().searchESIndex("operation_index","operation_index_type");
         }catch (Exception e){
             e.printStackTrace();
         }
