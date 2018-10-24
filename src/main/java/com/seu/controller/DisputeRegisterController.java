@@ -167,8 +167,9 @@ public class DisputeRegisterController {
 
             disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
 
-
-            return  ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),"修改成功");
+            Map<String,String> var=new HashMap<>();
+            var.put("caseId",caseId);
+            return  ResultVOUtil.ReturnBack(var,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),"修改成功");
 
         }
 
