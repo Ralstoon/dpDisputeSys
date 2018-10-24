@@ -1,9 +1,12 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.seu.domian.Admin;
 import com.seu.domian.One;
+import com.seu.repository.DisputecaseRepository;
 import com.seu.utils.GetWorkingTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +25,15 @@ import java.util.Date;
 @RestController
 @RequestMapping("/test")
 public class TestInstances {
-
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
     @PostMapping(value = "/run1")
-    public void run1(@RequestParam("caseId") String caseId){
-        System.out.println(caseId);
+    public Object run1(@RequestBody JSONObject map){
+        Integer page=map.getInteger("page")-1;
+        Integer size=map.getInteger("size");
+        PageRequest pageRequest=new PageRequest(page,size);
+        return disputecaseRepository.findAll_HallData(pageRequest);
+//        System.out.println(caseId);
     }
 
     @PostMapping(value = "/run2")
