@@ -445,29 +445,27 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         }
         Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
-        {
-            List<Disputecase> templist=disputecasePage.getContent();
-            Collections.sort(templist, new Comparator<Disputecase>() {
-                @Override
-                public int compare(Disputecase o1, Disputecase o2) {
-                    try{
-                        Date dt1 = o1.getApplyTime();
-                        Date dt2 = o2.getApplyTime();
-                        if (dt1.getTime() > dt2.getTime()) {
-                            return 1;
-                        } else if (dt1.getTime() < dt2.getTime()) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    }catch(Exception e){
-                        e.printStackTrace();
+        List<Disputecase> templist=disputecasePage.getContent();
+        Collections.sort(templist, new Comparator<Disputecase>() {
+            @Override
+            public int compare(Disputecase o1, Disputecase o2) {
+                try{
+                    Date dt1 = o1.getApplyTime();
+                    Date dt2 = o2.getApplyTime();
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
                     }
-                    return 0;
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
-            });
-        }
-        for(Disputecase disputecase:disputecasePage.getContent()){
+                return 0;
+            }
+        });
+        for(Disputecase disputecase:templist){
             String status=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus();
 
             MediationHallDataForm mediationHallDataForm=new MediationHallDataForm();
@@ -581,7 +579,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         Integer totalPages=disputecasePage.getTotalPages();
         List<MediationHallDataForm> mediationHallDataFormList=new ArrayList<>();
-        for(Disputecase disputecase:disputecasePage.getContent()){
+        List<Disputecase> templist=disputecasePage.getContent();
+        Collections.sort(templist, new Comparator<Disputecase>() {
+            @Override
+            public int compare(Disputecase o1, Disputecase o2) {
+                try{
+                    Date dt1 = o1.getApplyTime();
+                    Date dt2 = o2.getApplyTime();
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+        for(Disputecase disputecase:templist){
             MediationHallDataForm mediationHallDataForm=new MediationHallDataForm();
             mediationHallDataForm.setDate(disputecase.getApplyTime());
             mediationHallDataForm.setName(disputecase.getCaseName());
@@ -1549,11 +1568,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             for (Object stage:arr){
                 Object involvedInstitute = ((com.alibaba.fastjson.JSONObject) stage).get("InvolvedInstitute");
-
-
-
-                    hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)involvedInstitute).get("Hospital")));
-
+                hospitalList.add((String)(((com.alibaba.fastjson.JSONObject)involvedInstitute).get("Hospital")));
             }
 
             for(String hospital: hospitalList){
@@ -1565,7 +1580,25 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             userCaseListForm.setStatus(disputecaseProcessRepository.findByDisputecaseId(disputecase.getId()).getStatus());
             userCaseListFormList.add(userCaseListForm);
         }
-
+        Collections.sort(userCaseListFormList, new Comparator<UserCaseListForm>() {
+            @Override
+            public int compare(UserCaseListForm o1, UserCaseListForm o2) {
+                try{
+                    Date dt1 = o1.getDate();
+                    Date dt2 = o2.getDate();
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
 
         return ResultVOUtil.ReturnBack(userCaseListFormList, 111,"用户中心获取用户案件列表成功。");
     }
