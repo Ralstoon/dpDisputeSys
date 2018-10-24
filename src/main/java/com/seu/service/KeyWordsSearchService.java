@@ -22,7 +22,7 @@ public interface KeyWordsSearchService {
 
     // TODO 欠完善
     /** 类案推荐 */
-    Map<String,Object> getSimilarCases(JSONArray caseId);
+    Map<String,Object> getSimilarCases(JSONArray caseId,Integer role);
 
     /** 通过类案的名字查询案件具体内容 */
     Map<String, Object> getCaseDetails(String caseName,String type, String caseId);
