@@ -555,7 +555,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-//                disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
+                disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
@@ -673,8 +673,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
                     disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,pageRequest);
-//                else if(!StrIsEmptyUtil.isEmpty(filterMediator))
-//                    disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
+                else if(!StrIsEmptyUtil.isEmpty(filterMediator))
+                    disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
                 else if(startTime!=null)
                     disputecasePage=disputecaseRepository.findAfterTime(startTime,pageRequest);
                 else

@@ -29,9 +29,9 @@ public class temp {
                     Date dt1 = o1;
                     Date dt2 = o2;
                     if (dt1.getTime() > dt2.getTime()) {
-                        return 1;
-                    } else if (dt1.getTime() < dt2.getTime()) {
                         return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
                     } else {
                         return 0;
                     }
