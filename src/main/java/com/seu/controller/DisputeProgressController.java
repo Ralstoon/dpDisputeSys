@@ -882,8 +882,9 @@ public class DisputeProgressController {
     public ResultVO getcaseDetail(@RequestBody Map<String, String> map){
 
         String caseId = map.get("caseId");
+        String role = map.get("role");
 
-        return disputeProgressService.getcaseDetail(caseId);
+        return disputeProgressService.getcaseDetail(caseId, role);
     }
 
 
@@ -1048,6 +1049,29 @@ public class DisputeProgressController {
         return ResultVOUtil.ReturnBack(123,"调解员评判成功");
     }
 
-    //
+    @Autowired
+    private TaskService taskService;
+    //建议鉴定跳过
+    @PostMapping(value = "/mediator/ship")
+    public void ship(@RequestBody JSONObject object){
+        String caseId = object.getString("caseId");
+        /** 目前处于主流程:损害/医疗鉴定 */
+        Task task=null;
+        List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"损害/医疗鉴定");
+        for(Task one:tasks)
+            if(one.getName().equals("损害/医疗鉴定")){
+                task=one;
+                break;
+            }
 
+
+        /** 将挂起的流程返回正常状态 */
+        DisputecaseProcess currentProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
+        currentProcess.setIsSuspended(0);
+        disputecaseProcessRepository.save(currentProcess);
+        String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+        runtimeService.setVariable(pid,"paramAuthenticate","1");
+        /** 完成当前流程 */
+        taskService.complete(task.getId());  // 会进去到流程 调解前处理
+    }
 }

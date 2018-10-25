@@ -675,8 +675,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             calendar.add(Calendar.DAY_OF_MONTH,1);
             endTime=calendar.getTime();
         }
-        Sort sort = new Sort(Sort.Direction.DESC,"applyTime");
-        PageRequest pageRequest=new PageRequest(page,size,sort);
+        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        PageRequest pageRequest1=new PageRequest(page,size,sort);
+        PageRequest pageRequest=new PageRequest(page,size);
         Page<Disputecase> disputecasePage=null;
 
 
@@ -693,7 +694,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-                disputecasePage=disputecaseRepository.findAll(pageRequest);
+                disputecasePage=disputecaseRepository.findAll(pageRequest1);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
@@ -1161,11 +1162,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
         //是否可预约
-        if(mediationStageForm.getExpertAppoint().equals("0"))
-            mediationStageForm.setAppoint(true);
+        mediationStageForm.setAppoint(true);
         //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task tasks=taskService.createTaskQuery().processInstanceId(pid).singleResult();
-        if (tasks.getName().equals("专家预约审核") || tasks.getName().equals("三方调解") || tasks.getName().equals("三方调解") || tasks.getName().equals("调解结果处理")){
+        if (tasks.getName().equals("专家预约审核") || tasks.getName().equals("三方调解") || tasks.getName().equals("专家调解") || tasks.getName().equals("调解结果处理")){
             mediationStageForm.setAppoint(false);
         }
 
@@ -1743,7 +1743,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             for(ContactList c:lists)
                 contactLists.add(c);
 
-            jsonObject.put(form.getHospital(),contactLists);
+            jsonObject.put("name", form.getHospital());
+            jsonObject.put("contact", contactLists);
             result.add(jsonObject);
         }
 
@@ -2025,7 +2026,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getcaseDetail(String caseId) {
+    public ResultVO getcaseDetail(String caseId, String role) {
 
         Disputecase disputecase = disputecaseRepository.findOne(caseId);
         String[] temp=disputecase.getProposerId().trim().split(",");
@@ -2051,7 +2052,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             claimAmount = "10万以上";
         }
         result.put("claimAmount", claimAmount);
-        result.put("relatedCases", JSONObject.parseObject(disputecase.getRecommendedPaper()));
+
+
+        JSONObject jO = JSONObject.parseObject(disputecase.getRecommendedPaper());
+        if(role.equals("0")){
+            jO.remove("dissension_dx");
+            jO.remove("dissension");
+        }
+
+        result.put("relatedCases", jO);
 
 
         String mainRecSatgeName="";
@@ -2084,6 +2093,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             String diseasesymptomBefore = "";
             String diseasesymptomAfter = "";
+            String details = "";
             for(int j = 0; j < resultOfRegConflict.size(); j++){
                 String resultOfRegConflictName = ((JSONObject)resultOfRegConflict.get(j)).getString("name");
                 List<String> dB = (List<String>) ((JSONObject)resultOfRegConflict.get(j)).get("defaultBehavior");
@@ -2098,16 +2108,28 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 diseaseAfter = diseaseAfter + String.join(",", diseaseAfterList);
                 diseaseBefore = diseaseBefore + String.join(",", diseaseBeforeList);
 
-                for (int k=0; k< dB.size();k++){
-                    behaviorListTemp.add(resultOfRegConflictName+dB.get(j));
+                if (dB.size()!=0){
+                    for (int k=0; k< dB.size();k++){
+                        details = details + dB.get(k)+"、";
+                    }
+                    behaviorListTemp.add(resultOfRegConflictName+":"+details.substring(0, details.length()-1));
                 }
+
+
             }
             jsonObject.put("behaviorList", behaviorListTemp);
 
             jsonObject.put("resultOfDamage",((JSONObject)medicalProcess.get(i)).getString("ResultOfDamageDetail"));
-
-            jsonObject.put("diseasesBefore","症状："+diseasesymptomBefore+ "。疾病："+diseaseBefore);
-            jsonObject.put("diseaseAfter","症状："+diseasesymptomAfter+ "。疾病："+diseaseAfter);
+            if(diseasesymptomBefore.equals(""))
+                diseasesymptomBefore="未填写";
+            if(diseaseBefore.equals(""))
+                diseaseBefore="未填写";
+            if(diseasesymptomAfter.equals(""))
+                diseasesymptomAfter="未填写";
+            if(diseaseAfter.equals(""))
+                diseaseAfter="未填写";
+            jsonObject.put("diseasesBefore","症状："+diseasesymptomBefore+ "。疾病："+diseaseBefore+"。");
+            jsonObject.put("diseaseAfter","症状："+diseasesymptomAfter+ "。疾病："+diseaseAfter+"。");
 
             jsonObject.put("involvedInstitute",involvedInstitute);
             jsonObject.put("resultOfDamage",((JSONObject)medicalProcess.get(i)).getString("ResultOfDamage"));
