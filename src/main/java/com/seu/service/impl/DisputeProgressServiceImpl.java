@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -674,7 +675,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             calendar.add(Calendar.DAY_OF_MONTH,1);
             endTime=calendar.getTime();
         }
-        PageRequest pageRequest=new PageRequest(page,size);
+        Sort sort = new Sort(Sort.Direction.DESC,"applyTime");
+        PageRequest pageRequest=new PageRequest(page,size,sort);
         Page<Disputecase> disputecasePage=null;
 
 
@@ -1159,7 +1161,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
 
         //是否可预约
-        mediationStageForm.setAppoint(true);
+        if(mediationStageForm.getExpertAppoint().equals("0"))
+            mediationStageForm.setAppoint(true);
         //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         Task tasks=taskService.createTaskQuery().processInstanceId(pid).singleResult();
         if (tasks.getName().equals("专家预约审核") || tasks.getName().equals("三方调解") || tasks.getName().equals("三方调解") || tasks.getName().equals("调解结果处理")){
@@ -1724,6 +1727,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 //            }
 //        }
 
+        JSONArray result = JSONArray.parseArray("[]");
+
         for(int i = 0; i < jsArr.size(); ++i){
             JSONObject obj=jsArr.getJSONObject(i);
             JSONObject involvedInstitute=obj.getJSONObject("InvolvedInstitute");
@@ -1733,16 +1738,41 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         List<ContactList> contactLists=new ArrayList<>();
         for(InstituteForm form:instituteFormMap.values()){
+            JSONObject jsonObject = JSONObject.parseObject("{}");
             List<ContactList> lists=contactListRepository.findAllByCityAndZoneAndName(form.getCity(),form.getZone(),form.getHospital());
             for(ContactList c:lists)
                 contactLists.add(c);
+
+            jsonObject.put(form.getHospital(),contactLists);
+            result.add(jsonObject);
         }
-        List<InstituteMessageForm> instituteMessage=new ArrayList<>();
-        for(ContactList con:contactLists){
-            InstituteMessageForm imForm=new InstituteMessageForm(con.getName(),con.getTele(),con.getContactPerson(),con.getContactPhone());
-            instituteMessage.add(imForm);
-        }
-        return ResultVOUtil.ReturnBack(instituteMessage,DisputeProgressEnum.GETINFORMATION_SUCCESS.getCode(),DisputeProgressEnum.GETINFORMATION_SUCCESS.getMsg());
+
+
+
+
+//原版
+//        for(int i = 0; i < jsArr.size(); ++i){
+//            JSONObject obj=jsArr.getJSONObject(i);
+//            JSONObject involvedInstitute=obj.getJSONObject("InvolvedInstitute");
+//            InstituteForm instituteForm=new InstituteForm(involvedInstitute.getString("City"),involvedInstitute.getString("Zone"),involvedInstitute.getString("Hospital"));
+//            instituteFormMap.put(instituteForm.toString(),instituteForm);
+//        }
+//
+//        List<ContactList> contactLists=new ArrayList<>();
+//        for(InstituteForm form:instituteFormMap.values()){
+//            List<ContactList> lists=contactListRepository.findAllByCityAndZoneAndName(form.getCity(),form.getZone(),form.getHospital());
+//            for(ContactList c:lists)
+//                contactLists.add(c);
+//        }
+//        List<InstituteMessageForm> instituteMessage=new ArrayList<>();
+//        for(ContactList con:contactLists){
+//            InstituteMessageForm imForm=new InstituteMessageForm(con.getName(),con.getTele(),con.getContactPerson(),con.getContactPhone());
+//            instituteMessage.add(imForm);
+//        }
+
+
+
+        return ResultVOUtil.ReturnBack(result,DisputeProgressEnum.GETINFORMATION_SUCCESS.getCode(),DisputeProgressEnum.GETINFORMATION_SUCCESS.getMsg());
     }
 
     @Override
