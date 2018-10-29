@@ -36,10 +36,10 @@ mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
 
 qiniu:
-  accessKey: jQgwEQyvj26BfIqkzKJRAKUNKBHSY1rhToRAmL0S
-  secretKey: FmohAKLBvw22u9MKAwxKwV1a2mgI-brc3WWhlFmf
+  accessKey: ehkBu3JZo2DwT9vJXEpWOr-ZqPhMX8g-c9sXq5MX
+  secretKey: ZR9jqxtOZuYYhAoGELNpoWpWpCB8NUqA7iznAEz0
   bucket: disputeweb
-  path: pe93soaos.bkt.clouddn.com
+  path: phcgv7nm3.bkt.clouddn.com
 
 
 #security:
