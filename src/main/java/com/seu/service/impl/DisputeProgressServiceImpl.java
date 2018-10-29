@@ -611,9 +611,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             mediationHallDataForm.setName(disputecase.getCaseName());
             mediationHallDataForm.setCaseId(disputecase.getId());
 
-            //mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            mediationHallDataForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
             //todo:倒计时
-            mediationHallDataForm.setCountdown(null);
+            //mediationHallDataForm.setCountdown(null);
 
 
             /** 案件进程到process表中查询 */
@@ -747,9 +747,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             managerCaseForm.setCaseId(disputecase.getId());
 
 
-            //managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
+            managerCaseForm.setCountdown(getWorkingTimeUtil.calRemainTime(disputecase.getId()));
             //todo:倒计时
-            managerCaseForm.setCountdown(null);
+            //managerCaseForm.setCountdown(null);
 
 
             /** 案件进程到process表中查询 */

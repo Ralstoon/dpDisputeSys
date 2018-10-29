@@ -12,13 +12,16 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -77,16 +80,23 @@ public class GetWorkingTimeUtil {
         Calendar c=Calendar.getInstance();
         int countdown=0;
         if (EndDate.isWeekday==null){
-            Date currentDate = new Date();
-            Calendar c1=Calendar.getInstance();
-            c1.setTime(currentDate);
-//            EndDate.isWeekday.clear();
-            EndDate.isWeekday = new HashMap<>();
-            for(int i = 0; i<60; i++){
 
-                EndDate.isWeekday.put(sdf.parse(sdf.format(c1.getTime())), getResult(c1.getTime()));
-                c1.add(Calendar.DAY_OF_MONTH,1);
-            }
+            FileInputStream freader;
+            freader = new FileInputStream("E:/1.txt");
+            ObjectInputStream objectInputStream = new ObjectInputStream(freader);
+
+            EndDate.isWeekday = (Map<Date, Integer>) objectInputStream.readObject();
+
+//            Date currentDate = new Date();
+//            Calendar c1=Calendar.getInstance();
+//            c1.setTime(currentDate);
+////            EndDate.isWeekday.clear();
+//            EndDate.isWeekday = new HashMap<>();
+//            for(int i = 0; i<60; i++){
+//
+//                EndDate.isWeekday.put(sdf.parse(sdf.format(c1.getTime())), getResult(c1.getTime()));
+//                c1.add(Calendar.DAY_OF_MONTH,1);
+//            }
         }
 
         while(currentTime.getTime()<=endTime.getTime()){
