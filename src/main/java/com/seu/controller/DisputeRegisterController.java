@@ -124,37 +124,56 @@ public class DisputeRegisterController {
         String involvedPeople = map.getString("InvolvedPeople");
         JSONObject basicDivideInfo = map.getJSONObject("basicDivideInfo");
 
-        ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
-        if(res.getCode()<0)
-            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
-        String caseId = ((Map<String,String>)res.getData()).get("CaseId");
+        String caseId = map.getString("caseId");
+
+        //caseId 为空
+        if (caseId.equals("") || caseId == null){
+            ResultVO res=disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
+            if(res.getCode()<0)
+                return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_FAIL.getCode(),DisputeRegisterEnum.GETALLMESSAGE_FAIL.getMsg());
+            caseId = ((Map<String,String>)res.getData()).get("CaseId");
 
 
-        String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
-        //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
-        Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
-        String require=basicDivideInfo.getString("Require");
-        Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
+            String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
+            //String caseId=basicDivideInfo.getJSONObject("CaseId").toJSONString();
+            Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
+            String require=basicDivideInfo.getString("Require");
+            Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
 
-        disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
-        log.info("\n医疗行为接受完成\n");
-        //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
-        //Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-        //disputeProgressService.completeCurrentTask(currentTask.getId());
+            disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+            log.info("\n医疗行为接受完成\n");
+            //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
+            //Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+            //disputeProgressService.completeCurrentTask(currentTask.getId());
 
-        Map<String,Object> var =new HashMap<>();
-        var.put("disputeId",caseId);
-        var.put("paramProfesor",0);
-        var.put("paramAuthenticate",0);
-        disputeProgressService.startProcess(caseId,var);
-        Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
-        disputeProgressService.completeCurrentTask(currentTask.getId());
+            Map<String,Object> var =new HashMap<>();
+            var.put("disputeId",caseId);
+            var.put("paramProfesor",0);
+            var.put("paramAuthenticate",0);
+            disputeProgressService.startProcess(caseId,var);
+            Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
+            disputeProgressService.completeCurrentTask(currentTask.getId());
 
-        log.info("\n医疗行为任务完成\n");
+            log.info("\n医疗行为任务完成\n");
 
-        Map<String, String> result = new HashMap<>();
-        result.put("caseId",caseId);
-        return  ResultVOUtil.ReturnBack(result ,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+            Map<String, String> result = new HashMap<>();
+            result.put("caseId",caseId);
+            return  ResultVOUtil.ReturnBack(result ,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
+        } else {
+            String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
+            Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
+            String require=basicDivideInfo.getString("Require");
+            Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
+
+            disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+
+            Map<String,String> var=new HashMap<>();
+            var.put("caseId",caseId);
+            return  ResultVOUtil.ReturnBack(var,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),"修改成功");
+
+        }
+
+
     }
 
     @Autowired

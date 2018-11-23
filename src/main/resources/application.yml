@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://172.16.0.16:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
-    url: jdbc:mysql://223.3.72.234:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+    url: jdbc:mysql://172.16.0.16:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
+#    url: jdbc:mysql://223.3.72.234:3306/disputeweb?characterEncoding=utf-8&useSSL=false&autoReconnect=true
 
     username: root
     password: 123456
@@ -15,8 +15,8 @@ spring:
             hbm2ddl:
               auto: update
   redis:
-#    host: 172.16.0.16
-    host: 223.3.79.0
+    host: 172.16.0.16
+#    host: 223.3.79.0
     port: 6379
 
 server:
@@ -36,10 +36,10 @@ mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
 
 qiniu:
-  accessKey: jQgwEQyvj26BfIqkzKJRAKUNKBHSY1rhToRAmL0S
-  secretKey: FmohAKLBvw22u9MKAwxKwV1a2mgI-brc3WWhlFmf
+  accessKey: ehkBu3JZo2DwT9vJXEpWOr-ZqPhMX8g-c9sXq5MX
+  secretKey: ZR9jqxtOZuYYhAoGELNpoWpWpCB8NUqA7iznAEz0
   bucket: disputeweb
-  path: pe93soaos.bkt.clouddn.com
+  path: phcgv7nm3.bkt.clouddn.com
 
 
 #security:

@@ -56,4 +56,11 @@ public class Disputecase {
     private String keywordList;
     /** 表示调解员评判 */
     private String moderatorRegister;
+
+    public Disputecase() {
+    }
+
+    public Disputecase(Date applyTime) {
+        this.applyTime = applyTime;
+    }
 }
