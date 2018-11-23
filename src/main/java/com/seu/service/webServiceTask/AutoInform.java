@@ -30,19 +30,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-
-public class AutoInform implements JavaDelegate {
-
+@Component
+public class AutoInform {
+    @Autowired
+    private DisputecaseRepository disputecaseRepository;
+    @Autowired
+    private DisputecaseApplyRepository disputecaseApplyRepository;
+    @Autowired
+    private NormalUserRepository normalUserRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     // TODO 向用户，包括申请人和代理人发送告知书和代理人委托书，并告知于立案判断前登录系统并上传（未注册账号默认密码为111111）或在立案判断时亲自携带过来
-    @Override
-    public void execute(DelegateExecution delegateExecution) {
-        DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
-        DisputecaseApplyRepository disputecaseApplyRepository=SpringUtil.getBean(DisputecaseApplyRepository.class);
-        NormalUserRepository normalUserRepository=SpringUtil.getBean(NormalUserRepository.class);
-        UserRepository userRepository=SpringUtil.getBean(UserRepository.class);
+    public void execute(String caseId) throws Exception{
+//        DisputecaseRepository disputecaseRepository=SpringUtil.getBean(DisputecaseRepository.class);
+//        DisputecaseApplyRepository disputecaseApplyRepository=SpringUtil.getBean(DisputecaseApplyRepository.class);
+//        NormalUserRepository normalUserRepository=SpringUtil.getBean(NormalUserRepository.class);
+//        UserRepository userRepository=SpringUtil.getBean(UserRepository.class);
 
-        String caseId=delegateExecution.getVariable("disputeId").toString();
+//        String caseId=delegateExecution.getVariable("disputeId").toString();
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         String prosperId=disputecase.getProposerId();
         String[] temp=prosperId.trim().split(",");
@@ -61,7 +67,7 @@ public class AutoInform implements JavaDelegate {
     }
 
 
-    public void sendEmail(String disputeId,String Email) {
+    public void sendEmail(String disputeId,String Email) throws Exception{
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAIL1KePAlpKKvH", "0ROlCLO3RFb5gWN38s7giQMySrcsn4");
         IAcsClient client = new DefaultAcsClient(profile);
         SingleSendMailRequest request = new SingleSendMailRequest();
@@ -84,7 +90,7 @@ public class AutoInform implements JavaDelegate {
         }
     }
 
-    public void sendSms(String disputeId,String Phone,String name) {
+    public void sendSms(String disputeId,String Phone,String name) throws Exception{
         try {
             //设置超时时间-可自行调整
             System.setProperty("sun.net.client.defaultConnectTimeout", "10000");

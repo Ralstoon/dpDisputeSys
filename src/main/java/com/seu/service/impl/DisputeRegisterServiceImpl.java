@@ -16,6 +16,7 @@ import com.seu.repository.DisputecaseProcessRepository;
 import com.seu.repository.MediatorRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
+import com.seu.service.webServiceTask.AutoInform;
 import com.seu.util.MD5Util;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.KeyUtil;
@@ -323,6 +324,8 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     }
 
+    @Autowired
+    private AutoInform autoInform;
     @Override
     @Transactional
     public ResultVO getAllMessage(JSONObject obj) {
@@ -369,6 +372,19 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
         disputeProgressService.completeCurrentTask(currentTask.getId());
         log.info("\n纠纷登记任务完成\n");
-        return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getCode(),DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getMsg());
+
+        /**
+         * 发送自动通知任务Impl_webServiceTask AutoInform
+         * 为防止AutoInform任务出错导致流程中断，此处catch后单独处理，流程必会返回结果
+         * */
+        try {
+            autoInform.execute(caseId);
+        }catch (Exception e){
+            log.error("AutoInform任务出错！");
+            e.printStackTrace();
+        }finally {
+            return ResultVOUtil.ReturnBack(DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getCode(),DisputeRegisterEnum.GETALLMESSAGE_SUCCESS.getMsg());
+        }
+
     }
 }
