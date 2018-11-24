@@ -14,6 +14,7 @@ import com.seu.form.VOForm.*;
 import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
+import com.seu.service.webServiceTask.MediateInform;
 import com.seu.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
@@ -1390,6 +1391,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
     }
 
+    @Autowired
+    private MediateInform mediateInform;
     @Override
     @Transactional
     public ResultVO setAppoint(String caseId, String currentStageContent) {
@@ -1426,11 +1429,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
         taskService.complete(currentTask.getId());// Wj
 
-        // 3的流程看webServiceTask MediateInform
+        /** 发送预约通知 */
+        try {
+            mediateInform.execute(caseId);
+        }catch (Exception e){
+            log.error("[预约通知流程出现问题！]");
+            e.printStackTrace();
+        }finally {
+            return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETAPPOINT_SUCCESS.getCode(),DisputeProgressEnum.SETAPPOINT_SUCCESS.getMsg());
 
-        return ResultVOUtil.ReturnBack(DisputeProgressEnum.SETAPPOINT_SUCCESS.getCode(),DisputeProgressEnum.SETAPPOINT_SUCCESS.getMsg());
-
-
+        }
     }
 
     @Override

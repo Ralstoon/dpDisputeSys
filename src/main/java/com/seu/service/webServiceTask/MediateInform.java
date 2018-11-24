@@ -23,6 +23,7 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -33,17 +34,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @Date 2018/7/20 16:00
  * @Version 1.0
  **/
-public class MediateInform implements JavaDelegate {
+@Component
+public class MediateInform{
+    @Autowired
+    private DisputecaseProcessRepository disputecaseProcessRepository;
 
-
-    @Override
-    public void execute(DelegateExecution delegateExecution){
-        DisputecaseProcessRepository disputecaseProcessRepository=SpringUtil.getBean(DisputecaseProcessRepository.class);
-
-
-
-        // 调解通知对象包括 申请人、被申请人、专家(有的话)
-        String caseId=delegateExecution.getVariable("disputeId").toString();
+    public void execute(String caseId){
+        // 调解通知对象包括 申请人、被申请人
+//        String caseId=delegateExecution.getVariable("disputeId").toString();
         String ms=disputecaseProcessRepository.findByDisputecaseId(caseId).getMediateStage();
         JSONObject mediateStage=JSONObject.parseObject(ms);
         JSONArray applicants=mediateStage.getJSONArray("applicants");
@@ -75,15 +73,6 @@ public class MediateInform implements JavaDelegate {
             if(email.trim()!="")
                 sendEmail(caseId,name,email,MediationTime,MediationPlace);
         }
-
-//        JSONObject expertChoosed=currentStageContent.getJSONObject("particopateContact").getJSONObject("expertChoosed");
-//        String name=expertChoosed.getString("name");
-//        String phone=expertChoosed.getString("phone");
-//        String email=expertChoosed.getString("email");
-//        if(phone.trim()!="")
-//            sendSms(caseId,name,phone,MediationTime,MediationPlace);
-//        if(email.trim()!="")
-//            sendEmail(caseId,name,email,MediationTime,MediationPlace);
 
 
 
