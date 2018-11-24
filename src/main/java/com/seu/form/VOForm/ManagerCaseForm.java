@@ -52,6 +52,9 @@ public class ManagerCaseForm {
     //用户上传文件
     private JSONArray userUpload;
 
+    //案件等级
+    private String caseLevel;
+
     public void addUserIntention(String mediatorName,String mediatorId,String mediatorIntention){
         if(userIntention==null)
             userIntention=new ArrayList<>();

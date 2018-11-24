@@ -124,6 +124,7 @@ public class DisputeRegisterController {
         String involvedPeople = map.getString("InvolvedPeople");
         JSONObject basicDivideInfo = map.getJSONObject("basicDivideInfo");
 
+
         String caseId = map.getString("caseId");
 
         //caseId 为空
@@ -139,8 +140,10 @@ public class DisputeRegisterController {
             Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
             String require=basicDivideInfo.getString("Require");
             Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
+            String mediationCenter=basicDivideInfo.getString("mediationCenter");
+            String mediationCity=basicDivideInfo.getString("mediationCity");
 
-            disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+            disputeRegisterService.getBasicDivideInfo(mediationCity, mediationCenter, stageContent,caseId,mainRecStage,require,claimAmount);
             log.info("\n医疗行为接受完成\n");
             //String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
             //Task currentTask=disputeProgressService.searchCurrentTasks(caseId).get(0);  // 纠纷登记
@@ -165,7 +168,10 @@ public class DisputeRegisterController {
             String require=basicDivideInfo.getString("Require");
             Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
 
-            disputeRegisterService.getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+            String mediationCenter=basicDivideInfo.getString("mediationCenter");
+            String mediationCity=basicDivideInfo.getString("mediationCity");
+
+            disputeRegisterService.getBasicDivideInfo(mediationCity, mediationCenter, stageContent,caseId,mainRecStage,require,claimAmount);
 
             Map<String,String> var=new HashMap<>();
             var.put("caseId",caseId);
@@ -199,6 +205,7 @@ public class DisputeRegisterController {
         List<String> zoneList = new ArrayList<>(citys.getJSONObject(city).keySet());
         Map map = new HashMap();
         map.put("zoneList", zoneList);
+        map.put("mediationCenterList", zoneList);
         return ResultVOUtil.ReturnBack(map, 1, "获取县区列表成功");
     }
 

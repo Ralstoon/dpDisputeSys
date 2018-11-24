@@ -790,7 +790,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             }
             managerCaseForm.setCurrentMediator(setCurrentMediatorName);
             managerCaseForm.setMediatorid(setCurrentMediatorId);
-
+            managerCaseForm.setCaseLevel(disputecase.getLevel());
             /** 用户意向的调解员 */
             DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(disputecase.getId());
             String userChoose=disputecaseProcess.getUserChoose();
