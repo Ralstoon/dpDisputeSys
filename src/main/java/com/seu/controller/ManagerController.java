@@ -1,6 +1,7 @@
 package com.seu.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -41,9 +42,11 @@ public class ManagerController {
         for(Object o:cityList)
             arr.add(o.toString());
         res.put("opinion",arr);
-        JSONObject res_1= JSONObject.parseObject("{}");
+        JSONArray res_1= JSONArray.parseArray("[]");
         for(String one:arr){
-            res_1.put(one,disputecaseRepository.getCountByCity(one));
+            JSONObject o1=JSONObject.parseObject("{}");
+            o1.put("name",one);o1.put("value",disputecaseRepository.getCountByCity(one));
+            res_1.add(o1);
         }
         res.put("opinionData",res_1);
         return ResultVOUtil.ReturnBack(res,200,"成功");
@@ -59,9 +62,11 @@ public class ManagerController {
         for(Object o:centerList)
             arr.add(o.toString());
         res.put("opinion",arr);
-        JSONObject res_1= JSONObject.parseObject("{}");
+        JSONArray res_1= JSONArray.parseArray("[]");
         for(String one:arr){
-            res_1.put(one,disputecaseRepository.getCountByCenter(one));
+            JSONObject o1=JSONObject.parseObject("{}");
+            o1.put("name",one);o1.put("value",disputecaseRepository.getCountByCenter(one));
+            res_1.add(o1);
         }
         res.put("opinionData",res_1);
         return ResultVOUtil.ReturnBack(res,200,"成功");

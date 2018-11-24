@@ -60,27 +60,21 @@ public class UserController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    /*
-     *@Author 吴宇航
-     *@Description  处理所有用户统一登录的方法
-     *@Date 21:10 2018/8/3
-     *@Param [phone, password, httpServletResponse]
-     *@return com.seu.common.ServerResponse<com.seu.domian.NormalUser>
-     **/
-    @Autowired
-    private UserRepository userRepository;
-    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
-    public ResultVO login(@RequestBody JSONObject map) {
-        String phone=map.getString("phone");
-        String password=map.getString("password");
 
-        User user = userRepository.findByPhone(phone);
-        user.setPassword(MD5Util.MD5EncodeUtf8(password));
-
-        userRepository.save(user);
-
-        return ResultVOUtil.ReturnBack(112, "密码修改成功");
-    }
+//    @Autowired
+//    private UserRepository userRepository;
+//    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
+//    public ResultVO updatePassword(@RequestBody JSONObject map) {
+//        String phone=map.getString("phone");
+//        String password=map.getString("password");
+//
+//        User user = userRepository.findByPhone(phone);
+//        user.setPassword(MD5Util.MD5EncodeUtf8(password));
+//
+//        userRepository.save(user);
+//
+//        return ResultVOUtil.ReturnBack(112, "密码修改成功");
+//    }
 
     /*
      *@Author 吴宇航
@@ -109,22 +103,22 @@ public class UserController {
      *@Param [normalUserDetailForm, bindingResult]
      *@return com.seu.ViewObject.ResultVO
      **/
-    // TODO
-    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
-    public ResultVO updateUserInfo(@RequestBody Map<String,Object> map){
-//        if(bindingResult.hasErrors()){
-//            Map<String,Object> param=new HashMap<>();
-//            param.put("data",bindingResult.getFieldError().getDefaultMessage());
-//            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
-//        }
-//        NormalUser currentUser=(NormalUser)session.getAttribute("currentUser");
-        NormalUserForm normalUserForm1=new NormalUserForm();
-        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm1);
-        if(result!=null)
-            return ResultVOUtil.ReturnBack(result,UpdateInfoEnum.UPDATE_SUCCESS.getCode(),UpdateInfoEnum.UPDATE_SUCCESS.getMsg());
-        else
-            return ResultVOUtil.ReturnBack(UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
-    }
+//    // TODO
+//    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
+//    public ResultVO login(@RequestBody Map<String,Object> map){
+////        if(bindingResult.hasErrors()){
+////            Map<String,Object> param=new HashMap<>();
+////            param.put("data",bindingResult.getFieldError().getDefaultMessage());
+////            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
+////        }
+////        NormalUser currentUser=(NormalUser)session.getAttribute("currentUser");
+//        NormalUserForm normalUserForm1=new NormalUserForm();
+//        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm1);
+//        if(result!=null)
+//            return ResultVOUtil.ReturnBack(result,UpdateInfoEnum.UPDATE_SUCCESS.getCode(),UpdateInfoEnum.UPDATE_SUCCESS.getMsg());
+//        else
+//            return ResultVOUtil.ReturnBack(UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
+//    }
 
 
     @RequestMapping(value = "loginout",method = RequestMethod.POST)
@@ -261,7 +255,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
-    public ServerResponse<UserForm> updatePassword(@RequestBody JSONObject map) {
+    public ServerResponse<UserForm> login(@RequestBody JSONObject map) {
         String phone=map.getString("phone");
         String password=map.getString("password");
 //        System.out.println(password+"  "+phone);
