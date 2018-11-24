@@ -34,6 +34,7 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
     @Query(value ="select DISTINCT a.mediation_center FROM disputecase a where a.province=?1 and a.city=?2",
             nativeQuery = true)
     List<Object> findDistinctCenter(String province,String city);
+
     @Query(value ="select count(*) FROM disputecase a where a.mediation_center=?1 ",
             nativeQuery = true)
     Integer getCountByCenter(String mediationCenter);
@@ -47,8 +48,8 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
     Page<Object[]> findHistoryCaseByUserId(String userId,Pageable pageable);
 
 
-    @Query(value = "SELECT a.* from disputecase where a.province like ?1 AND a.city like ?2 AND a.mediation_center like ?3 ORDER BY ?#{#pageable},a.id DESC",
-            countQuery = "SELECT a.* from disputecase where a.province like ?1 AND a.city like ?2 AND a.mediation_center like ?3 ORDER BY a.id DESC",
+    @Query(value = "SELECT a.* from disputecase a where a.province like ?1 AND a.city like ?2 AND a.mediation_center like ?3 ORDER BY ?#{#pageable},a.id DESC",
+            countQuery = "SELECT a.* from disputecase a where a.province like ?1 AND a.city like ?2 AND a.mediation_center like ?3 ORDER BY a.id DESC",
             nativeQuery = true)
     Page<Disputecase> findAllWithDesc(String province,String city,String mediate_center,Pageable pageable);
 

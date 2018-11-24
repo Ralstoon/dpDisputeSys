@@ -58,7 +58,7 @@ public class Disputecase {
     private String moderatorRegister;
 
     //调解中心
-    private String mediateCenter;
+    private String mediationCenter;
     private String province;
     private String city;
 

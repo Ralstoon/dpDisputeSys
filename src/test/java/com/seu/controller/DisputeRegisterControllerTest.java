@@ -1,19 +1,32 @@
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+package com.seu.controller;
+
+
+import com.alibaba.fastjson.JSONObject;
+import com.seu.repository.ConstantDataRepository;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
-@RunWith(Arquillian.class)
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class DisputeRegisterControllerTest {
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClass(com.seu.controller.DisputeRegisterController.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
 
+    @Autowired
+    private ConstantDataRepository constantDataRepository;
+
+    @Test
+    public void getMediationCenterList() {
+        String province="江苏省";
+        String city="连云港市";
+        JSONObject obj=JSONObject.parseObject(constantDataRepository.findByName("center_list").getData());
+        String li=obj.getJSONObject(province).getJSONArray(city).toString();
+        System.out.println(li);
+    }
 }

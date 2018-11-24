@@ -314,5 +314,28 @@ public class DisputeRegisterController {
         return ResultVOUtil.ReturnBack(result,123,"历史案件");
     }
 
+//    @Autowired
+//    private ConstantDataRepository constantDataRepository;
 
+    @GetMapping("/getMediationProvinceList")
+    public ResultVO getMediationProvinceList(){
+        JSONObject obj=JSONObject.parseObject(constantDataRepository.findByName("center_list").getData());
+        return ResultVOUtil.ReturnBack(obj.keySet(),200,"成功");
+    }
+
+    @PostMapping("/getMediationCityList")
+    public ResultVO getMediationCityList(@RequestBody JSONObject map){
+        String province=map.getString("province");
+        JSONObject obj=JSONObject.parseObject(constantDataRepository.findByName("center_list").getData());
+
+        return ResultVOUtil.ReturnBack(obj.getJSONObject(province).keySet(),200,"成功");
+    }
+
+    @PostMapping("/getMediationCenterList")
+    public ResultVO getMediationCenterList(@RequestBody JSONObject map){
+        String province=map.getString("province");
+        String city=map.getString("city");
+        JSONObject obj=JSONObject.parseObject(constantDataRepository.findByName("center_list").getData());
+        return ResultVOUtil.ReturnBack(obj.getJSONObject(province).getJSONArray(city),200,"成功");
+    }
 }

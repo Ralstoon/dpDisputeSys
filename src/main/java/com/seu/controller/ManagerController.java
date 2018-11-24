@@ -71,4 +71,11 @@ public class ManagerController {
         res.put("opinionData",res_1);
         return ResultVOUtil.ReturnBack(res,200,"成功");
     }
+
+//    @PostMapping("/getCase_judiciary")
+//    public ResultVO getCaseJudiciary(@RequestBody JSONObject map){
+//        String province=map.getString("province");
+//        String city=map.getString("city");
+//        String mediate_center=map.getString("mediate_center");
+//    }
 }
