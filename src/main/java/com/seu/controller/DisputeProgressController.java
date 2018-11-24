@@ -626,7 +626,7 @@ public class DisputeProgressController {
     @Autowired
     private RuntimeService runtimeService;
 
-    //专家预约审核
+    //专家审核
     @PostMapping("/exportAppointCheck")
     public ResultVO ExportAppointCheck(@RequestBody Map<String, String> map) throws Exception{
         String disputeId = map.get("caseId");
@@ -656,6 +656,10 @@ public class DisputeProgressController {
 
         Task currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
         disputeProgressService.completeCurrentTask(currentTask.getId(), var);
+        /** 如果当前任务是调解通知，则再跳一下 */
+        currentTask=disputeProgressService.searchCurrentTasks(disputeId).get(0);
+        if(currentTask.getName().equals("调解通知"))
+            taskService.complete(currentTask.getId());
 
         return ResultVOUtil.ReturnBack(map,112,"审核完成");
     }
@@ -746,6 +750,8 @@ public class DisputeProgressController {
         JSONObject map= Request2JSONobjUtil.convert(request);
         String caseId = map.getString("caseId");//操作人id
         //String stageContent=map.getString("stageContent");
+        if(caseId==null)
+            System.out.println("/mediator/getKeyWordList  error 746");
         String stageContent=disputecaseRepository.findOne(caseId).getMedicalProcess();
 
         JSONArray jsonArray = JSONArray.parseArray(stageContent);
