@@ -42,4 +42,6 @@ public class MediationHallDataForm {
     //用户上传文件
     private JSONArray userUpload;
 
+    private String caseLevel;
+
 }

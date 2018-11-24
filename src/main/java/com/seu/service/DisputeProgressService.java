@@ -129,7 +129,7 @@ public interface DisputeProgressService {
     ResultVO getAdditionalAllocation(String caseId,Pageable pageRequest);
 
     /** 下拉框：管理员页面获取所有调解员(不分页) */
-    ResultVO getAllMediator();
+    ResultVO getAllMediator(String province, String city, String mediateCenter);
 
     /** 立案判断通过后为process表添加 调解开始时间和调解结束时间，初始限时30个工作日 */
     void setStartTimeAndEndTime(String caseId) throws Exception;

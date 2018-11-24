@@ -2,6 +2,7 @@ package com.seu.converter;
 
 import com.seu.domian.User;
 import com.seu.form.VOForm.UserForm;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @ClassName User2UserForm
@@ -10,6 +11,8 @@ import com.seu.form.VOForm.UserForm;
  * @Date 2018/8/3 21:28
  * @Version 1.0
  **/
+
+
 public class User2UserForm {
     public static UserForm convert(User user){
         UserForm userForm=new UserForm();
@@ -22,6 +25,7 @@ public class User2UserForm {
             }
             if(user.getRole()!=null){
                 userForm.setRole(user.getRole());
+
             }
 
         }catch (Exception e){

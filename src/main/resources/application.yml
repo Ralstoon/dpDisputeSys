@@ -16,18 +16,19 @@ spring:
               auto: update
   redis:
 #    host: 172.16.0.16
+
     host: 139.199.166.125
     port: 6379
 
 server:
-#  port: 8080
-  port: 443
-  ssl:
-    key-store-type: JKS
-    key-store: classpath:1541430928812.jks
-    key-store-password: 1541430928812
-    # 证书别名
-    key-alias: alias
+  port: 8080
+#  port: 443
+#  ssl:
+#    key-store-type: JKS
+#    key-store: classpath:1541430928812.jks
+#    key-store-password: 1541430928812
+#    # 证书别名
+#    key-alias: alias
 
 
 

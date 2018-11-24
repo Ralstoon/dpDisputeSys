@@ -71,7 +71,33 @@ public class UserServiceImpl implements UserService {
         if(!user.getPassword().equals(md5Password)){
             return ServerResponse.createByErrorMessage("登录密码错误");
         }
-        return ServerResponse.createBySuccess("用户登录成功", User2UserForm.convert(user));
+
+        UserForm userForm = new UserForm();
+
+        if(user.getID()!=null){
+            userForm.setId(user.getID());
+        }
+        if(user.getSpecificId()!=null){
+            userForm.setSpecific_id(user.getSpecificId());
+        }
+        if(user.getRole()!=null){
+            userForm.setRole(user.getRole());
+            if(user.getRole().equals("1")){
+                Mediator mediator = mediatorRepository.findByFatherId(user.getID());
+                userForm.setProvince(mediator.getProvince());
+                userForm.setCity(mediator.getCity());
+                userForm.setMediateCenter(mediator.getMediateCenter());
+            }
+            if(user.getRole().equals("2")){
+                Admin admin = adminRepository.findByFatherId(user.getID());
+                userForm.setProvince(admin.getProvince());
+                userForm.setCity(admin.getCity());
+                userForm.setMediateCenter(admin.getMediateCenter());
+                userForm.setLevel(admin.getLevel());
+            }
+        }
+
+        return ServerResponse.createBySuccess("用户登录成功", userForm);
     }
 
     @Override

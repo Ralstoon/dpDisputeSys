@@ -572,9 +572,14 @@ public class DisputeProgressController {
     }
 
     /** 下拉框：管理员页面获取所有调解员(不分页) */
-    @GetMapping("/manager/getAllMediator")
-    public ResultVO getAllMediator(){
-        return disputeProgressService.getAllMediator();
+    @PostMapping("/manager/getAllMediator")
+    public ResultVO getAllMediator(@RequestBody JSONObject map){
+        //province city mediate_center
+        String province = map.getString("province");
+        String city = map.getString("city");
+        String mediateCenter = map.getString("mediate_center");
+
+        return disputeProgressService.getAllMediator(province, city, mediateCenter);
     }
 
 //    // 调解前预约 调解员判断 是否进行 专家预约，调解员线下确认时间

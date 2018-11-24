@@ -19,4 +19,8 @@ public class UserForm implements Serializable {
     private String id;  // user表id
     private String specific_id;  // 对应role表的id
     private String role;
+    private String province;
+    private String city;
+    private String mediateCenter;
+    private Integer level;
 }

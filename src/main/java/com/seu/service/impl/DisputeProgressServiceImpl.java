@@ -505,6 +505,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             mediationHallDataForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));
 
+            mediationHallDataForm.setCaseLevel(disputecase.getLevel());
+
             mediationHallDataFormList.add(mediationHallDataForm);
 
             //当前人是否回避words=str.trim().split(",");todo:test
@@ -935,16 +937,27 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Integer size=map.getInteger("size");
         String filterType=map.getString("filterType");
         String filterType2=map.getString("filterType2");
+        String province = map.getString("province");
+        String city = map.getString("city");
+        String mediateCenter = map.getString("mediate_center");
+
+        if (province==null)
+            province="";
+        if (city==null)
+            city="";
+        if (mediateCenter==null)
+            mediateCenter="";
+
         PageRequest pageRequest=new PageRequest(page,size);
         Page<Mediator> mediatorList=null;
         if(!StrIsEmptyUtil.isEmpty(filterType) && !StrIsEmptyUtil.isEmpty(filterType2))
-            mediatorList=mediatorRepository.findAllByAuthorityConfirmAndAuthorityJudiciary(filterType,filterType2,pageRequest);
+            mediatorList=mediatorRepository.findAllByAuthorityConfirmAndAuthorityJudiciary(filterType,filterType2,province,city,mediateCenter,pageRequest);
         else if(!StrIsEmptyUtil.isEmpty(filterType))
-            mediatorList=mediatorRepository.findAllByAuthorityConfirm(filterType,pageRequest);
+            mediatorList=mediatorRepository.findAllByAuthorityConfirm(filterType,province,city,mediateCenter,pageRequest);
         else if(!StrIsEmptyUtil.isEmpty(filterType2))
-            mediatorList=mediatorRepository.findAllByAuthorityJudiciary(filterType2,pageRequest);
+            mediatorList=mediatorRepository.findAllByAuthorityJudiciary(filterType2,province,city,mediateCenter,pageRequest);
         else
-            mediatorList=mediatorRepository.findAll(pageRequest);
+            mediatorList=mediatorRepository.findAllByMediatorCenter(province,city,mediateCenter,pageRequest);
 
         Integer totalPages=mediatorList.getTotalPages();
         List<MediatorAuthorityForm> mediatorAuthorityFormList=new ArrayList<>();
@@ -1694,8 +1707,14 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getAllMediator() {
-        List<Mediator> mediatorList=mediatorRepository.findAll();
+    public ResultVO getAllMediator(String province, String city, String mediateCenter) {
+        if (province==null)
+            province="";
+        if(city==null)
+            city="";
+        if(mediateCenter==null)
+            mediateCenter="";
+        List<Mediator> mediatorList=mediatorRepository.findByMediateCenter(province, city, mediateCenter);
         List<OneMediatorForm> mediatorFormList=new ArrayList<>();
         for(Mediator mediator:mediatorList){
             String name=mediator.getMediatorName();

@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.awt.*;
+import java.util.List;
+
 
 /**
  * @ClassName MediatorRepository
@@ -23,9 +26,29 @@ public interface MediatorRepository extends JpaRepository<Mediator,String> {
             nativeQuery = true)
     Page<Mediator> findAllWithoutUserChooseAndAvoid(String userChoose, String avoidStatus, Pageable pageable);
 
-    Page<Mediator> findAllByAuthorityConfirmAndAuthorityJudiciary(String filterType1,String filterType2,Pageable pageable);
-    Page<Mediator> findAllByAuthorityConfirm(String filterType,Pageable pageable);
-    Page<Mediator> findAllByAuthorityJudiciary(String filterType,Pageable pageable);
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.authority_confirm = ?4 and authority_judiciary = ?5 ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.authority_confirm = ?4 and authority_judiciary = ?5",
+            nativeQuery = true)
+    Page<Mediator> findAllByAuthorityConfirmAndAuthorityJudiciary(String province, String city, String mediateCenter,String filterType1,String filterType2,Pageable pageable);
 
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.authority_confirm = ?4 ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.authority_confirm = ?4",
+            nativeQuery = true)
+    Page<Mediator> findAllByAuthorityConfirm(String province, String city, String mediateCenter,String filterType,Pageable pageable);
+
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and authority_judiciary = ?4 ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and authority_judiciary = ?4",
+            nativeQuery = true)
+    Page<Mediator> findAllByAuthorityJudiciary(String province, String city, String mediateCenter,String filterType,Pageable pageable);
+
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3%",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3%",
+            nativeQuery = true)
+    List<Mediator> findByMediateCenter(String province, String city, String mediateCenter);
+
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3%",
+            nativeQuery = true)
+    Page<Mediator> findAllByMediatorCenter(String province, String city, String mediateCenter,Pageable pageable);
 
 }
