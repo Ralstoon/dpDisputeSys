@@ -147,7 +147,7 @@ public interface DisputeProgressService {
     void setSuspended(String caseId,Integer isSuspended);
 
     /** 管理员获取专家管理界面数据 */
-    ResultVO getExpertManageList(PageRequest pageRequest,Integer filterStatus);
+    ResultVO getExpertManageList(PageRequest pageRequest,Integer filterStatus,String province,String city,String mediateCenter);
 
     /** 根据caseId和video_url存入进展表的当前阶段中 */
     void saveMediateVideo(String caseId,String video_url);

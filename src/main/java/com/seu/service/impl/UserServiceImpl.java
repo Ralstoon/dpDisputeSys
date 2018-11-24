@@ -172,6 +172,8 @@ public class UserServiceImpl implements UserService {
             String mediatorName=map.getString("mediatorName");
             String idCard=map.getString("idCard");
             String mediateCenter=map.getString("mediateCenter");
+            String province=map.getString("province");
+            String city=map.getString("city");
             String authorityConfirm=map.getString("authorityConfirm");
             String authorityJudiciary=map.getString("authorityJudiciary");
             String id=KeyUtil.genUniqueKey();
@@ -179,6 +181,8 @@ public class UserServiceImpl implements UserService {
             String role="1";
             User registerUser=new User(id,phone,md5Password,role,specificId);
             Mediator registerMediator=new Mediator(specificId,id,mediatorName,idCard,mediateCenter,authorityConfirm,authorityJudiciary);
+            registerMediator.setProvince(province);
+            registerMediator.setCity(city);
             userRepository.save(registerUser);
             mediatorRepository.save(registerMediator);
             /** 在IM上进行注册，发送原密码 */

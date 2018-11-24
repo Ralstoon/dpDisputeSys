@@ -32,7 +32,8 @@ public class TestInstances {
         Integer page=map.getInteger("page")-1;
         Integer size=map.getInteger("size");
         PageRequest pageRequest=new PageRequest(page,size);
-        return disputecaseRepository.findAll_HallData(pageRequest);
+//        return disputecaseRepository.findAll_HallData(pageRequest);
+        return null;
 //        System.out.println(caseId);
     }
 

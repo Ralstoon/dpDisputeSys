@@ -394,6 +394,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         Date endTime=map.getDate("endTime");
 
         String authorityConfirm = map.getString("authorityConfirm");
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String mediateCenter=map.getString("mediate_center");
+        if(province==null)
+            province="%";
+        if(city==null)
+            city="%";
+        if(mediateCenter==null)
+            mediateCenter="%";
+
 
 
         if(endTime!=null){
@@ -420,29 +430,29 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         switch (count){
             case 0:
                 if(authorityConfirm.equals("1"))
-                    disputecasePage=disputecaseRepository.findAll_HallData(pageRequest);
+                    disputecasePage=disputecaseRepository.findAll_HallData(province,city,mediateCenter,pageRequest);
                 if(authorityConfirm.equals("0"))
-                    disputecasePage= disputecaseRepository.findAll_HallData_ByLow(pageRequest);
+                    disputecasePage= disputecaseRepository.findAll_HallData_ByLow(province,city,mediateCenter,pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
-                    disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,province,city,mediateCenter,pageRequest);
                 else if(startTime!=null)
-                    disputecasePage=disputecaseRepository.findAfterTime_HallData(startTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findAfterTime_HallData(startTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findBeforeTime_HallData(endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findBeforeTime_HallData(endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 2:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
                     if(startTime!=null)
-                        disputecasePage=disputecaseRepository.findWithStatusAndAfterTime(filterStatus,startTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndAfterTime(filterStatus,startTime,province,city,mediateCenter,pageRequest);
                     else
-                        disputecasePage=disputecaseRepository.findWithStatusAndBeforeTime(filterStatus,endTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndBeforeTime(filterStatus,endTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findBetweenTime_HallData(startTime,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findBetweenTime_HallData(startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 3:
-                disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,pageRequest);
+                disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
         }
         Integer totalPages=disputecasePage.getTotalPages();
@@ -536,6 +546,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         String filterMediator=map.getString("id").trim();
         Date startTime=map.getDate("startTime");
         Date endTime=map.getDate("endTime");
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String mediateCenter=map.getString("mediate_center");
+        if(province==null)
+            province="%";
+        if(city==null)
+            city="%";
+        if(mediateCenter==null)
+            mediateCenter="%";
+
         if(endTime!=null){
             // endTime+1
             Calendar calendar=Calendar.getInstance();
@@ -559,27 +579,27 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-                disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
+                disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,province,city,mediateCenter,pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
-                    disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,province,city,mediateCenter,pageRequest);
                 else if(startTime!=null)
-                    disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime(filterMediator,startTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime(filterMediator,startTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime(filterMediator,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime(filterMediator,endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 2:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
                     if(startTime!=null)
-                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,province,city,mediateCenter,pageRequest);
                     else
-                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findWithMediatorAndTime(filterMediator,startTime,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithMediatorAndTime(filterMediator,startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 3:
-                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,pageRequest);
+                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
         }
 
@@ -671,6 +691,17 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         String filterMediator=map.getString("filterMediator").trim();
         Date startTime=map.getDate("startTime");
         Date endTime=map.getDate("endTime");
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String mediateCenter=map.getString("mediate_center");
+        if(province==null)
+            province="%";
+        if(city==null)
+            city="%";
+        if(mediateCenter==null)
+            mediateCenter="%";
+
+
         if(endTime!=null){
             // endTime+1
             Calendar calendar=Calendar.getInstance();
@@ -697,47 +728,47 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             count++;
         switch (count){
             case 0:
-                disputecasePage=disputecaseRepository.findAll(pageRequest1);
+                disputecasePage=disputecaseRepository.findAllWithDesc(province,city,mediateCenter,pageRequest);
                 break;
             case 1:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
-                    disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithProcessStatus(filterStatus,province,city,mediateCenter,pageRequest);
                 else if(!StrIsEmptyUtil.isEmpty(filterMediator))
-                    disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,pageRequest);
+                    disputecasePage=disputecaseRepository.findByMediatorId(filterMediator,province,city,mediateCenter,pageRequest);
                 else if(startTime!=null)
-                    disputecasePage=disputecaseRepository.findAfterTime(startTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findAfterTime(startTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findBeforeTime(endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findBeforeTime(endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 2:
                 if(!StrIsEmptyUtil.isEmpty(filterStatus))
                     if(!StrIsEmptyUtil.isEmpty(filterMediator))
-                        disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndMediator(filterStatus,filterMediator,province,city,mediateCenter,pageRequest);
                     else if(startTime!=null)
-                        disputecasePage=disputecaseRepository.findWithStatusAndAfterTime(filterStatus,startTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndAfterTime(filterStatus,startTime,province,city,mediateCenter,pageRequest);
                     else
-                        disputecasePage=disputecaseRepository.findWithStatusAndBeforeTime(filterStatus,endTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findWithStatusAndBeforeTime(filterStatus,endTime,province,city,mediateCenter,pageRequest);
                 else
                     if(!StrIsEmptyUtil.isEmpty(filterMediator))
                         if(startTime!=null)
-                            disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime(filterMediator,startTime,pageRequest);
+                            disputecasePage=disputecaseRepository.findWithMediatorAndAfterTime(filterMediator,startTime,province,city,mediateCenter,pageRequest);
                         else
-                            disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime(filterMediator,endTime,pageRequest);
+                            disputecasePage=disputecaseRepository.findWithMediatorAndBeforeTime(filterMediator,endTime,province,city,mediateCenter,pageRequest);
                     else
-                        disputecasePage=disputecaseRepository.findBetweenTime(startTime,endTime,pageRequest);
+                        disputecasePage=disputecaseRepository.findBetweenTime(startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 3:
                 if(endTime==null)
-                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndAfterTime(filterStatus,filterMediator,startTime,province,city,mediateCenter,pageRequest);
                 else if(startTime==null)
-                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithStatusAndMediatorAndBeforeTime(filterStatus,filterMediator,endTime,province,city,mediateCenter,pageRequest);
                 else if(StrIsEmptyUtil.isEmpty(filterMediator))
-                    disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithStatusAndTime(filterStatus,startTime,endTime,province,city,mediateCenter,pageRequest);
                 else
-                    disputecasePage=disputecaseRepository.findWithMediatorAndTime(filterMediator,startTime,endTime,pageRequest);
+                    disputecasePage=disputecaseRepository.findWithMediatorAndTime(filterMediator,startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
             case 4:
-                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,pageRequest);
+                disputecasePage=disputecaseRepository.findWith4Conditions(filterStatus,filterMediator,startTime,endTime,province,city,mediateCenter,pageRequest);
                 break;
         }
 
@@ -1930,7 +1961,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getExpertManageList(PageRequest pageRequest,Integer filterStatus) {
+    public ResultVO getExpertManageList(PageRequest pageRequest,Integer filterStatus,String province,String city,String mediateCenter) {
         /**
           filterstatus 0 1 2 待审批 通过 不通过
          待审批找参数is_suspended
@@ -1940,16 +1971,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<ExpertAppointForm> list=new ArrayList<>();
         if(filterStatus!=3){
             if(filterStatus==0)
-                pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+                pages=disputecaseAccessoryRepository.findBySuspended(2,province,city,mediateCenter,pageRequest);
             else if(filterStatus==1 || filterStatus==2)
-                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus), pageRequest);
+                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus),province,city,mediateCenter, pageRequest);
 
             for(Object[] obj:pages.getContent()){
                 ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), String.valueOf(filterStatus));
                 list.add(form);
             }
         }else{
-            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(pageRequest);
+            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(province,city,mediateCenter,pageRequest);
             for(Object[] obj:pages.getContent()){
                 String result="";
                 if(obj[3].toString().equals("0"))

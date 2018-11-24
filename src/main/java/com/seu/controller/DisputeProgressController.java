@@ -720,7 +720,17 @@ public class DisputeProgressController {
 
         if(filterStatus.equals(""))
             status = 3;
-        return disputeProgressService.getExpertManageList(pageRequest,status);
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String mediateCenter=map.getString("mediate_center");
+        if(province==null)
+            province="%";
+        if(city==null)
+            city="%";
+        if(mediateCenter==null)
+            mediateCenter="%";
+
+        return disputeProgressService.getExpertManageList(pageRequest,status,province,city,mediateCenter);
     }
 
 
@@ -1083,4 +1093,7 @@ public class DisputeProgressController {
         /** 完成当前流程 */
         taskService.complete(task.getId());  // 会进去到流程 调解前处理
     }
+
+
+
 }

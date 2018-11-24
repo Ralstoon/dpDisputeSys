@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(("/DisputeWeb/search"))
+@RequestMapping("/DisputeWeb/search")
 public class SearchController {
     @Autowired
     private KeyWordsSearchService keyWordsSearchService;
