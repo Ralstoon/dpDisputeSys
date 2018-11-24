@@ -24,4 +24,6 @@ public interface UserService {
     /** 调解员账号注册 */
     ResultVO registerMediator(JSONArray map);
 
+    String getCode(String Phone);
+
 }

@@ -79,7 +79,11 @@ public class DisputeProgressController {
     public ResultVO caseAccept(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
                                @RequestParam("result") Integer result,
                                @RequestParam("caseId") String disputeId,
+                               @RequestParam("caseLevel") String caseLevel,
                                @RequestParam("id") String ID) throws Exception {
+        Disputecase disputecase = disputecaseRepository.findOne(disputeId);
+        disputecase.setLevel(caseLevel);
+        disputecaseRepository.save(disputecase);
         log.info("\n开始 立案判断\n");
         String name=userService.findNameById(ID);
         List<Task> tasks=verifyProcessUtil.verifyTask(disputeId,"立案判断");

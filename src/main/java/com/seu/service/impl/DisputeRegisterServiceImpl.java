@@ -305,13 +305,23 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
 
     @Override
     @Transactional
-    public void getBasicDivideInfo(String stageContent, String caseId, Integer mainRecStage, String require, Integer claimAmount) {
+    public void getBasicDivideInfo(String city, String mediationCenter, String stageContent, String caseId, Integer mainRecStage, String require, Integer claimAmount) {
 
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
+        disputecase.setMediationCenter(mediationCenter);
+        disputecase.setCity(city);
+        disputecase.setProvice("江苏省");
         disputecase.setAppeal(require);
         disputecase.setMainRecStage(String.valueOf(mainRecStage)+"");
         disputecase.setClaimMoney(claimAmount+"");
         disputecase.setMedicalProcess(stageContent);
+        if(claimAmount==0){
+            disputecase.setLevel("1");
+        }else if(claimAmount==1){
+            disputecase.setLevel("3");
+        }else {
+            disputecase.setLevel("5");
+        }
         String[] temp=disputecase.getProposerId().trim().split(",");
         List<String> names=new ArrayList<>();
         for(String s:temp){
@@ -342,7 +352,10 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         Integer mainRecStage=basicDivideInfo.getInteger("mainRecStage");
         String require=basicDivideInfo.getString("Require");
         Integer claimAmount=basicDivideInfo.getInteger("claimAmount");
-        getBasicDivideInfo(stageContent,caseId,mainRecStage,require,claimAmount);
+        String mediationCenter=basicDivideInfo.getString("mediationCenter");
+        String city = basicDivideInfo.getJSONArray("stageContent").getJSONObject(0).getJSONObject("InvolvedInstitute").getString("City");
+
+        getBasicDivideInfo(city, mediationCenter,stageContent,caseId,mainRecStage,require,claimAmount);
         log.info("\n医疗行为接受完成\n");
         /** 添加所选择的的调解员 */
         JSONArray pickedList=obj.getJSONArray("InfoOfMediator");

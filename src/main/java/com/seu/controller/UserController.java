@@ -2,6 +2,14 @@ package com.seu.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.aliyuncs.profile.IClientProfile;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
@@ -272,5 +280,15 @@ public class UserController {
             redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
         }
         return response;
+    }
+
+    //注册验证码请求
+    @RequestMapping(value = "getCode",method = RequestMethod.POST)
+    public ResultVO getZoneList(@RequestBody Map<String, String > map) {
+        String phone = map.get("phone");
+
+        Map<String, String> data = new HashMap<>();
+        data.put("authcode", userService.getCode(phone));
+        return ResultVOUtil.ReturnBack(data,123,"获取验证码成功");
     }
 }

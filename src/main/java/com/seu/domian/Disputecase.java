@@ -57,6 +57,14 @@ public class Disputecase {
     /** 表示调解员评判 */
     private String moderatorRegister;
 
+    //调解中心
+    private String mediationCenter;
+    private String provice;
+    private String city;
+
+    //案件等级
+    private String level;
+
     public Disputecase() {
     }
 
