@@ -33,6 +33,7 @@ import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.RegisterIMUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -96,7 +97,6 @@ public class UserServiceImpl implements UserService {
                 userForm.setLevel(admin.getLevel());
             }
         }
-
         return ServerResponse.createBySuccess("用户登录成功", userForm);
     }
 

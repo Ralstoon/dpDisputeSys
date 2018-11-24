@@ -103,22 +103,22 @@ public class UserController {
      *@Param [normalUserDetailForm, bindingResult]
      *@return com.seu.ViewObject.ResultVO
      **/
-//    // TODO
-//    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
-//    public ResultVO login(@RequestBody Map<String,Object> map){
-////        if(bindingResult.hasErrors()){
-////            Map<String,Object> param=new HashMap<>();
-////            param.put("data",bindingResult.getFieldError().getDefaultMessage());
-////            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
-////        }
-////        NormalUser currentUser=(NormalUser)session.getAttribute("currentUser");
-//        NormalUserForm normalUserForm1=new NormalUserForm();
-//        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm1);
-//        if(result!=null)
-//            return ResultVOUtil.ReturnBack(result,UpdateInfoEnum.UPDATE_SUCCESS.getCode(),UpdateInfoEnum.UPDATE_SUCCESS.getMsg());
-//        else
-//            return ResultVOUtil.ReturnBack(UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
-//    }
+    // TODO
+    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
+    public ResultVO updateUserInfo(@RequestBody Map<String,Object> map){
+//        if(bindingResult.hasErrors()){
+//            Map<String,Object> param=new HashMap<>();
+//            param.put("data",bindingResult.getFieldError().getDefaultMessage());
+//            return ResultVOUtil.ReturnBack(param,UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
+//        }
+//        NormalUser currentUser=(NormalUser)session.getAttribute("currentUser");
+        NormalUserForm normalUserForm1=new NormalUserForm();
+        NormalUserForm result= normalUserService.updateNormalUser(normalUserForm1);
+        if(result!=null)
+            return ResultVOUtil.ReturnBack(result,UpdateInfoEnum.UPDATE_SUCCESS.getCode(),UpdateInfoEnum.UPDATE_SUCCESS.getMsg());
+        else
+            return ResultVOUtil.ReturnBack(UpdateInfoEnum.UPDATE_FAIL.getCode(),UpdateInfoEnum.UPDATE_FAIL.getMsg());
+    }
 
 
     @RequestMapping(value = "loginout",method = RequestMethod.POST)
