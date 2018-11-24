@@ -310,7 +310,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
         Disputecase disputecase=disputecaseRepository.getOne(caseId);
         disputecase.setMediationCenter(mediationCenter);
         disputecase.setCity(city);
-        disputecase.setProvice("江苏省");
+        disputecase.setProvince("江苏省");
         disputecase.setAppeal(require);
         disputecase.setMainRecStage(String.valueOf(mainRecStage)+"");
         disputecase.setClaimMoney(claimAmount+"");
