@@ -7,6 +7,7 @@ import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
 import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseApply;
+import com.seu.domian.Mediator;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
 import com.seu.form.ExpertAppointForm;
@@ -305,5 +306,6 @@ public class DisputeRegisterController {
         result.put("HistoryCaseFormList",HistoryCaseFormList);
         return ResultVOUtil.ReturnBack(result,123,"历史案件");
     }
+
 
 }

@@ -920,7 +920,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         for(Mediator mediator:mediatorList.getContent()){
             String name=mediator.getMediatorName();
             String mediatorId=mediator.getFatherId();
-            mediatorFormList.add(new OneMediatorForm(name,mediatorId));
+            mediatorFormList.add(new OneMediatorForm(name,mediatorId,mediator.getMediateCenter(),mediator.getBasicInformation()));
         }
         Map<String,Object> var=new HashMap<>();
         var.put("mediatorFormList",mediatorFormList);

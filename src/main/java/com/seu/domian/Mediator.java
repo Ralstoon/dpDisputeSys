@@ -1,6 +1,7 @@
 package com.seu.domian;
 
 import lombok.Data;
+import org.python.antlr.ast.Str;
 
 import javax.persistence.*;
 
@@ -26,6 +27,9 @@ public class Mediator {
     private String mediateCenter;
     private String authorityConfirm="0";
     private String authorityJudiciary="0";
+    private String basicInformation;
+    private String city;
+    private String province;
 
     public Mediator() {
     }

@@ -20,4 +20,8 @@ public class Admin {
     private String fatherId;
     private String adminName;
     private String idCard;
+    private String mediateCenter;
+    private String city;
+    private String province;
+    private Integer level;
 }
