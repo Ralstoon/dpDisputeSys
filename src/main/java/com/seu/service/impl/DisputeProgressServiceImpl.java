@@ -1710,7 +1710,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getAdditionalAllocation(String caseId, Pageable pageRequest) {
+    public ResultVO getAdditionalAllocation(String province ,String city,String mediateCenter ,String caseId, Pageable pageRequest) {
         /** 先获取用户意向 */
         DisputecaseProcess disputecaseProcess=disputecaseProcessRepository.findByDisputecaseId(caseId);
         String userChoose=disputecaseProcess.getUserChoose();
@@ -1721,7 +1721,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         if(StrIsEmptyUtil.isEmpty(avoidStatus))
             avoidStatus="";
         Page<Mediator> mediatorPage;
-        mediatorPage=mediatorRepository.findAllWithoutUserChooseAndAvoid(userChoose,avoidStatus,pageRequest);
+        mediatorPage=mediatorRepository.findAllWithoutUserChooseAndAvoid(userChoose,avoidStatus,province,city,mediateCenter,pageRequest);
         System.out.println(mediatorPage.getTotalPages());
         Integer totalPages=mediatorPage.getTotalPages();
         List<OneMediatorForm> mediatorFormList=new ArrayList<>();

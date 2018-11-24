@@ -566,9 +566,13 @@ public class DisputeProgressController {
         Integer page=map.getInteger("page")-1;
         Integer size=map.getInteger("size");
 
+        String province = map.getString("province");
+        String city = map.getString("city");
+        String mediateCenter = map.getString("mediate_center");
+
         PageRequest pageRequest=new PageRequest(page,size);
         log.info("\n结束 [另外分配]\n");
-        return disputeProgressService.getAdditionalAllocation(caseId,pageRequest);
+        return disputeProgressService.getAdditionalAllocation(province, city, mediateCenter, caseId,pageRequest);
     }
 
     /** 下拉框：管理员页面获取所有调解员(不分页) */
@@ -1031,8 +1035,23 @@ public class DisputeProgressController {
         String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
         DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
         disputecaseAccessory.setProtocal(url);
+        DisputecaseProcess disputeProgress = disputecaseProcessRepository.findByDisputecaseId(caseId);
+        disputeProgress.setStatus("13");
+        disputecaseProcessRepository.save(disputeProgress);
         disputecaseAccessoryRepository.save(disputecaseAccessory);
         return ResultVOUtil.ReturnBack(123, "协议上传");
+    }
+
+    //协议下载
+    @PostMapping(value = "/getProtocal")
+    public ResultVO getProtocal(@RequestBody JSONObject obj){
+
+        String caseId = obj.getString("caseId");
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        String url = disputecaseAccessory.getProtocal();
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url);
+        return ResultVOUtil.ReturnBack(map,123, "获得协议链接");
     }
 
     //6.司法确认

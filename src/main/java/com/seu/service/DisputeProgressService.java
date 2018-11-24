@@ -126,7 +126,7 @@ public interface DisputeProgressService {
     ResultVO getUserChooseMediator(JSONObject map);
 
     /** 管理者获取该案件的 另外分配：剔除 用户意向和申请回避 */
-    ResultVO getAdditionalAllocation(String caseId,Pageable pageRequest);
+    ResultVO getAdditionalAllocation(String province ,String city,String mediateCenter ,String caseId,Pageable pageRequest);
 
     /** 下拉框：管理员页面获取所有调解员(不分页) */
     ResultVO getAllMediator(String province, String city, String mediateCenter);
