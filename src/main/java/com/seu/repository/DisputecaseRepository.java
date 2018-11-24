@@ -34,6 +34,7 @@ public interface DisputecaseRepository extends JpaRepository<Disputecase,String>
     @Query(value ="select DISTINCT a.mediation_center FROM disputecase a where a.province=?1 and a.city=?2",
             nativeQuery = true)
     List<Object> findDistinctCenter(String province,String city);
+
     @Query(value ="select count(*) FROM disputecase a where a.mediation_center=?1 ",
             nativeQuery = true)
     Integer getCountByCenter(String mediationCenter);

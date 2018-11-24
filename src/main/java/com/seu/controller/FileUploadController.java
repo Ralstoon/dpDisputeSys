@@ -1,6 +1,8 @@
 package com.seu.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.DisputecaseAccessory;
 import com.seu.repository.DisputecaseAccessoryRepository;
 import com.seu.service.DisputecaseAccessoryService;
@@ -44,44 +46,13 @@ public class FileUploadController {
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
     @PostMapping("/wordUpload")
-    public ResponseEntity<FileSystemResource> upload(@RequestBody Map<String,Object> map) throws IOException {
+    public ResultVO upload(@RequestBody Map<String,Object> map) throws IOException {
         String templateName=map.get("templateName").toString();
-        File file=wordTemplateUtil.createWord(map,templateName);
-
-
-        String url = "";
-        String disputeId = map.get("caseId").toString();
-        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
-        if (templateName.equals("南京市医调委不予受理通知书") || templateName.equals("南京市医调委案件受理通知书")){
-            FileInputStream inputStream = new FileInputStream(file);
-            url = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ file.getName());
-            disputecaseAccessory.setAcceptanceNotice("http://"+url);
-            disputecaseAccessoryRepository.save(disputecaseAccessory);
-        }
-
-        if (templateName.equals("司法确认申请书")){
-            FileInputStream inputStream =  new FileInputStream(file);
-            url = disputecaseAccessoryService.uploadFile(inputStream, file.getName());
-            JSONObject result = JSONObject.parseObject("{}");
-            result.put("judicialConfirmFile", url);
-            disputecaseAccessory.setJudicialConfirm(result.toJSONString());
-            disputecaseAccessoryRepository.save(disputecaseAccessory);
-        }
-
-        /** 返回文件结果 */
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", "attachment; filename=" + templateName + ".doc");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-        headers.add("Last-Modified", new Date().toString());
-        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new FileSystemResource(file));
+        String url=wordTemplateUtil.createWord(map,templateName);
+        JSONObject res=JSONObject.parseObject("{}");
+        res.put("name",templateName);
+        res.put("url",url);
+        return ResultVOUtil.ReturnBack(res,200,"成功");
 
     }
 }

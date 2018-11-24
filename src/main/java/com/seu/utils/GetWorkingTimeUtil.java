@@ -107,6 +107,7 @@ public class GetWorkingTimeUtil {
             c.add(Calendar.DAY_OF_MONTH,1);
             currentTime=c.getTime();
         }
+        countdown=30;
         return countdown;
     }
 }

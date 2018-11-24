@@ -37,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -1458,8 +1457,8 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
          * 当前步骤为 调解前处理
          * 1、设置paramBeforeMediate=1
          *         appointResult 参数 ： 0为三方 1为专家
-         * 2、流程往下走一格
-         * 3、自动发送预约消息
+         * 2、流程往下走一格到 调解通知
+         * 3、自动结束调解通知
          */
         String pid=disputecaseActivitiRepository.getOne(caseId).getProcessId();
         List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"调解前处理");
@@ -1472,6 +1471,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         taskService.complete(currentTask.getId());
         currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
         taskService.complete(currentTask.getId());// Wj
+        /** 假如当前是在调解通知，则再跳一下 */
+        currentTask=taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        if(currentTask.getName().equals("调解通知"))
+            taskService.complete(currentTask.getId());
+
 
         /** 发送预约通知 */
         try {
