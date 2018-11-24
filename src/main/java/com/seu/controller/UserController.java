@@ -70,7 +70,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
-    public ResultVO login(@RequestBody JSONObject map) {
+    public ResultVO updatePassword(@RequestBody JSONObject map) {
         String phone=map.getString("phone");
         String password=map.getString("password");
 
@@ -261,7 +261,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
-    public ServerResponse<UserForm> updatePassword(@RequestBody JSONObject map) {
+    public ServerResponse<UserForm> login(@RequestBody JSONObject map) {
         String phone=map.getString("phone");
         String password=map.getString("password");
 //        System.out.println(password+"  "+phone);
