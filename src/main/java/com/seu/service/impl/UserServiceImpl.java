@@ -97,7 +97,6 @@ public class UserServiceImpl implements UserService {
                 userForm.setLevel(admin.getLevel());
             }
         }
-        System.out.println(userForm);
         return ServerResponse.createBySuccess("用户登录成功", userForm);
     }
 
