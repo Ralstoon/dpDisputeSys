@@ -216,15 +216,6 @@ public class DisputeProgressController {
     }
 
 
-    /** 管理员获取统计管理页面列表
-     * 上送司法厅的分页筛选*/
-    @PostMapping(value = "/manager/getCase_judiciary")
-    public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
-//
-        String id = map.get("id");
-
-        return disputeProgressService.getManagerCaseJudiciary(id);
-    }
 
     /** 管理员获取所有的调解员列表(分页) */
     @PostMapping(value = "/manager/getMediatorListWithPage")
@@ -233,9 +224,14 @@ public class DisputeProgressController {
         String caseId=map.getString("caseId");
         Integer page=map.getInteger("page")-1;  // 前端从一开始，后台从0开始
         Integer size=map.getInteger("size");
+
+        String province = map.getString("province");
+        String city = map.getString("city");
+        String mediate_center = map.getString("mediate_center");
+
         PageRequest pageRequest=new PageRequest(page,size);
         log.info("\n结束 [获取所有调解员列表]\n");
-        return disputeProgressService.getMediatorList(caseId,pageRequest);
+        return disputeProgressService.getMediatorList(province, city, mediate_center, caseId,pageRequest);
     }
 
     /** 管理员 获取所有调解员的授权信息 */

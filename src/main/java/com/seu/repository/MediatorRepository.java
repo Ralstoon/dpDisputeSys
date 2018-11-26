@@ -20,9 +20,14 @@ import java.util.List;
 public interface MediatorRepository extends JpaRepository<Mediator,String> {
     Mediator findByFatherId(String ID);
 
+    @Query(value = "select * from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3%  ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where  mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% ",
+            nativeQuery = true)
+    Page<Mediator> findAll(String province, String  city,String mediate_center, Pageable pageable);
+
     /** 获取另外分配的调解员列表： 剔除用户意向和调解员回避 */
-    @Query(value = "select * from mediator where FIND_IN_SET(father_id,?4)=0 AND FIND_IN_SET(father_id,?5)=0 and mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3%  ORDER BY ?#{#pageable}",
-            countQuery = "select count(*) from mediator where FIND_IN_SET(father_id,?4)=0 AND FIND_IN_SET(father_id,?5)=0 and mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% ",
+    @Query(value = "select * from mediator where FIND_IN_SET(father_id,?1)=0 AND FIND_IN_SET(father_id,?2)=0 and mediator.province like %?3% and mediator.city like %?4% and mediator.mediate_center like %?5%  ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where FIND_IN_SET(father_id,?1)=0 AND FIND_IN_SET(father_id,?2)=0 and mediator.province like %?3% and mediator.city like %?4% and mediator.mediate_center like %?5% ",
             nativeQuery = true)
     Page<Mediator> findAllWithoutUserChooseAndAvoid(String userChoose, String avoidStatus, String province, String city, String mediateCenter, Pageable pageable);
 

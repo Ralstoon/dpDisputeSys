@@ -74,7 +74,7 @@ public interface DisputeProgressService {
     ResultVO getManagerCaseJudiciary(String id);
 
     /** 管理员获取调解员列表（用于给案件分配调解员） */
-    ResultVO getMediatorList(String id,Pageable pageable);
+    ResultVO getMediatorList(String province, String city, String mediate_center, String id,Pageable pageable);
 
     /** 管理员 获取所有调解员的授权信息 */
     ResultVO getNameofAuthorityList(JSONObject map);

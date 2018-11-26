@@ -944,8 +944,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
     }
 
     @Override
-    public ResultVO getMediatorList(String id,Pageable pageable) {
-        Page<Mediator> mediatorList=mediatorRepository.findAll(pageable);
+    public ResultVO getMediatorList(String province, String city, String mediate_center,String id,Pageable pageable) {
+        if(province == null)
+            province="";
+        if(city == null)
+            city = "";
+        if(mediate_center == null)
+            mediate_center = "";
+
+        Page<Mediator> mediatorList=mediatorRepository.findAll(province, city, mediate_center, pageable);
         mediatorList.getTotalPages();
         Integer totalPages=mediatorList.getTotalPages();
         List<OneMediatorForm> mediatorFormList=new ArrayList<>();
@@ -1140,15 +1147,21 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             for(String hos:res){
 
                 List<ContactList> contactList = contactListRepository.findByName(hos);
-                ContactList contact = contactList.get(0);
-
-                String phone=contact.getTele();
-                if(phone==null)
-                    phone="";
-                JSONObject obj=JSONObject.parseObject("{}");
-                obj.put("name",hos);
-                obj.put("phone",phone);
-                respo.add(obj);
+                if(contactList.size()==0 || contactList==null){
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name","联系人");
+                    obj.put("phone","1258012580");
+                    respo.add(obj);
+                }else{
+                    ContactList contact = contactList.get(0);
+                    String phone=contact.getTele();
+                    if(phone==null)
+                        phone="暂缺";
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name",hos);
+                    obj.put("phone",phone);
+                    respo.add(obj);
+                }
             }
             mediationStageForm.setRespondents(respo);
         }else
