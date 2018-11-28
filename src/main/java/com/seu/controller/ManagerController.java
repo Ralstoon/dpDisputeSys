@@ -12,6 +12,7 @@ import com.seu.domian.Mediator;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.VOForm.ManagerCaseForm;
 import com.seu.repository.*;
+import com.seu.service.ManagerService;
 import com.seu.service.impl.DisputeProgressServiceImpl;
 import com.seu.utils.GetWorkingTimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -87,5 +87,146 @@ public class ManagerController {
     public ResultVO getCaseJudiciary(@RequestBody JSONObject map) throws Exception{
 
        return disputeProgressService.getManagerCaseList(map);
+    }
+
+    @Autowired
+    private ManagerService managerService;
+    //添加调解员
+    @PostMapping("/manager/addMediator")
+    public ResultVO addMediator(@RequestParam(value = "avatar", required=false) MultipartFile multipartFile,
+                                @RequestParam("mediator_name") String mediatorName,
+                                @RequestParam("id_card") String idCard,
+                                @RequestParam("mediate_center") String mediateCenter,
+                                @RequestParam("authority_confirm") String authorityConfirm,
+                                @RequestParam("authority_judiciary") String authorityJudiciary,
+                                @RequestParam("basic_information") String basicInformation,
+                                @RequestParam("city") String city,
+                                @RequestParam("province") String province,
+                                @RequestParam("phone") String phone,
+                                @RequestParam("password") String password) throws IOException {
+
+        return managerService.addMediator(mediatorName, idCard, mediateCenter, authorityConfirm, authorityJudiciary, basicInformation,
+                city,province,phone,password, multipartFile);
+    }
+
+    //删除调解员
+    @PostMapping("/manager/deleteMediator")
+    public ResultVO deleteMediator(@RequestBody JSONObject map) {
+        String phone = map.getString("phone");
+        return managerService.deleteMediator(phone);
+    }
+
+    //修改调解员
+    @PostMapping("/manager/updateMediator")
+    public ResultVO updateMediator(@RequestParam(value = "avatar", required=false) MultipartFile multipartFile,
+                                @RequestParam("mediator_name") String mediatorName,
+                                @RequestParam("id_card") String idCard,
+                                @RequestParam("mediate_center") String mediateCenter,
+                                @RequestParam("authority_confirm") String authorityConfirm,
+                                @RequestParam("authority_judiciary") String authorityJudiciary,
+                                @RequestParam("basic_information") String basicInformation,
+                                @RequestParam("city") String city,
+                                @RequestParam("province") String province,
+                                @RequestParam("phone") String phone,
+                                @RequestParam("password") String password) throws IOException {
+
+        return managerService.updateMediator(mediatorName, idCard, mediateCenter, authorityConfirm, authorityJudiciary, basicInformation,
+                city,province,phone,password, multipartFile);
+    }
+
+    //添加医院联系方式
+    @PostMapping("/manager/addContactList")
+    public ResultVO addContactList(@RequestBody JSONObject map){
+        String name = map.getString("name");
+        String tele = map.getString("tele");
+        String contactPerson= map.getString("contact_person");
+        String contactPhone=map.getString("contact_phone");
+        String role=map.getString("role");
+        String location=map.getString("location");
+        String province=map.getString("province");
+        String zone=map.getString("zone");
+        String city=map.getString("city");
+
+        return managerService.addContactList(name,
+                tele,
+                contactPerson,
+                contactPhone,
+                role,
+                location,
+                province,
+                zone,
+                city);
+    }
+
+    //删除医院联系方式
+    @PostMapping("/manager/deleteContactList")
+    public ResultVO deleteContactList(@RequestBody JSONObject map){
+        String id = map.getString("id");
+
+        return managerService.deleteContactList(id);
+    }
+
+    //修改医院联系方式
+    @PostMapping("/manager/updateContactList")
+    public ResultVO updateContactList(@RequestBody JSONObject map){
+        String id = map.getString("id");
+        String name = map.getString("name");
+        String tele = map.getString("tele");
+        String contactPerson= map.getString("contact_person");
+        String contactPhone=map.getString("contact_phone");
+        String role=map.getString("role");
+        String location=map.getString("location");
+        String province=map.getString("province");
+        String zone=map.getString("zone");
+        String city=map.getString("city");
+
+        return managerService.updateContactList(id, name,
+                tele,
+                contactPerson,
+                contactPhone,
+                role,
+                location,
+                province,
+                zone,
+                city);
+    }
+
+    //查医院联系方式
+    @PostMapping("/manager/getContactList")
+    public ResultVO getContactList(@RequestBody JSONObject map){
+        Integer size=map.getInteger("size");
+        Integer page=map.getInteger("page")-1;
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String zone=map.getString("zone");
+
+        return managerService.getContactList(size, page, province, city, zone);
+    }
+//    Integer size=map.getInteger("size");
+//    Integer page=map.getInteger("page")-1;
+//    String filterStatus=map.getString("filterStatus").trim();
+//    String filterMediator=map.getString("filterMediator").trim();
+//    Date startTime=map.getDate("startTime");
+//    Date endTime=map.getDate("endTime");
+//    String province=map.getString("province");
+//    String city=map.getString("city");
+//    String mediateCenter=map.getString("mediate_center");
+
+    //添加医院、科室
+    @PostMapping("/manager/addHospitalAndRoom")
+    public ResultVO addHospitalAndRoom(@RequestBody JSONObject map){
+        String hospital = map.getString("hospital");
+        JSONArray room = map.getJSONArray("room");
+        String province=map.getString("province");
+        String zone=map.getString("zone");
+        String city=map.getString("city");
+
+
+
+        return managerService.addHospitalAndRoom(
+                zone,
+                city,
+                hospital,
+                room);
     }
 }

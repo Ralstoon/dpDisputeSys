@@ -30,6 +30,7 @@ public class Mediator {
     private String basicInformation;
     private String city;
     private String province;
+    private String avatar;
 
     public Mediator() {
     }
@@ -42,5 +43,32 @@ public class Mediator {
         this.mediateCenter = mediateCenter;
         this.authorityConfirm = authorityConfirm;
         this.authorityJudiciary = authorityJudiciary;
+    }
+
+    public Mediator(String mediatorId, String fatherId, String mediatorName, String idCard, String mediateCenter, String authorityConfirm, String authorityJudiciary, String basicInformation, String city, String province) {
+        this.mediatorId = mediatorId;
+        this.fatherId = fatherId;
+        this.mediatorName = mediatorName;
+        this.idCard = idCard;
+        this.mediateCenter = mediateCenter;
+        this.authorityConfirm = authorityConfirm;
+        this.authorityJudiciary = authorityJudiciary;
+        this.basicInformation = basicInformation;
+        this.city = city;
+        this.province = province;
+    }
+
+    public Mediator(String mediatorId, String fatherId, String mediatorName, String idCard, String mediateCenter, String authorityConfirm, String authorityJudiciary, String basicInformation, String city, String province, String avatar) {
+        this.mediatorId = mediatorId;
+        this.fatherId = fatherId;
+        this.mediatorName = mediatorName;
+        this.idCard = idCard;
+        this.mediateCenter = mediateCenter;
+        this.authorityConfirm = authorityConfirm;
+        this.authorityJudiciary = authorityJudiciary;
+        this.basicInformation = basicInformation;
+        this.city = city;
+        this.province = province;
+        this.avatar = avatar;
     }
 }

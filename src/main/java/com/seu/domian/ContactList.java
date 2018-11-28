@@ -44,4 +44,16 @@ public class ContactList implements Serializable {
 
     public ContactList() {
     }
+
+    public ContactList(String name, String tele, String contactPerson, String contactPhone, String role, String location, String province, String zone, String city) {
+        this.name = name;
+        this.tele = tele;
+        this.contactPerson = contactPerson;
+        this.contactPhone = contactPhone;
+        this.role = role;
+        this.location = location;
+        this.province = province;
+        this.zone = zone;
+        this.city = city;
+    }
 }
