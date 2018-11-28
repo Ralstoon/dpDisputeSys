@@ -55,4 +55,9 @@ public class FileUploadController {
         return ResultVOUtil.ReturnBack(res,200,"成功");
 
     }
+
+    @PostMapping("/autoBlank")
+    public ResultVO autoBlank(@RequestBody JSONObject map) throws IOException {
+        return wordTemplateUtil.autoBlank(map);
+    }
 }

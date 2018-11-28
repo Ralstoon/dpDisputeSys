@@ -22,6 +22,7 @@ import com.seu.utils.DisputeProcessReturnMap;
 import com.seu.utils.GetTitleAndAbstract;
 import com.seu.utils.Request2JSONobjUtil;
 import com.seu.utils.VerifyProcessUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -443,7 +444,8 @@ public class DisputeProgressController {
     public ResultVO setAppoint(@RequestParam("caseId") String caseId,
                                @RequestParam("id") String id,
                                @RequestParam("currentStageContent") String currentStageContent,
-                               @RequestParam(value = "application", required=false) MultipartFile application,
+//                               @RequestParam(value = "application", required=false) MultipartFile application,
+                               @RequestParam(value = "application") Boolean application,
                                @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail) throws Exception {
         disputecaseAccessoryService.addExportApply(application, applicationDetail, caseId);
         return disputeProgressService.setAppoint(caseId,currentStageContent);
@@ -1058,22 +1060,12 @@ public class DisputeProgressController {
 
     //6.司法确认
     @PostMapping(value = "/judicialConfirm")
-    public ResultVO judicialConfirm(@RequestParam(value = "id") String id,
-                                    @RequestParam(value = "caseId") String caseId,
-                                    @RequestParam(value = "judicialConfirmText") String judicialConfirmText,
-                                    @RequestParam(value = "judicialConfirmFile") MultipartFile multipartFile) throws IOException {
-        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
-        String url = disputecaseAccessoryService.uploadFile(inputStream, multipartFile.getOriginalFilename());
-        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
-        JSONObject result = JSONObject.parseObject("{}");
-        result.put("judicialConfirmText", judicialConfirmText);
-        result.put("judicialConfirmFile", url);
-        disputecaseAccessory.setJudicialConfirm(result.toJSONString());
-        disputecaseAccessoryRepository.save(disputecaseAccessory);
+    public ResultVO judicialConfirm(@RequestBody JSONObject map) throws IOException {
+        String caseId=map.getString("caseId");
         DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.findByDisputecaseId(caseId);
         disputecaseProcess.setStatus("5");
         disputecaseProcessRepository.save(disputecaseProcess);
-        return ResultVOUtil.ReturnBack(123, "司法确认上传");
+        return ResultVOUtil.ReturnBack(200, "司法确认上传");
     }
 
     //7.立案审批添加参数

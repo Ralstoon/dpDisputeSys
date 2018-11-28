@@ -20,7 +20,7 @@ public interface DisputecaseAccessoryService {
     ResultVO addNotificationAffirm(MultipartFile multipartFile, String disputeId) throws IOException;
     ResultVO addProxyCertification(MultipartFile multipartFile, String disputeId) throws IOException;
 
-    void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception;
+    void addExportApply(Boolean application, MultipartFile[] applicationDetail, String disputeId) throws Exception;
 
     String addAcceptanceNotification(MultipartFile multipartFile, String disputeId) throws IOException;
 }
