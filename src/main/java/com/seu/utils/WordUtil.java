@@ -26,8 +26,8 @@ public class WordUtil {
             configuration.setDefaultEncoding("UTF-8");
 
             //ftl模板文件
-            configuration.setClassForTemplateLoading(WordUtil.class,"/");
-
+//            configuration.setClassForTemplateLoading(WordUtil.class,"/");
+            configuration.setClassForTemplateLoading(WordUtil.class,"C:/Users/Administrator/Desktop/");
             //获取模板
             Template template = configuration.getTemplate(templateName);
 

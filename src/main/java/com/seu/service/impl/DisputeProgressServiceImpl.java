@@ -1138,17 +1138,22 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             JSONArray respo=JSONArray.parseArray("[]");
             for(String hos:res){
-
                 List<ContactList> contactList = contactListRepository.findByName(hos);
-                ContactList contact = contactList.get(0);
-
-                String phone=contact.getTele();
-                if(phone==null)
-                    phone="";
-                JSONObject obj=JSONObject.parseObject("{}");
-                obj.put("name",hos);
-                obj.put("phone",phone);
-                respo.add(obj);
+                if(contactList.size()==0 || contactList==null){
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name","暂缺");
+                    obj.put("phone","暂缺");
+                    respo.add(obj);
+                }else{
+                    ContactList contact = contactList.get(0);
+                    String phone=contact.getTele();
+                    if(phone==null)
+                        phone="";
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name",hos);
+                    obj.put("phone",phone);
+                    respo.add(obj);
+                }
             }
             mediationStageForm.setRespondents(respo);
         }else

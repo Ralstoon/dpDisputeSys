@@ -216,16 +216,6 @@ public class DisputeProgressController {
     }
 
 
-    /** 管理员获取统计管理页面列表
-     * 上送司法厅的分页筛选*/
-    @PostMapping(value = "/manager/getCase_judiciary")
-    public ResultVO getManagerCaseJudiciary(@RequestBody Map<String, String> map){
-//
-        String id = map.get("id");
-
-        return disputeProgressService.getManagerCaseJudiciary(id);
-    }
-
     /** 管理员获取所有的调解员列表(分页) */
     @PostMapping(value = "/manager/getMediatorListWithPage")
     public ResultVO getMediatorListWithPage(@RequestBody JSONObject map){
