@@ -22,7 +22,7 @@ public interface UserService {
 
 
     /** 调解员账号注册 */
-    ResultVO registerMediator(JSONArray map);
+    ResultVO registerMediator(String province, String city, String mediate_center, JSONArray map);
 
     String getCode(String Phone);
 

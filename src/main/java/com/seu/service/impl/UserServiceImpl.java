@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResultVO registerMediator(JSONArray arr) {
+    public ResultVO registerMediator(String province, String city, String mediateCenter, JSONArray arr) {
         log.info("进入注册调解员");
         for(int i=0;i<arr.size();++i){
             JSONObject map=arr.getJSONObject(i);
@@ -171,9 +171,9 @@ public class UserServiceImpl implements UserService {
             String md5Password=MD5Util.MD5EncodeUtf8(password);
             String mediatorName=map.getString("mediatorName");
             String idCard=map.getString("idCard");
-            String mediateCenter=map.getString("mediateCenter");
-            String province=map.getString("province");
-            String city=map.getString("city");
+//            String mediateCenter=map.getString("mediateCenter");
+//            String province=map.getString("province");
+//            String city=map.getString("city");
             String authorityConfirm=map.getString("authorityConfirm");
             String authorityJudiciary=map.getString("authorityJudiciary");
             String id=KeyUtil.genUniqueKey();

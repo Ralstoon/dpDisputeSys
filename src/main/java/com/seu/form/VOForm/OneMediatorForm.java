@@ -22,6 +22,9 @@ public class OneMediatorForm {
     /** 基本信息 */
     private String basciInfo;
 
+    //头像
+    private String avator;
+
     public OneMediatorForm(String name, String id) {
         this.mediatorName = name;
         this.mediatorId = id;
@@ -32,5 +35,13 @@ public class OneMediatorForm {
         this.mediatorId = mediatorId;
         this.mediatorCenter = mediatorCenter;
         this.basciInfo = basciInfo;
+    }
+
+    public OneMediatorForm(String mediatorName, String mediatorId, String mediatorCenter, String basciInfo, String avator) {
+        this.mediatorName = mediatorName;
+        this.mediatorId = mediatorId;
+        this.mediatorCenter = mediatorCenter;
+        this.basciInfo = basciInfo;
+        this.avator = avator;
     }
 }

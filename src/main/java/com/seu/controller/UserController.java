@@ -152,8 +152,11 @@ public class UserController {
     @PostMapping(value = "registerMediator")
     public ResultVO registerMediator(@RequestBody JSONObject var){
 //        System.out.println(var.toString());
+        String province = var.getString("province");
+        String city = var.getString("city");
+        String mediate_center = var.getString("mediate_center");
         JSONArray map=var.getJSONArray("addMeditorList");
-        return userService.registerMediator(map);
+        return userService.registerMediator(province,city,mediate_center, map);
     }
 
     //用户撤销申请
