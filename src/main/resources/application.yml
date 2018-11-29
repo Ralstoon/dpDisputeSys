@@ -21,14 +21,14 @@ spring:
     port: 6379
 
 server:
-  port: 8082
-#  port: 443
-#  ssl:
-#    key-store-type: JKS
-#    key-store: classpath:1541430928812.jks
-#    key-store-password: 1541430928812
-#    # 证书别名
-#    key-alias: alias
+#  port: 8082
+  port: 443
+  ssl:
+    key-store-type: JKS
+    key-store: classpath:1541430928812.jks
+    key-store-password: 1541430928812
+    # 证书别名
+    key-alias: alias
 
 
 

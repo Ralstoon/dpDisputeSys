@@ -14,19 +14,13 @@
   <pkg:part pkg:name="/word/_rels/document.xml.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml" pkg:padding="256">
     <pkg:xmlData>
       <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-        <Relationship Id="rId8" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>
-        <Relationship Id="rId13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
         <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/>
-        <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/>
-        <Relationship Id="rId12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+        <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
         <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
         <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
-        <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/>
-        <Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer3.xml"/>
+        <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
         <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes" Target="endnotes.xml"/>
-        <Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header3.xml"/>
         <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes" Target="footnotes.xml"/>
-        <Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer2.xml"/>
       </Relationships>
     </pkg:xmlData>
   </pkg:part>
@@ -34,146 +28,193 @@
     <pkg:xmlData>
       <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
         <w:body>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="0087548F" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:spacing w:after="100" w:afterAutospacing="1" w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLine="883"/>
-              <w:jc w:val="center"/>
+              <w:pStyle w:val="2"/>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="445" w:firstLine="1966"/>
               <w:rPr>
-                <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体"/>
-                <w:b/>
+                <w:rFonts w:ascii="黑体" w:hAnsi="黑体"/>
                 <w:sz w:val="44"/>
                 <w:szCs w:val="44"/>
               </w:rPr>
             </w:pPr>
             <w:r>
               <w:rPr>
-                <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
-                <w:b/>
+                <w:rFonts w:ascii="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
                 <w:sz w:val="44"/>
                 <w:szCs w:val="44"/>
               </w:rPr>
-              <w:t>司法确认</w:t>
-            </w:r>
-            <w:r w:rsidRPr="0087548F">
-              <w:rPr>
-                <w:rFonts w:ascii="黑体" w:eastAsia="黑体" w:hAnsi="黑体" w:hint="eastAsia"/>
-                <w:b/>
-                <w:sz w:val="44"/>
-                <w:szCs w:val="44"/>
-              </w:rPr>
-              <w:t>申请书</w:t>
+              <w:t>人 民 调 解 协 议 书</w:t>
             </w:r>
           </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="008A1A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:jc w:val="center"/>
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
               </w:rPr>
             </w:pPr>
-            <w:r w:rsidRPr="008A1A13">
+            <w:r>
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
+                <w:rFonts w:ascii="宋体" w:hAnsi="宋体" w:hint="eastAsia"/>
+                <w:sz w:val="28"/>
+                <w:szCs w:val="28"/>
+                <w:lang w:val="arn-CL"/>
               </w:rPr>
-              <w:t>当事人（自然人姓名、性别、年龄、民族、职业、单位或住址，法人及社会组织的名称、地址、法定代表人姓名和职务）：</w:t>
+              <w:t xml:space="preserve">                            </w:t>
             </w:r>
-          </w:p>
-          <#list columns as col>
-		  <w:p w:rsidR="009B11F2" w:rsidRPr="004F0A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+            <w:r w:rsidRPr="00776A30">
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>申请人：</w:t>
-            </w:r>
-            <w:r w:rsidR="009629DD">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${col["param1"]}</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>，</w:t>
-            </w:r>
-            <w:r w:rsidR="007D31C7">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${col["param2"]}</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>，</w:t>
-            </w:r>
-            <w:r w:rsidR="00C105FD">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${col["param3"]}</w:t>
-            </w:r>
-            <w:r w:rsidR="00795390">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:rFonts w:ascii="宋体" w:hAnsi="宋体" w:hint="eastAsia"/>
+                <w:sz w:val="28"/>
+                <w:szCs w:val="28"/>
+                <w:lang w:val="arn-CL"/>
               </w:rPr>
               <w:t xml:space="preserve"> </w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00776A30">
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>族，</w:t>
+              <w:t>编号宁医调</w:t>
             </w:r>
-            <w:r w:rsidR="00683B33">
+            <w:r w:rsidRPr="00776A30">
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:cs="Arial"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+              </w:rPr>
+              <w:t>〔</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00776A30">
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:cs="Arial" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+              </w:rPr>
+              <w:t>2018</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:cs="Arial"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+              </w:rPr>
+              <w:t>〕</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:cs="Arial" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+              </w:rPr>
+              <w:t xml:space="preserve">  </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00776A30">
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>号</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00261AFB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:jc w:val="center"/>
+              <w:rPr>
+                <w:rFonts w:ascii="楷体" w:eastAsia="楷体" w:hAnsi="楷体"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+            </w:pPr>
+          </w:p>
+          <#list columns as col>
+		  <w:p w:rsidR="00CC47DA" w:rsidRPr="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:tabs>
+                <w:tab w:val="left" w:pos="0"/>
+              </w:tabs>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>当事人（患方）：</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${col["param1"]}</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00CC56CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>，</w:t>
+            </w:r>
+            <w:r w:rsidR="00B33F57">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${col["param2"]}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>，</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${col["param3"]}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> 年 </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
               </w:rPr>
               <w:t>${col["param4"]}</w:t>
             </w:r>
@@ -182,52 +223,30 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t xml:space="preserve">月 </w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>年</w:t>
+              <w:t>${col["param5"]}</w:t>
             </w:r>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t>日出生，身份证号码：</w:t>
             </w:r>
-            <w:r w:rsidR="00795390">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${col["param5"]}</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>月</w:t>
-            </w:r>
-            <w:r w:rsidR="00795390">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t>${col["param6"]}</w:t>
             </w:r>
@@ -236,25 +255,14 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t>，住</w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>日出生，身份证号码：</w:t>
-            </w:r>
-            <w:r w:rsidR="00683B33">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t>${col["param7"]}</w:t>
             </w:r>
@@ -263,111 +271,95 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t>。</w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+          </w:p>
+		  </#list>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>，住</w:t>
-            </w:r>
+            </w:pPr>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t>当事人（医方）：</w:t>
             </w:r>
-            <w:r w:rsidR="00795390">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>${col["param8"]}</w:t>
+              <w:t>${param8}</w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve">。                  </w:t>
+              <w:t xml:space="preserve">   </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00A03FEE">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>住所地</w:t>
+            </w:r>
+            <w:r w:rsidRPr="004E02CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>：</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param9}</w:t>
             </w:r>
           </w:p>
-		  </#list>
-		  
-          <w:p w:rsidR="009B11F2" w:rsidRPr="004F0A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00776A30" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
+              <w:tabs>
+                <w:tab w:val="left" w:pos="0"/>
+              </w:tabs>
+              <w:spacing w:line="560" w:lineRule="exact"/>
               <w:ind w:firstLineChars="200" w:firstLine="640"/>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
             </w:pPr>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00776A30">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>被申请人：</w:t>
+              <w:t>法定代表人：</w:t>
             </w:r>
-            <w:r>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve">（医院名称） </w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-            <w:r w:rsidR="00795390">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${param9}</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve">   住所地：</w:t>
-            </w:r>
-            <w:r w:rsidR="00683B33">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t>${param10}</w:t>
             </w:r>
@@ -376,67 +368,57 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t xml:space="preserve">  </w:t>
             </w:r>
+            <w:r w:rsidRPr="00776A30">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>，该院院长</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param11}</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00776A30">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>。</w:t>
+            </w:r>
           </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="004F0A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00CC56CF" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
+              <w:spacing w:line="560" w:lineRule="exact"/>
               <w:ind w:firstLineChars="200" w:firstLine="640"/>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
             </w:pPr>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:color w:val="000000"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>法定代表人：</w:t>
-            </w:r>
-            <w:r>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:color w:val="000000"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-            <w:r w:rsidR="00795390">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:color w:val="000000"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>${param11}</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00776A30">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve">    职务：</w:t>
+              <w:t>委托代理人：</w:t>
             </w:r>
-            <w:r w:rsidR="00E36121">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t>${param12}</w:t>
             </w:r>
@@ -445,57 +427,430 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t xml:space="preserve"> </w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00CC56CF">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>。</w:t>
+              <w:t>，</w:t>
             </w:r>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="004F0A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t>委托代理人：</w:t>
+              <w:t xml:space="preserve"> </w:t>
             </w:r>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t xml:space="preserve"> </w:t>
             </w:r>
-            <w:r w:rsidR="00E36121">
+            <w:r w:rsidRPr="00CC56CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>医院沟通办</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
               <w:t>${param13}</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00CC56CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>。</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00EF0686">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>纠纷简要情况：</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00CC56CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>患者</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param14}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">  ，</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00CC56CF">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>因</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">${param15} </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>，于</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param16}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>年</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param17}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>月</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param18}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>日至</w:t>
+            </w:r>
+            <w:r w:rsidR="00B33F57">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param8}</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>医院就诊，……</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>患方认为：医方在诊疗过程中存在过错……，要求经济补偿。为此双方产生纠纷。</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>经</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>双方协商一致</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>，共同</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00EF0686">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>向</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>南京市医患纠纷人民调解委员会申请调解。</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:color w:val="000000"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>经多次调解，现双方</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00EF0686">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>自愿达成如下协议：</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00DC0C07" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:color w:val="FF0000"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>一、</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">另自本协议签订之日起 </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param19}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">个工作日内，由 </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param8}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> 医院</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">一次性补偿/赔偿/支付当事人 </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param20}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> 人民币 </w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param21}</w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve"> 圆整（￥</w:t>
+            </w:r>
+            <w:r w:rsidR="00DF0C98">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>${param22}</w:t>
+            </w:r>
+            <w:r w:rsidR="00FA38E3">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t xml:space="preserve">} </w:t>
             </w:r>
             <w:bookmarkStart w:id="0" w:name="_GoBack"/>
             <w:bookmarkEnd w:id="0"/>
@@ -504,323 +859,126 @@
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>。</w:t>
+              <w:t>0000元）。</w:t>
             </w:r>
           </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="009B11F2" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="001F13A6" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
+              <w:spacing w:line="560" w:lineRule="exact"/>
               <w:ind w:firstLineChars="200" w:firstLine="640"/>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="28"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="28"/>
-              </w:rPr>
-              <w:t>纠纷简要情况：</w:t>
-            </w:r>
-            <w:r>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="28"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="009B11F2" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="28"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>，现双方自愿达成共识，并签署</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>宁医调</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial"/>
-                <w:color w:val="333333"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>〔</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:color w:val="333333"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>201</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>8</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>〕</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-            <w:r>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t>号《人民调解协议书》。</w:t>
-            </w:r>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="008A1A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-              <w:t xml:space="preserve">当事人申请事项： </w:t>
-            </w:r>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRPr="004F0A13" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="00735023">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:color w:val="000000"/>
                 <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>二、医患双方争议一次性解决，此纠纷终结，双方再无任何争议。</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
+              <w:t>三、本协议是双方当事人真实的意思表示，经双方当事人签字（盖章）后生效。</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
                 <w:szCs w:val="28"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve">  </w:t>
-            </w:r>
-            <w:r>
+            </w:pPr>
+            <w:r w:rsidRPr="00EF0686">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:color w:val="000000"/>
                 <w:sz w:val="32"/>
                 <w:szCs w:val="28"/>
-                <w:u w:val="single"/>
               </w:rPr>
-              <w:t xml:space="preserve">  </w:t>
+              <w:t>本协议书一式伍份，医院方叁份，患方壹份，人民调解委员会壹份。</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00683313" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00683313">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:lastRenderedPageBreak/>
+              <w:t>当事人</w:t>
             </w:r>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t>请求南京市鼓楼区人民法院对</w:t>
+              <w:t>（医方）</w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00683313">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t>宁医调</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial"/>
-                <w:color w:val="333333"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>〔</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:color w:val="333333"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>201</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>8</w:t>
-            </w:r>
-            <w:r w:rsidRPr="004F0A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-              </w:rPr>
-              <w:t>〕</w:t>
+              <w:t>：</w:t>
             </w:r>
             <w:r>
               <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:cs="Arial" w:hint="eastAsia"/>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-                <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t xml:space="preserve">     </w:t>
             </w:r>
-            <w:r w:rsidRPr="004F0A13">
+            <w:r w:rsidRPr="00683313">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve">号《人民调解协议书》进行司法确认。                    </w:t>
-            </w:r>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-            </w:pPr>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-            </w:pPr>
-          </w:p>
-          <w:p w:rsidR="009B11F2" w:rsidRDefault="009B11F2" w:rsidP="009B11F2">
-            <w:pPr>
-              <w:spacing w:line="440" w:lineRule="exact"/>
-              <w:ind w:firstLineChars="200" w:firstLine="640"/>
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-            </w:pPr>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-              <w:t>申请人（签名）</w:t>
-            </w:r>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
               <w:t xml:space="preserve">      </w:t>
             </w:r>
@@ -828,114 +986,183 @@
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
               <w:t xml:space="preserve"> </w:t>
             </w:r>
-            <w:r w:rsidRPr="008A1A13">
+            <w:r w:rsidRPr="00683313">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t>人民调解员：</w:t>
             </w:r>
-            <w:r w:rsidRPr="008A1A13">
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00683313" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00683313" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00683313">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t>登记日期</w:t>
+              <w:t>当事人</w:t>
             </w:r>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t xml:space="preserve">    </w:t>
+              <w:t>（患方）</w:t>
             </w:r>
-            <w:r w:rsidRPr="008A1A13">
+            <w:r w:rsidRPr="00683313">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t>年</w:t>
-            </w:r>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve"> </w:t>
+              <w:t xml:space="preserve">：    </w:t>
             </w:r>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
-              </w:rPr>
-              <w:t xml:space="preserve">  </w:t>
-            </w:r>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-              </w:rPr>
-              <w:t>月</w:t>
-            </w:r>
-            <w:r w:rsidRPr="008A1A13">
-              <w:rPr>
-                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
-                <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
               <w:t xml:space="preserve"> </w:t>
             </w:r>
+            <w:r w:rsidRPr="00683313">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t xml:space="preserve">       记录人： </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="0076594D" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
             <w:r>
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
-                <w:u w:val="single"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
-              <w:t xml:space="preserve">   </w:t>
+              <w:t xml:space="preserve">                  </w:t>
             </w:r>
-            <w:r w:rsidRPr="008A1A13">
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00EF0686" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:jc w:val="right"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00EF0686">
               <w:rPr>
                 <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
                 <w:sz w:val="32"/>
-                <w:szCs w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t>南京市医患纠纷人民调解委员会</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="500" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="1400" w:firstLine="4480"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+              <w:t xml:space="preserve">二〇一   年 月 </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00EF0686">
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
               </w:rPr>
               <w:t>日</w:t>
             </w:r>
           </w:p>
-          <w:p w:rsidR="004358AB" w:rsidRPr="009B11F2" w:rsidRDefault="004358AB" w:rsidP="003A671C">
+          <w:p w:rsidR="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
             <w:pPr>
-              <w:ind w:firstLine="440"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="32"/>
+              </w:rPr>
             </w:pPr>
           </w:p>
-          <w:sectPr w:rsidR="004358AB" w:rsidRPr="009B11F2" w:rsidSect="004358AB">
-            <w:headerReference w:type="even" r:id="rId6"/>
-            <w:headerReference w:type="default" r:id="rId7"/>
-            <w:footerReference w:type="even" r:id="rId8"/>
-            <w:footerReference w:type="default" r:id="rId9"/>
-            <w:headerReference w:type="first" r:id="rId10"/>
-            <w:footerReference w:type="first" r:id="rId11"/>
+          <w:p w:rsidR="00DB30CB" w:rsidRPr="00DB30CB" w:rsidRDefault="00DB30CB" w:rsidP="00DB30CB">
+            <w:pPr>
+              <w:spacing w:line="560" w:lineRule="exact"/>
+              <w:ind w:firstLineChars="200" w:firstLine="640"/>
+              <w:rPr>
+                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                <w:sz w:val="32"/>
+                <w:szCs w:val="28"/>
+              </w:rPr>
+            </w:pPr>
+          </w:p>
+          <w:sectPr w:rsidR="00DB30CB" w:rsidRPr="00DB30CB" w:rsidSect="00CC47DA">
             <w:pgSz w:w="11906" w:h="16838"/>
-            <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/>
-            <w:cols w:space="708"/>
-            <w:docGrid w:linePitch="360"/>
+            <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="851" w:footer="992" w:gutter="0"/>
+            <w:cols w:space="425"/>
+            <w:docGrid w:type="lines" w:linePitch="312"/>
           </w:sectPr>
         </w:body>
       </w:document>
@@ -945,14 +1172,14 @@
     <pkg:xmlData>
       <w:footnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
         <w:footnote w:type="separator" w:id="-1">
-          <w:p w:rsidR="00307AC3" w:rsidRDefault="00307AC3" w:rsidP="00795390">
+          <w:p w:rsidR="00F037EE" w:rsidRDefault="00F037EE" w:rsidP="00DF0C98">
             <w:r>
               <w:separator/>
             </w:r>
           </w:p>
         </w:footnote>
         <w:footnote w:type="continuationSeparator" w:id="0">
-          <w:p w:rsidR="00307AC3" w:rsidRDefault="00307AC3" w:rsidP="00795390">
+          <w:p w:rsidR="00F037EE" w:rsidRDefault="00F037EE" w:rsidP="00DF0C98">
             <w:r>
               <w:continuationSeparator/>
             </w:r>
@@ -961,84 +1188,18 @@
       </w:footnotes>
     </pkg:xmlData>
   </pkg:part>
-  <pkg:part pkg:name="/word/header3.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml">
-    <pkg:xmlData>
-      <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a3"/>
-          </w:pPr>
-        </w:p>
-      </w:hdr>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/footer2.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml">
-    <pkg:xmlData>
-      <w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a5"/>
-          </w:pPr>
-        </w:p>
-      </w:ftr>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/footer1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml">
-    <pkg:xmlData>
-      <w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a5"/>
-          </w:pPr>
-        </w:p>
-      </w:ftr>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/footer3.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml">
-    <pkg:xmlData>
-      <w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a5"/>
-          </w:pPr>
-        </w:p>
-      </w:ftr>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/header1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml">
-    <pkg:xmlData>
-      <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a3"/>
-          </w:pPr>
-        </w:p>
-      </w:hdr>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/header2.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml">
-    <pkg:xmlData>
-      <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
-        <w:p w:rsidR="00795390" w:rsidRDefault="00795390">
-          <w:pPr>
-            <w:pStyle w:val="a3"/>
-          </w:pPr>
-        </w:p>
-      </w:hdr>
-    </pkg:xmlData>
-  </pkg:part>
   <pkg:part pkg:name="/word/endnotes.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml">
     <pkg:xmlData>
       <w:endnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se wp14">
         <w:endnote w:type="separator" w:id="-1">
-          <w:p w:rsidR="00307AC3" w:rsidRDefault="00307AC3" w:rsidP="00795390">
+          <w:p w:rsidR="00F037EE" w:rsidRDefault="00F037EE" w:rsidP="00DF0C98">
             <w:r>
               <w:separator/>
             </w:r>
           </w:p>
         </w:endnote>
         <w:endnote w:type="continuationSeparator" w:id="0">
-          <w:p w:rsidR="00307AC3" w:rsidRDefault="00307AC3" w:rsidP="00795390">
+          <w:p w:rsidR="00F037EE" w:rsidRDefault="00F037EE" w:rsidP="00DF0C98">
             <w:r>
               <w:continuationSeparator/>
             </w:r>
@@ -1337,8 +1498,11 @@
         <w:zoom w:percent="100"/>
         <w:bordersDoNotSurroundHeader/>
         <w:bordersDoNotSurroundFooter/>
-        <w:defaultTabStop w:val="720"/>
-        <w:characterSpacingControl w:val="doNotCompress"/>
+        <w:defaultTabStop w:val="420"/>
+        <w:drawingGridVerticalSpacing w:val="156"/>
+        <w:displayHorizontalDrawingGridEvery w:val="0"/>
+        <w:displayVerticalDrawingGridEvery w:val="2"/>
+        <w:characterSpacingControl w:val="compressPunctuation"/>
         <w:hdrShapeDefaults>
           <o:shapedefaults v:ext="edit" spidmax="2049"/>
         </w:hdrShapeDefaults>
@@ -1351,47 +1515,26 @@
           <w:endnote w:id="0"/>
         </w:endnotePr>
         <w:compat>
+          <w:spaceForUL/>
+          <w:balanceSingleByteDoubleByteWidth/>
+          <w:doNotLeaveBackslashAlone/>
+          <w:ulTrailSpace/>
+          <w:doNotExpandShiftReturn/>
+          <w:adjustLineHeightInTable/>
           <w:useFELayout/>
           <w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="12"/>
         </w:compat>
         <w:rsids>
-          <w:rsidRoot w:val="009B11F2"/>
-          <w:rsid w:val="00040C40"/>
-          <w:rsid w:val="000509F6"/>
-          <w:rsid w:val="0005480E"/>
-          <w:rsid w:val="000B40D8"/>
-          <w:rsid w:val="00123386"/>
-          <w:rsid w:val="001666D0"/>
-          <w:rsid w:val="001B5AE1"/>
-          <w:rsid w:val="001C2C23"/>
-          <w:rsid w:val="002137EC"/>
-          <w:rsid w:val="002C40C1"/>
-          <w:rsid w:val="00307AC3"/>
-          <w:rsid w:val="00323B43"/>
-          <w:rsid w:val="003A671C"/>
-          <w:rsid w:val="003D37D8"/>
-          <w:rsid w:val="003F0D05"/>
-          <w:rsid w:val="004358AB"/>
-          <w:rsid w:val="005211B6"/>
-          <w:rsid w:val="0064717C"/>
-          <w:rsid w:val="00683B33"/>
-          <w:rsid w:val="006D43AF"/>
-          <w:rsid w:val="007525AE"/>
-          <w:rsid w:val="00774F3B"/>
-          <w:rsid w:val="00795390"/>
-          <w:rsid w:val="007A3219"/>
-          <w:rsid w:val="007D31C7"/>
-          <w:rsid w:val="0088502C"/>
-          <w:rsid w:val="008B7726"/>
-          <w:rsid w:val="008D6942"/>
-          <w:rsid w:val="009629DD"/>
-          <w:rsid w:val="009B11F2"/>
-          <w:rsid w:val="009B2BD3"/>
-          <w:rsid w:val="00C105FD"/>
-          <w:rsid w:val="00E36121"/>
-          <w:rsid w:val="00EB0E95"/>
-          <w:rsid w:val="00EF6294"/>
-          <w:rsid w:val="00FA51CB"/>
+          <w:rsidRoot w:val="00DB30CB"/>
+          <w:rsid w:val="000C4A2C"/>
+          <w:rsid w:val="003611A1"/>
+          <w:rsid w:val="004272EB"/>
+          <w:rsid w:val="00B33F57"/>
+          <w:rsid w:val="00CC47DA"/>
+          <w:rsid w:val="00DB30CB"/>
+          <w:rsid w:val="00DF0C98"/>
+          <w:rsid w:val="00F037EE"/>
+          <w:rsid w:val="00FA38E3"/>
         </w:rsids>
         <m:mathPr>
           <m:mathFont m:val="Cambria Math"/>
@@ -1416,9 +1559,28 @@
         </w:shapeDefaults>
         <w:decimalSymbol w:val="."/>
         <w:listSeparator w:val=","/>
-        <w14:docId w14:val="737B607A"/>
-        <w15:docId w15:val="{DF1ADBCA-251E-4C0E-A2E6-DC3FCE0FEFCC}"/>
+        <w14:docId w14:val="3DD3D17A"/>
+        <w15:docId w15:val="{3635464C-B780-4A63-B62E-CD680CD7CA55}"/>
       </w:settings>
+    </pkg:xmlData>
+  </pkg:part>
+  <pkg:part pkg:name="/word/webSettings.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml">
+    <pkg:xmlData>
+      <w:webSettings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" mc:Ignorable="w14 w15 w16se">
+        <w:optimizeForBrowser/>
+      </w:webSettings>
+    </pkg:xmlData>
+  </pkg:part>
+  <pkg:part pkg:name="/docProps/core.xml" pkg:contentType="application/vnd.openxmlformats-package.core-properties+xml" pkg:padding="256">
+    <pkg:xmlData>
+      <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <dc:title/>
+        <dc:creator>微软用户</dc:creator>
+        <cp:lastModifiedBy>微软用户</cp:lastModifiedBy>
+        <cp:revision>5</cp:revision>
+        <dcterms:created xsi:type="dcterms:W3CDTF">2018-11-29T08:56:00Z</dcterms:created>
+        <dcterms:modified xsi:type="dcterms:W3CDTF">2018-11-29T09:00:00Z</dcterms:modified>
+      </cp:coreProperties>
     </pkg:xmlData>
   </pkg:part>
   <pkg:part pkg:name="/word/styles.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml">
@@ -1427,24 +1589,19 @@
         <w:docDefaults>
           <w:rPrDefault>
             <w:rPr>
-              <w:rFonts w:asciiTheme="minorHAnsi" w:eastAsia="微软雅黑" w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
-              <w:sz w:val="22"/>
+              <w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorEastAsia" w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
+              <w:kern w:val="2"/>
+              <w:sz w:val="21"/>
               <w:szCs w:val="22"/>
               <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar-SA"/>
             </w:rPr>
           </w:rPrDefault>
-          <w:pPrDefault>
-            <w:pPr>
-              <w:spacing w:line="360" w:lineRule="auto"/>
-              <w:ind w:firstLineChars="200" w:firstLine="200"/>
-              <w:jc w:val="both"/>
-            </w:pPr>
-          </w:pPrDefault>
+          <w:pPrDefault/>
         </w:docDefaults>
         <w:latentStyles w:defLockedState="0" w:defUIPriority="99" w:defSemiHidden="0" w:defUnhideWhenUsed="0" w:defQFormat="0" w:count="371">
           <w:lsdException w:name="Normal" w:uiPriority="0" w:qFormat="1"/>
           <w:lsdException w:name="heading 1" w:uiPriority="9" w:qFormat="1"/>
-          <w:lsdException w:name="heading 2" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+          <w:lsdException w:name="heading 2" w:semiHidden="1" w:uiPriority="0" w:unhideWhenUsed="1" w:qFormat="1"/>
           <w:lsdException w:name="heading 3" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
           <w:lsdException w:name="heading 4" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
           <w:lsdException w:name="heading 5" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
@@ -1817,17 +1974,35 @@
         <w:style w:type="paragraph" w:default="1" w:styleId="a">
           <w:name w:val="Normal"/>
           <w:qFormat/>
-          <w:rsid w:val="009B11F2"/>
+          <w:rsid w:val="00DB30CB"/>
           <w:pPr>
             <w:widowControl w:val="0"/>
-            <w:spacing w:line="240" w:lineRule="auto"/>
-            <w:ind w:firstLineChars="0" w:firstLine="0"/>
+            <w:jc w:val="both"/>
           </w:pPr>
           <w:rPr>
             <w:rFonts w:ascii="Times New Roman" w:eastAsia="宋体" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-            <w:kern w:val="2"/>
-            <w:sz w:val="21"/>
             <w:szCs w:val="24"/>
+          </w:rPr>
+        </w:style>
+        <w:style w:type="paragraph" w:styleId="2">
+          <w:name w:val="heading 2"/>
+          <w:basedOn w:val="a"/>
+          <w:next w:val="a"/>
+          <w:link w:val="20"/>
+          <w:qFormat/>
+          <w:rsid w:val="00DB30CB"/>
+          <w:pPr>
+            <w:keepNext/>
+            <w:keepLines/>
+            <w:spacing w:before="260" w:after="260" w:line="415" w:lineRule="auto"/>
+            <w:outlineLvl w:val="1"/>
+          </w:pPr>
+          <w:rPr>
+            <w:rFonts w:ascii="Arial" w:eastAsia="黑体" w:hAnsi="Arial"/>
+            <w:b/>
+            <w:bCs/>
+            <w:sz w:val="32"/>
+            <w:szCs w:val="32"/>
           </w:rPr>
         </w:style>
         <w:style w:type="character" w:default="1" w:styleId="a0">
@@ -1857,13 +2032,26 @@
           <w:semiHidden/>
           <w:unhideWhenUsed/>
         </w:style>
+        <w:style w:type="character" w:customStyle="1" w:styleId="20">
+          <w:name w:val="标题 2 字符"/>
+          <w:basedOn w:val="a0"/>
+          <w:link w:val="2"/>
+          <w:rsid w:val="00DB30CB"/>
+          <w:rPr>
+            <w:rFonts w:ascii="Arial" w:eastAsia="黑体" w:hAnsi="Arial" w:cs="Times New Roman"/>
+            <w:b/>
+            <w:bCs/>
+            <w:sz w:val="32"/>
+            <w:szCs w:val="32"/>
+          </w:rPr>
+        </w:style>
         <w:style w:type="paragraph" w:styleId="a3">
           <w:name w:val="header"/>
           <w:basedOn w:val="a"/>
           <w:link w:val="a4"/>
           <w:uiPriority w:val="99"/>
           <w:unhideWhenUsed/>
-          <w:rsid w:val="00795390"/>
+          <w:rsid w:val="00DF0C98"/>
           <w:pPr>
             <w:pBdr>
               <w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/>
@@ -1885,10 +2073,9 @@
           <w:basedOn w:val="a0"/>
           <w:link w:val="a3"/>
           <w:uiPriority w:val="99"/>
-          <w:rsid w:val="00795390"/>
+          <w:rsid w:val="00DF0C98"/>
           <w:rPr>
             <w:rFonts w:ascii="Times New Roman" w:eastAsia="宋体" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-            <w:kern w:val="2"/>
             <w:sz w:val="18"/>
             <w:szCs w:val="18"/>
           </w:rPr>
@@ -1899,7 +2086,7 @@
           <w:link w:val="a6"/>
           <w:uiPriority w:val="99"/>
           <w:unhideWhenUsed/>
-          <w:rsid w:val="00795390"/>
+          <w:rsid w:val="00DF0C98"/>
           <w:pPr>
             <w:tabs>
               <w:tab w:val="center" w:pos="4153"/>
@@ -1918,33 +2105,14 @@
           <w:basedOn w:val="a0"/>
           <w:link w:val="a5"/>
           <w:uiPriority w:val="99"/>
-          <w:rsid w:val="00795390"/>
+          <w:rsid w:val="00DF0C98"/>
           <w:rPr>
             <w:rFonts w:ascii="Times New Roman" w:eastAsia="宋体" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-            <w:kern w:val="2"/>
             <w:sz w:val="18"/>
             <w:szCs w:val="18"/>
           </w:rPr>
         </w:style>
       </w:styles>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/word/webSettings.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml">
-    <pkg:xmlData>
-      <w:webSettings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" mc:Ignorable="w14 w15 w16se">
-        <w:optimizeForBrowser/>
-      </w:webSettings>
-    </pkg:xmlData>
-  </pkg:part>
-  <pkg:part pkg:name="/docProps/core.xml" pkg:contentType="application/vnd.openxmlformats-package.core-properties+xml" pkg:padding="256">
-    <pkg:xmlData>
-      <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <dc:creator>微软用户</dc:creator>
-        <cp:lastModifiedBy>微软用户</cp:lastModifiedBy>
-        <cp:revision>8</cp:revision>
-        <dcterms:created xsi:type="dcterms:W3CDTF">2018-11-23T13:06:00Z</dcterms:created>
-        <dcterms:modified xsi:type="dcterms:W3CDTF">2018-11-23T13:13:00Z</dcterms:modified>
-      </cp:coreProperties>
     </pkg:xmlData>
   </pkg:part>
   <pkg:part pkg:name="/word/fontTable.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml">
@@ -1957,20 +2125,6 @@
           <w:pitch w:val="variable"/>
           <w:sig w:usb0="E00002FF" w:usb1="4000ACFF" w:usb2="00000001" w:usb3="00000000" w:csb0="0000019F" w:csb1="00000000"/>
         </w:font>
-        <w:font w:name="微软雅黑">
-          <w:panose1 w:val="020B0503020204020204"/>
-          <w:charset w:val="86"/>
-          <w:family w:val="swiss"/>
-          <w:pitch w:val="variable"/>
-          <w:sig w:usb0="80000287" w:usb1="280F3C52" w:usb2="00000016" w:usb3="00000000" w:csb0="0004001F" w:csb1="00000000"/>
-        </w:font>
-        <w:font w:name="Times New Roman">
-          <w:panose1 w:val="02020603050405020304"/>
-          <w:charset w:val="00"/>
-          <w:family w:val="roman"/>
-          <w:pitch w:val="variable"/>
-          <w:sig w:usb0="E0002AFF" w:usb1="C0007841" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-        </w:font>
         <w:font w:name="宋体">
           <w:altName w:val="SimSun"/>
           <w:panose1 w:val="02010600030101010101"/>
@@ -1979,8 +2133,29 @@
           <w:pitch w:val="variable"/>
           <w:sig w:usb0="00000003" w:usb1="288F0000" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
         </w:font>
+        <w:font w:name="Times New Roman">
+          <w:panose1 w:val="02020603050405020304"/>
+          <w:charset w:val="00"/>
+          <w:family w:val="roman"/>
+          <w:pitch w:val="variable"/>
+          <w:sig w:usb0="E0002AFF" w:usb1="C0007841" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+        </w:font>
+        <w:font w:name="Arial">
+          <w:panose1 w:val="020B0604020202020204"/>
+          <w:charset w:val="00"/>
+          <w:family w:val="swiss"/>
+          <w:pitch w:val="variable"/>
+          <w:sig w:usb0="E0002AFF" w:usb1="C0007843" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+        </w:font>
         <w:font w:name="黑体">
           <w:altName w:val="SimHei"/>
+          <w:panose1 w:val="02010609060101010101"/>
+          <w:charset w:val="86"/>
+          <w:family w:val="modern"/>
+          <w:pitch w:val="fixed"/>
+          <w:sig w:usb0="800002BF" w:usb1="38CF7CFA" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
+        </w:font>
+        <w:font w:name="楷体">
           <w:panose1 w:val="02010609060101010101"/>
           <w:charset w:val="86"/>
           <w:family w:val="modern"/>
@@ -1993,13 +2168,6 @@
           <w:family w:val="modern"/>
           <w:pitch w:val="fixed"/>
           <w:sig w:usb0="800002BF" w:usb1="38CF7CFA" w:usb2="00000016" w:usb3="00000000" w:csb0="00040001" w:csb1="00000000"/>
-        </w:font>
-        <w:font w:name="Arial">
-          <w:panose1 w:val="020B0604020202020204"/>
-          <w:charset w:val="00"/>
-          <w:family w:val="swiss"/>
-          <w:pitch w:val="variable"/>
-          <w:sig w:usb0="E0002AFF" w:usb1="C0007843" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
         </w:font>
         <w:font w:name="Cambria">
           <w:panose1 w:val="02040503050406030204"/>
@@ -2015,18 +2183,18 @@
     <pkg:xmlData>
       <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
         <Template>Normal.dotm</Template>
-        <TotalTime>6</TotalTime>
-        <Pages>1</Pages>
-        <Words>64</Words>
-        <Characters>366</Characters>
+        <TotalTime>5</TotalTime>
+        <Pages>2</Pages>
+        <Words>100</Words>
+        <Characters>574</Characters>
         <Application>Microsoft Office Word</Application>
         <DocSecurity>0</DocSecurity>
-        <Lines>3</Lines>
+        <Lines>4</Lines>
         <Paragraphs>1</Paragraphs>
         <ScaleCrop>false</ScaleCrop>
         <Company>微软中国</Company>
         <LinksUpToDate>false</LinksUpToDate>
-        <CharactersWithSpaces>429</CharactersWithSpaces>
+        <CharactersWithSpaces>673</CharactersWithSpaces>
         <SharedDoc>false</SharedDoc>
         <HyperlinksChanged>false</HyperlinksChanged>
         <AppVersion>16.0000</AppVersion>

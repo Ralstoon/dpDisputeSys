@@ -1,8 +1,8 @@
 package com.seu.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -25,15 +25,13 @@ import com.seu.repository.DisputecaseRepository;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputecaseAccessoryService;
 import com.seu.utils.KeyUtil;
+import com.seu.utils.StrIsEmptyUtil;
 import com.seu.utils.VerifyProcessUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -115,7 +113,8 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
             NormalUserUpload normalUserUpload = new NormalUserUpload(personId, disputeStatus, fileType, fileDescription, url);
             List<NormalUserUpload> normalUserUploadList =  new ArrayList<NormalUserUpload>();
             normalUserUploadList.add(normalUserUpload);
-            String normaluserUpload = JSONArray.fromObject(normalUserUploadList).toString();
+
+            String normaluserUpload = net.sf.json.JSONArray.fromObject(normalUserUploadList).toString();
             DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory();
             disputecaseAccessory.setId(id);
             disputecaseAccessory.setDisputecaseId(disputeID);
@@ -126,11 +125,11 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         else {
             DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeID);
             String normalusrUpload = disputecaseAccessory.getNormaluserUpload();
-            List<NormalUserUpload> normalUserUploadList = JSONArray.fromObject(normalusrUpload);
+            List<NormalUserUpload> normalUserUploadList = net.sf.json.JSONArray.fromObject(normalusrUpload);
             NormalUserUpload normalUserUpload = new NormalUserUpload(personId, disputeStatus, fileType, fileDescription, url);
             normalUserUploadList.add(normalUserUpload);
             //DisputecaseAccessory disputecaseAccessory = new DisputecaseAccessory(id, disputeID, null, normaluserUpload);
-            disputecaseAccessory.setNormaluserUpload(JSONArray.fromObject(normalUserUploadList).toString());
+            disputecaseAccessory.setNormaluserUpload(net.sf.json.JSONArray.fromObject(normalUserUploadList).toString());
             disputecaseAccessoryRepository.save(disputecaseAccessory);
             return ResultVOUtil.ReturnBack(normalUserUpload, DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getCode(), DisputecaseAccessoryEnum.ADDNORMLUSERUPLOAD_SUCCESS.getMsg());
 
@@ -141,7 +140,7 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     @Override
     public ResultVO normalFileList(String disputeId) {
         DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
-        List<NormalUserUpload> normalUserUploadList = JSONArray.fromObject(disputecaseAccessory.getNormaluserUpload());
+        List<NormalUserUpload> normalUserUploadList = net.sf.json.JSONArray.fromObject(disputecaseAccessory.getNormaluserUpload());
         return ResultVOUtil.ReturnBack(normalUserUploadList, DisputecaseAccessoryEnum.GETNORMALUSERUPLOADLIST_SUCCESS.getCode(), DisputecaseAccessoryEnum.GETNORMALUSERUPLOADLIST_SUCCESS.getMsg());
     }
 
@@ -242,19 +241,13 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
     }
 
     @Override
-    public void addExportApply(MultipartFile application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
+    public void addExportApply(Boolean application, MultipartFile[] applicationDetail, String disputeId) throws Exception {
         /** 设置流程参数 */
         Integer appointResult=0,paramBeforeMediate=1;
-        if(application!=null){
+        if(application!=false){
             paramBeforeMediate=1;
             appointResult=1;
         }
-
-//        //查看是否有鉴定资格
-//        Disputecase disputecase = disputecaseRepository.findOne(disputeId);
-//        if( Integer.parseInt(disputecase.getClaimMoney())<1){
-//            paramBeforeMediate=1;
-//        }
 
         String pid=disputecaseActivitiRepository.getOne(disputeId).getProcessId();
         runtimeService.setVariable(pid,"paramBeforeMediate",paramBeforeMediate);
@@ -262,37 +255,36 @@ public class DisputecaseAccessoryServiceImpl implements DisputecaseAccessoryServ
         if(runtimeService.getVariable(pid,"paramProfesor")==null || runtimeService.getVariable(pid,"paramProfesor").equals("0"))
             runtimeService.setVariable(pid,"paramProfesor",0);
 
-        DisputecaseAccessory disputecaseAccessory=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
-        if(application!=null){
-            log.info("\n专家预约 文件转储开始\n");
-            FileInputStream inputStream = (FileInputStream) application.getInputStream();
-            String applicationUrl = disputecaseAccessoryService.uploadFile(inputStream, disputeId+"/"+ application.getOriginalFilename());
-            com.alibaba.fastjson.JSONObject save= com.alibaba.fastjson.JSONObject.parseObject("{}");
-            com.alibaba.fastjson.JSONObject applicationJson= com.alibaba.fastjson.JSONObject.parseObject("{}");
-            applicationJson.put("url", applicationUrl);
-            applicationJson.put("name", application.getOriginalFilename());
-            save.put("application", applicationJson);
-            if(applicationDetail.length!=0){
-                com.alibaba.fastjson.JSONArray files = com.alibaba.fastjson.JSONArray.parseArray("[]");
-                for (MultipartFile multipartFile: applicationDetail){
-                    com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
-                    FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
-                    String url = disputecaseAccessoryService.uploadFile(inputStream2, disputeId+"/"+ multipartFile.getOriginalFilename());
-                    obj.put("url","http://"+url);
-                    obj.put("name",multipartFile.getOriginalFilename());
-                    files.add(obj);
-                }
-                save.put("files",files);
+        if(applicationDetail.length!=0){
+            log.info("\n专家预约 材料文件转储开始\n");
+            DisputecaseAccessory da=disputecaseAccessoryRepository.findByDisputecaseId(disputeId);
+            String temp=da.getAppointExpert();
+            JSONObject appointExpert;
+            if(StrIsEmptyUtil.isEmpty(temp)){
+                appointExpert=JSONObject.parseObject("{}");
+                appointExpert.put("application", "");
+                appointExpert.put("applicationDetail", com.alibaba.fastjson.JSONArray.parseArray("[]"));
             }
-            System.out.println(save.toString());
-            disputecaseAccessory.setAppointExpert(save.toString());
-            //有文件，申预约，在此处挂起
-            /** 将流程挂起为专家预约 2 */
-            disputeProgressService.setSuspended(disputeId,2);
-            log.info("\n专家预约 文件转储成功\n");
-        }
+            else
+                appointExpert=JSONObject.parseObject(temp);
 
-        disputecaseAccessoryRepository.save(disputecaseAccessory);
+            JSONArray arr=appointExpert.getJSONArray("applicationDetail");
+            for (MultipartFile multipartFile: applicationDetail){
+                com.alibaba.fastjson.JSONObject obj= JSONObject.parseObject("{}");
+                FileInputStream inputStream2 = (FileInputStream) multipartFile.getInputStream();
+                String url = disputecaseAccessoryService.uploadFile(inputStream2, disputeId+"/"+ multipartFile.getOriginalFilename());
+                obj.put("url","http://"+url);
+                obj.put("name",multipartFile.getOriginalFilename());
+                arr.add(obj);
+            }
+            appointExpert.put("applicationDetail",arr);
+            da.setAppointExpert(appointExpert.toString());
+            disputecaseAccessoryRepository.save(da);
+        }
+        log.info("\n专家预约 材料文件转储成功\n");
+        //有文件，申预约，在此处挂起
+        /** 将流程挂起为专家预约 2 */
+        disputeProgressService.setSuspended(disputeId,2);
     }
 
     @Override

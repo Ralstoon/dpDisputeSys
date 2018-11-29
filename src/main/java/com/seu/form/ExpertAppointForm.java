@@ -14,16 +14,16 @@ import lombok.Data;
 public class ExpertAppointForm {
     private String caseId;
     private String caseName;
-    private JSONObject appointExpert;
+    private String application;
     private String status;
 
     public ExpertAppointForm() {
     }
 
-    public ExpertAppointForm(String caseId,String caseName, JSONObject appointExpert, String status) {
+    public ExpertAppointForm(String caseId,String caseName, String application, String status) {
         this.caseId=caseId;
         this.caseName = caseName;
-        this.appointExpert = appointExpert;
+        this.application = application;
         this.status = status;
     }
 }

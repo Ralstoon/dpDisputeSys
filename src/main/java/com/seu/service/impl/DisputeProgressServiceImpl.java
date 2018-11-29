@@ -1145,7 +1145,6 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
             JSONArray respo=JSONArray.parseArray("[]");
             for(String hos:res){
-
                 List<ContactList> contactList = contactListRepository.findByName(hos);
                 if(contactList.size()==0 || contactList==null){
                     JSONObject obj=JSONObject.parseObject("{}");
@@ -1157,6 +1156,21 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                     String phone=contact.getTele();
                     if(phone==null)
                         phone="暂缺";
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name",hos);
+                    obj.put("phone",phone);
+                    respo.add(obj);
+                }
+                if(contactList.size()==0 || contactList==null){
+                    JSONObject obj=JSONObject.parseObject("{}");
+                    obj.put("name","暂缺");
+                    obj.put("phone","暂缺");
+                    respo.add(obj);
+                }else{
+                    ContactList contact = contactList.get(0);
+                    String phone=contact.getTele();
+                    if(phone==null)
+                        phone="";
                     JSONObject obj=JSONObject.parseObject("{}");
                     obj.put("name",hos);
                     obj.put("phone",phone);
@@ -1999,7 +2013,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus),province,city,mediateCenter, pageRequest);
 
             for(Object[] obj:pages.getContent()){
-                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), String.valueOf(filterStatus));
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), String.valueOf(filterStatus));
                 list.add(form);
             }
         }else{
@@ -2010,7 +2024,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                     result="0";
                 else
                     result=obj[3].toString();
-                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), result);
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), result);
                 list.add(form);
             }
         }
