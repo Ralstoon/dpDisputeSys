@@ -1,5 +1,6 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
@@ -46,13 +47,11 @@ public class FileUploadController {
     private DisputecaseAccessoryRepository disputecaseAccessoryRepository;
 
     @PostMapping("/wordUpload")
-    public ResultVO upload(@RequestBody Map<String,Object> map) throws IOException {
-        String templateName=map.get("templateName").toString();
-        String url=wordTemplateUtil.createWord(map,templateName);
-        JSONObject res=JSONObject.parseObject("{}");
-        res.put("name",templateName);
-        res.put("url",url);
-        return ResultVOUtil.ReturnBack(res,200,"成功");
+    public ResultVO upload(@RequestBody JSONArray array) throws IOException {
+        String templateName=array.getJSONObject(0).getString("templateName");
+        String caseId=array.getJSONObject(0).getString("caseId");
+        return wordTemplateUtil.createWord(array,templateName,caseId);
+
 
     }
 

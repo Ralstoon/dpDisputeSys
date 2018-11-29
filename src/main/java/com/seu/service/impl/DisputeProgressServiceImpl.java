@@ -2013,7 +2013,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus),province,city,mediateCenter, pageRequest);
 
             for(Object[] obj:pages.getContent()){
-                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), String.valueOf(filterStatus));
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), String.valueOf(filterStatus));
                 list.add(form);
             }
         }else{
@@ -2024,7 +2024,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                     result="0";
                 else
                     result=obj[3].toString();
-                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()), result);
+                ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), result);
                 list.add(form);
             }
         }
