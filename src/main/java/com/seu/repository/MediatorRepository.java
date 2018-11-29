@@ -56,4 +56,9 @@ public interface MediatorRepository extends JpaRepository<Mediator,String> {
             nativeQuery = true)
     Page<Mediator> findAllByMediatorCenter(String province, String city, String mediateCenter,Pageable pageable);
 
+    @Query(value = "select mediator.*,user.* from mediator , user where mediator.father_id = user.ID and mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.mediator_name like %?4% ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from mediator where mediator.province like %?1% and mediator.city like %?2% and mediator.mediate_center like %?3% and mediator.mediator_name like %?4%",
+            nativeQuery = true)
+    Page<Object[]> findAllByMediatorCenterMediatorName(String province, String city, String mediateCenter,String mediatorName,Pageable pageable);
+
 }
