@@ -1695,14 +1695,26 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
     @Override
     public ResultVO getAuthority(String id) {
-        Mediator mediator=mediatorRepository.findByFatherId(id);
-        String authorityConfirm=mediator.getAuthorityConfirm();
-        String authorityJudiciary=mediator.getAuthorityJudiciary();
-        Map<String,Object> var=new HashMap<>();
-        var.put("authorityConfirm",authorityConfirm);
-        var.put("authorityJudiciary",authorityJudiciary);
-        return  ResultVOUtil.ReturnBack(var,DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getMsg());
+        try {
+            if(adminRepository.findByFatherId(id)!=null){
+                Map<String,Object> var=new HashMap<>();
+                var.put("authorityConfirm","1");
+                var.put("authorityJudiciary","1");
+                return  ResultVOUtil.ReturnBack(var,DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getMsg());
 
+            }
+            Mediator mediator=mediatorRepository.findByFatherId(id);
+            String authorityConfirm=mediator.getAuthorityConfirm();
+            String authorityJudiciary=mediator.getAuthorityJudiciary();
+            Map<String,Object> var=new HashMap<>();
+            var.put("authorityConfirm",authorityConfirm);
+            var.put("authorityJudiciary",authorityJudiciary);
+            return  ResultVOUtil.ReturnBack(var,DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORGETAUTHORITY_SUCCESS.getMsg());
+
+        }catch (NullPointerException npe){
+            npe.printStackTrace();
+            return ResultVOUtil.ReturnBack(501,"空指针错误：该id不属于管理者或调解员,id="+id);
+        }
     }
 
     @Override
