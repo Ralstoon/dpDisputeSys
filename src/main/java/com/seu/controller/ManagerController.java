@@ -146,7 +146,11 @@ public class ManagerController {
         String province=map.getString("province");
         String zone=map.getString("zone");
         String city=map.getString("city");
-
+        managerService.addHospitalAndRoom(
+                zone,
+                city,
+                name,
+                JSON.parseArray("[]"));
         return managerService.addContactList(name,
                 tele,
                 contactPerson,
@@ -229,4 +233,47 @@ public class ManagerController {
                 hospital,
                 room);
     }
+
+    //获取调解员列表（后台管理）
+    @PostMapping("/manager/getMediatorListBackEnd")
+    public ResultVO getMediatorList(@RequestBody JSONObject map){
+        Integer size = map.getInteger("size");
+        Integer page = map.getInteger("page");
+        String mediationCenter = map.getString("mediationCenter");
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String mediatiorName = map.getString("mediatiorName");
+
+
+
+        return managerService.getMediatorList(
+                size,
+                page,
+                mediationCenter,
+                province,
+                city,
+                mediatiorName);
+    }
+
+    //获取医院列表
+    @PostMapping("/manager/getHospitalList")
+    public ResultVO getHospitalList(@RequestBody JSONObject map){
+        Integer size = map.getInteger("size");
+        Integer page = map.getInteger("page");
+        String zone = map.getString("zone");
+        String province=map.getString("province");
+        String city=map.getString("city");
+        String hospitalName = map.getString("hospitalName");
+
+
+
+        return managerService.getHospitalList(
+                size,
+                page,
+                zone,
+                province,
+                city,
+                hospitalName);
+    }
+
 }

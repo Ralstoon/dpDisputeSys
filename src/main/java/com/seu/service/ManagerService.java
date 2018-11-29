@@ -46,4 +46,14 @@ public interface ManagerService {
                                        city);
 
     ResultVO getContactList(Integer size,Integer page,String province,String city,String zone);
+
+    ResultVO getMediatorList(Integer size,Integer
+                             page,String
+                             mediationCenter,String
+                             province,String
+                             city,String
+                             mediatiorName);
+
+    ResultVO getHospitalList(Integer size,Integer page,String zone,String province,String city,String hosipital);
+
 }
