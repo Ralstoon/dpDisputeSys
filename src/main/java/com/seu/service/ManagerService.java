@@ -45,7 +45,7 @@ public interface ManagerService {
                                        zone,String
                                        city);
 
-    ResultVO getContactList(Integer size,Integer page,String province,String city,String zone);
+    ResultVO getContactList(Integer size,Integer page,String province,String city,String zone, String hospital);
 
     ResultVO getMediatorList(Integer size,Integer
                              page,String
@@ -55,5 +55,7 @@ public interface ManagerService {
                              mediatiorName);
 
     ResultVO getHospitalList(Integer size,Integer page,String zone,String province,String city,String hosipital);
+
+    ResultVO updateHospital(String zone, String city, String hospital,String newZone, String newCity, String newHospital, JSONArray room);
 
 }

@@ -22,8 +22,8 @@ public interface ContactListRepository extends JpaRepository<ContactList,Integer
     List<ContactList> findByName(String hospital);
 
 
-    @Query(value = "select * from contact_list where contact_list.province like %?1% and contact_list.city like %?2% and contact_list.zone like %?3% ORDER BY ?#{#pageable}",
-            countQuery = "select count(*) from contact_list where contact_list.province like %?1% and contact_list.city like %?2% and contact_list.zone like %?3%",
+    @Query(value = "select * from contact_list where contact_list.province like %?1% and contact_list.city like %?2% and contact_list.zone like %?3% and contact_list.name like %?4% ORDER BY ?#{#pageable}",
+            countQuery = "select count(*) from contact_list where contact_list.province like %?1% and contact_list.city like %?2% and contact_list.zone like %?3% and contact_list.name like %?4%",
             nativeQuery = true)
-    Page<ContactList> findByLoc(String province, String city, String mediateCenter,Pageable pageable);
+    Page<ContactList> findByLoc(String province, String city, String mediateCenter,String hosipital, Pageable pageable);
 }
