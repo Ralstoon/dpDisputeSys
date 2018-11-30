@@ -203,8 +203,9 @@ public class ManagerController {
         String province=map.getString("province");
         String city=map.getString("city");
         String zone=map.getString("zone");
+        String hospital = map.getString("hospital");
 
-        return managerService.getContactList(size, page, province, city, zone);
+        return managerService.getContactList(size, page, province, city, zone, hospital);
     }
 //    Integer size=map.getInteger("size");
 //    Integer page=map.getInteger("page")-1;
@@ -274,6 +275,30 @@ public class ManagerController {
                 province,
                 city,
                 hospitalName);
+    }
+
+    //修改医院updateHospital
+    @PostMapping("/manager/updateHospital")
+    public ResultVO updateHospital(@RequestBody JSONObject map){
+        Integer size = map.getInteger("size");
+        Integer page = map.getInteger("page");
+        String zone = map.getString("zone");
+        String city=map.getString("city");
+        String hospital = map.getString("hospital");
+        String newZone = map.getString("newZone");
+        String newCity=map.getString("newCity");
+        String newHospital = map.getString("newHospital");
+        JSONArray room = map.getJSONArray("room");
+        String province=map.getString("province");
+
+        return managerService.updateHospital(
+                zone,
+                city,
+                hospital,
+                newZone,
+                newCity,
+                newHospital,
+                room);
     }
 
 }
