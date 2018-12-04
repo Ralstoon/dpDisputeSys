@@ -363,7 +363,7 @@ public class WordTemplateUtil {
                 res.put("columns",columns);
                 res.put("param8",hosNameList.get(i));
                 List<ContactList> cl=contactListRepository.findByName(hosNameList.get(i));
-                if(!StrIsEmptyUtil.isEmpty(cl.get(0).getLocation()))
+                if(cl.size()!=0 && !StrIsEmptyUtil.isEmpty(cl.get(0).getLocation()))
                     res.put("param9",cl.get(0).getLocation());
                 res.put("param14",param14.substring(0,param14.length()-1));
                 res.put("param20",param14.substring(0,param14.length()-1));
