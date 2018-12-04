@@ -1,16 +1,22 @@
 package com.seu.form.VOForm;
 
+import com.alibaba.fastjson.JSONArray;
+import com.seu.domian.ContactList;
+
+import java.util.List;
+
 public class HospitalForm {
     String hospitalName;
-    String room;
+    JSONArray room;
     String province;
     String city;
     String zone;
+    List<ContactList> contactLists;
 
     public HospitalForm() {
     }
 
-    public HospitalForm(String hospitalName, String room, String province, String city, String zone) {
+    public HospitalForm(String hospitalName, JSONArray room, String province, String city, String zone) {
         this.hospitalName = hospitalName;
         this.room = room;
         this.province = province;
@@ -26,11 +32,11 @@ public class HospitalForm {
         this.hospitalName = hospitalName;
     }
 
-    public String getRoom() {
+    public JSONArray getRoom() {
         return room;
     }
 
-    public void setRoom(String room) {
+    public void setRoom(JSONArray room) {
         this.room = room;
     }
 
@@ -56,5 +62,13 @@ public class HospitalForm {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public void setContactLists(List<ContactList> contactLists){
+        this.contactLists = contactLists;
+    }
+
+    public List<ContactList> getContactLists() {
+        return contactLists;
     }
 }

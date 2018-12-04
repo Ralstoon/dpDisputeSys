@@ -12,20 +12,16 @@ public interface ManagerService {
                          String authorityJudiciary, String basicInformation, String city, String province,
                          String phone, String password, MultipartFile multipartFile) throws IOException;
 
-    ResultVO addContactList(String name,String
-                            tele,String
-                            contactPerson,String
-                            contactPhone,String
-                            role,String
-                            location,String
-                            province,String
-                            zone,String
-                            city);
+    ResultVO addContactList(JSONArray jsonArray);
 
     ResultVO addHospitalAndRoom(String zone, String
                                  city, String
                                  hospital, JSONArray
-                                 room);
+                                 room, JSONArray contactList);
+    ResultVO updateRoom(String zone, String
+            city, String
+                                        hospital, JSONArray
+                                        room);
 
     ResultVO deleteMediator(String phone);
 

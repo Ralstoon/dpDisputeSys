@@ -108,7 +108,7 @@ public class GetTitleAndAbstract {
                     detail = detail + "医院进行了" + ((JSONObject)eachResult).getString("test") + "检测。";
                 }
                 if( ((JSONObject)eachResult).get("operation") != null && ((List<String>)((JSONObject)eachResult).get("operation")).size() != 0 ){
-                    detail = detail + "医院进行了" + ((JSONObject)eachResult).getString("operation") + "手术。";
+                    detail = detail + "医院进行了手术，包括：" +((List<String>)(((JSONObject)eachResult).get("operation"))).stream().collect(Collectors.joining("、")) + "。";
                 }
 
                 if( ((JSONObject)eachResult).get("medicine") != null && !((JSONObject)eachResult).getString("medicine").isEmpty() ){
@@ -138,7 +138,7 @@ public class GetTitleAndAbstract {
 
                 if (((JSONObject) eachResult).get("name") != null && !((JSONObject) eachResult).getString("name").isEmpty()) {
                     detail = detail
-                            + "院方可能在"
+                            + "院方可能存在"
                             + ((JSONObject) eachResult).getString("name")
                             + "失误。";
                 }

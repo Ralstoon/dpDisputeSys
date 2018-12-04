@@ -80,22 +80,30 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public ResultVO addContactList(String name, String tele, String contactPerson, String contactPhone, String role, String location, String province, String zone, String city) {
-        ContactList contactList = new ContactList(name,
-                tele,
-                contactPerson,
-                contactPhone,
-                role,
-                location,
-                province,
-                zone,
-                city);
-        contactListRepository.save(contactList);
-        return ResultVOUtil.ReturnBack(3, "医院联系方式添加成功");
+    public ResultVO addContactList(JSONArray jsonArray) {
+
+        List<String> contactId = new ArrayList<>();
+
+        for(int i = 0; i<jsonArray.size();i++){
+            ContactList contactList = new ContactList(jsonArray.getJSONObject(i).getString("name"),
+                    jsonArray.getJSONObject(i).getString("tele"),
+                            jsonArray.getJSONObject(i).getString("contactPerson"),
+                                    jsonArray.getJSONObject(i).getString("contactPhone"),
+                                            jsonArray.getJSONObject(i).getString("role"),
+                                                    jsonArray.getJSONObject(i).getString("location"),
+                                                            jsonArray.getJSONObject(i).getString("province"),
+                                                                    jsonArray.getJSONObject(i).getString("zone"),
+                                                                            jsonArray.getJSONObject(i).getString("city"));
+            ContactList contactList1 = contactListRepository.save(contactList);
+            contactId.add(contactList1.getId().toString());
+        }
+
+
+        return ResultVOUtil.ReturnBack(contactId, 3, "医院联系方式添加成功");
     }
 
     @Override
-    public ResultVO addHospitalAndRoom(String zone, String city, String hospital, JSONArray room) {
+    public ResultVO addHospitalAndRoom(String zone, String city, String hospital, JSONArray room, JSONArray contactList) {
 
         ConstantData constantData = constantDataRepository.findByName("room_list");
         JSONObject jsonObject = JSON.parseObject(constantData.getData());
@@ -125,6 +133,53 @@ public class ManagerServiceImpl implements ManagerService {
 
         constantData.setData(jsonObject.toJSONString());
         constantDataRepository.save(constantData);
+
+        List<String> contactId=new ArrayList<>();
+
+        //添加联系人
+        if(!(contactList==null)){
+            for(int i=0;i<contactList.size();i++){
+                ContactList contactListDomain = new ContactList();
+                contactListDomain.setCity(city);
+                contactListDomain.setZone(zone);
+                contactListDomain.setProvince("江苏省");
+                contactListDomain.setLocation(contactList.getJSONObject(i).getString("localtion"));
+                contactListDomain.setRole(contactList.getJSONObject(i).getString("role"));
+                contactListDomain.setContactPhone(contactList.getJSONObject(i).getString("connectPhone"));
+                contactListDomain.setContactPerson(contactList.getJSONObject(i).getString("connectPerson"));
+                contactListDomain.setTele(contactList.getJSONObject(i).getString("tele"));
+                contactListDomain.setName(hospital);
+                ContactList contactList1 = contactListRepository.save(contactListDomain);
+                contactId.add(contactList1.getId().toString());
+            }
+
+        }
+
+        return ResultVOUtil.ReturnBack(contactId,3, "医院科室添加成功");
+    }
+
+    @Override
+    public ResultVO updateRoom(String zone, String city, String hospital, JSONArray room) {
+        ConstantData constantData = constantDataRepository.findByName("room_list");
+        JSONObject jsonObject = JSON.parseObject(constantData.getData());
+        if (jsonObject.getJSONObject(city) == null){
+            jsonObject.put(city, JSON.parseObject("{}"));
+        }
+        if(jsonObject.getJSONObject(city).getJSONObject(zone) == null){
+            jsonObject.getJSONObject(city).put(zone,JSON.parseObject("{}"));
+        }
+
+        if(jsonObject.getJSONObject(city).getJSONObject(zone).getJSONArray(hospital)==null){
+            jsonObject.getJSONObject(city).getJSONObject(zone).put(hospital,room);
+        }else{
+
+            jsonObject.getJSONObject(city).getJSONObject(zone).put(hospital,room);
+        }
+
+
+        constantData.setData(jsonObject.toJSONString());
+        constantDataRepository.save(constantData);
+
         return ResultVOUtil.ReturnBack(3, "医院科室添加成功");
     }
 
@@ -132,8 +187,13 @@ public class ManagerServiceImpl implements ManagerService {
     public ResultVO deleteMediator(String phone) {
         User user = userRepository.findByPhone(phone);
         Mediator mediator = mediatorRepository.findByFatherId(user.getID());
-        userRepository.delete(user);
-        mediatorRepository.delete(mediator);
+        try {
+            userRepository.delete(user);
+            mediatorRepository.delete(mediator);
+        }catch (Exception e){
+
+        }
+
         return ResultVOUtil.ReturnBack(3, "调解员删除成功");
     }
 
@@ -266,7 +326,10 @@ public class ManagerServiceImpl implements ManagerService {
             if(obj[12]==null)
                 obj[12]="";
 
-            MediatorBankendForm mediatorBankendForm = new MediatorBankendForm(obj[2].toString(), obj[3].toString(), obj[4].toString(), obj[5].toString(), obj[6].toString(),obj[7].toString(),obj[8].toString(),obj[9].toString(),obj[10].toString(),obj[12].toString());
+            MediatorBankendForm mediatorBankendForm = new MediatorBankendForm(obj[2].toString(),
+                    obj[3].toString(), obj[4].toString(), obj[5].toString(), obj[6].toString(),
+                    obj[8].toString(),obj[9].toString(),obj[10].toString(),
+                    "http://"+obj[7].toString(),obj[12].toString());
             mediatorBankendForms.add(mediatorBankendForm);
         }
 
@@ -298,13 +361,10 @@ public class ManagerServiceImpl implements ManagerService {
 
 
 
-                        hospitalForm.setRoom(((String) jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).
-                                getJSONArray(eachHospital).stream().
-                                reduce("",(result, item)->result+"、"+item)).
-                                substring(1, ((String) jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).
-                                        getJSONArray(eachHospital).stream().
-                                        reduce("",(result, item)->result+"、"+item)).length()));
+                        hospitalForm.setRoom((jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).getJSONArray(eachHospital)));
 
+                        List<ContactList> contactLists = contactListRepository.findAllByCityAndZoneAndName(eachCity, eachZone,eachHospital);
+                        hospitalForm.setContactLists(contactLists);
                         hospitalFormList.add(hospitalForm);
                     }
                 }
@@ -326,12 +386,10 @@ public class ManagerServiceImpl implements ManagerService {
                         hospitalForm.setCity(city);
                         hospitalForm.setZone(eachZone);
                         hospitalForm.setHospitalName(eachHospital);
-                        hospitalForm.setRoom(((String) jsonObject.getJSONObject(city).getJSONObject(eachZone).
-                                getJSONArray(eachHospital).stream().
-                                reduce("",(result, item)->result + "、"+item)).
-                                substring(1,((String) jsonObject.getJSONObject(city).getJSONObject(eachZone).
-                                        getJSONArray(eachHospital).stream().
-                                        reduce("",(result, item)->result + "、"+item)).length()));
+                        hospitalForm.setRoom((jsonObject.getJSONObject(city).getJSONObject(eachZone).getJSONArray(eachHospital)));
+
+                        List<ContactList> contactLists = contactListRepository.findAllByCityAndZoneAndName(city, eachZone,eachHospital);
+                        hospitalForm.setContactLists(contactLists);
                         hospitalFormList.add(hospitalForm);
                     }
                 }
@@ -346,12 +404,11 @@ public class ManagerServiceImpl implements ManagerService {
                     hospitalForm.setCity(city);
                     hospitalForm.setZone(zone);
                     hospitalForm.setHospitalName(eachHospital);
-                    hospitalForm.setRoom(((String) jsonObject.getJSONObject(city).getJSONObject(zone).
-                            getJSONArray(eachHospital).stream().
-                            reduce("",(result, item)->result+"、"+item)).substring(1,
-                            ((String) jsonObject.getJSONObject(city).getJSONObject(zone).
-                                    getJSONArray(eachHospital).stream().
-                                    reduce("",(result, item)->result+"、"+item)).length()));
+                    hospitalForm.setRoom((jsonObject.getJSONObject(city).getJSONObject(zone).
+                            getJSONArray(eachHospital)));
+
+                    List<ContactList> contactLists = contactListRepository.findAllByCityAndZoneAndName(city, zone,eachHospital);
+                    hospitalForm.setContactLists(contactLists);
 
                     hospitalFormList.add(hospitalForm);
                 }
@@ -373,12 +430,11 @@ public class ManagerServiceImpl implements ManagerService {
                             hospitalForm.setCity(city);
                             hospitalForm.setZone(eachZone);
                             hospitalForm.setHospitalName(eachHospital);
-                            hospitalForm.setRoom(((String) jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).
-                                    getJSONArray(eachHospital).stream().
-                                    reduce("",(result, item)->result+"、"+item)).
-                                    substring(1,((String) jsonObject.getJSONObject(eachCity).
-                                            getJSONObject(eachZone).getJSONArray(eachHospital).stream().
-                                            reduce("",(result, item)->result+"、"+item)).length()));
+                            hospitalForm.setRoom((jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).
+                                    getJSONArray(eachHospital)));
+
+                            List<ContactList> contactLists = contactListRepository.findAllByCityAndZoneAndName(eachCity, eachZone,eachHospital);
+                            hospitalForm.setContactLists(contactLists);
                             hospitalFormList.add(hospitalForm);
                         }
 
@@ -391,7 +447,7 @@ public class ManagerServiceImpl implements ManagerService {
         Integer totalSize = hospitalFormList.size();
         Integer totalpage = totalSize/size + 1;
 
-        Integer startIndex = (page - 1)*size;
+        Integer startIndex = (page)*size;
         List<HospitalForm> hospitalFormListPage = new ArrayList<>();
         Integer endPage=0;
         if (size > totalSize){

@@ -136,30 +136,22 @@ public class ManagerController {
 
     //添加医院联系方式
     @PostMapping("/manager/addContactList")
-    public ResultVO addContactList(@RequestBody JSONObject map){
-        String name = map.getString("name");
-        String tele = map.getString("tele");
-        String contactPerson= map.getString("contact_person");
-        String contactPhone=map.getString("contact_phone");
-        String role=map.getString("role");
-        String location=map.getString("location");
-        String province=map.getString("province");
-        String zone=map.getString("zone");
-        String city=map.getString("city");
-        managerService.addHospitalAndRoom(
-                zone,
-                city,
-                name,
-                JSON.parseArray("[]"));
-        return managerService.addContactList(name,
-                tele,
-                contactPerson,
-                contactPhone,
-                role,
-                location,
-                province,
-                zone,
-                city);
+    public ResultVO addContactList(@RequestBody JSONArray map){
+//        String name = map.getString("name");
+//        String tele = map.getString("tele");
+//        String contactPerson= map.getString("contact_person");
+//        String contactPhone=map.getString("contact_phone");
+//        String role=map.getString("role");
+//        String location=map.getString("location");
+//        String province=map.getString("province");
+//        String zone=map.getString("zone");
+//        String city=map.getString("city");
+////        managerService.addHospitalAndRoom(
+////                zone,
+////                city,
+////                name,
+////                JSON.parseArray("[]"));
+        return managerService.addContactList(map);
     }
 
     //删除医院联系方式
@@ -171,13 +163,13 @@ public class ManagerController {
     }
 
     //修改医院联系方式
-    @PostMapping("/manager/updateContactList")
+    @PostMapping("/manager/updateContact")
     public ResultVO updateContactList(@RequestBody JSONObject map){
         String id = map.getString("id");
         String name = map.getString("name");
         String tele = map.getString("tele");
-        String contactPerson= map.getString("contact_person");
-        String contactPhone=map.getString("contact_phone");
+        String contactPerson= map.getString("contactPerson");
+        String contactPhone=map.getString("contactPhone");
         String role=map.getString("role");
         String location=map.getString("location");
         String province=map.getString("province");
@@ -218,7 +210,7 @@ public class ManagerController {
 //    String mediateCenter=map.getString("mediate_center");
 
     //添加医院、科室
-    @PostMapping("/manager/addHospitalAndRoom")
+    @PostMapping("/manager/addHospital")
     public ResultVO addHospitalAndRoom(@RequestBody JSONObject map){
         String hospital = map.getString("hospital");
         JSONArray room = map.getJSONArray("room");
@@ -226,24 +218,30 @@ public class ManagerController {
         String zone=map.getString("zone");
         String city=map.getString("city");
 
+        JSONArray contactList=map.getJSONArray("contactList");
+
+
 
 
         return managerService.addHospitalAndRoom(
                 zone,
                 city,
                 hospital,
-                room);
+                room,
+                contactList);
     }
 
     //获取调解员列表（后台管理）
     @PostMapping("/manager/getMediatorListBackEnd")
     public ResultVO getMediatorList(@RequestBody JSONObject map){
         Integer size = map.getInteger("size");
-        Integer page = map.getInteger("page");
+        Integer page = map.getInteger("page")-1;
         String mediationCenter = map.getString("mediationCenter");
         String province=map.getString("province");
+        String mediatiorName = map.getString("mediatorName");
         String city=map.getString("city");
-        String mediatiorName = map.getString("mediatiorName");
+
+
 
 
 
@@ -260,11 +258,11 @@ public class ManagerController {
     @PostMapping("/manager/getHospitalList")
     public ResultVO getHospitalList(@RequestBody JSONObject map){
         Integer size = map.getInteger("size");
-        Integer page = map.getInteger("page");
+        Integer page = map.getInteger("page")-1;
         String zone = map.getString("zone");
         String province=map.getString("province");
         String city=map.getString("city");
-        String hospitalName = map.getString("hospitalName");
+        String hospitalName = map.getString("hospital");
 
 
 
@@ -280,8 +278,6 @@ public class ManagerController {
     //修改医院updateHospital
     @PostMapping("/manager/updateHospital")
     public ResultVO updateHospital(@RequestBody JSONObject map){
-        Integer size = map.getInteger("size");
-        Integer page = map.getInteger("page");
         String zone = map.getString("zone");
         String city=map.getString("city");
         String hospital = map.getString("hospital");
@@ -300,5 +296,22 @@ public class ManagerController {
                 newHospital,
                 room);
     }
+
+    //DisputeWeb/manager/updateRoom
+    @PostMapping("/manager/updateRoom")
+    public ResultVO updateRoom(@RequestBody JSONObject map){
+        String hospital = map.getString("hospitalName");
+        JSONArray room = map.getJSONArray("room");
+        String province=map.getString("province");
+        String zone=map.getString("zone");
+        String city=map.getString("city");
+
+        return managerService.updateRoom(
+                zone,
+                city,
+                hospital,
+                room);
+    }
+
 
 }
