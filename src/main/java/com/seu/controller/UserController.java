@@ -274,7 +274,7 @@ public class UserController {
             String ID=userForm.getId();
             String role=userForm.getRole();
             Integer expire=RedisConstant.EXPIRE;
-            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
+//            redisTemplate.opsForValue().set(String.format(RedisConstant.USER_RREFIX,role,ID),userForm,expire,TimeUnit.SECONDS);
         }
         return response;
     }

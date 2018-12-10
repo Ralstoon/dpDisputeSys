@@ -503,5 +503,13 @@ public class ManagerServiceImpl implements ManagerService {
         return ResultVOUtil.ReturnBack(3,"修改医院成功");
     }
 
+    @Override
+    public ResultVO getBasicRoom() {
+        ConstantData constantData = constantDataRepository.findByName("baisic_room");
+        Map<String, JSONArray> result = new HashMap<>();
+        result.put("room",  JSONArray.parseArray(constantData.getData()));
+        return ResultVOUtil.ReturnBack(result,112,"获取基础科室成功");
+    }
+
 
 }

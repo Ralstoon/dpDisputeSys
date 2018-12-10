@@ -54,4 +54,6 @@ public interface ManagerService {
 
     ResultVO updateHospital(String zone, String city, String hospital,String newZone, String newCity, String newHospital, JSONArray room);
 
+    ResultVO getBasicRoom();
+
 }

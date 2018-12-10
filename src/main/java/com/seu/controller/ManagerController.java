@@ -313,5 +313,11 @@ public class ManagerController {
                 room);
     }
 
+    //获取基础科室，方便录入科室  /manager/getBasicRoom
+    @GetMapping("/manager/getBasicRoom")
+    public ResultVO getBasicRoom(){
+
+        return managerService.getBasicRoom();
+    }
 
 }
