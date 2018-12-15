@@ -9,6 +9,7 @@ import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.domian.Mediator;
+import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeProgressEnum;
 import com.seu.form.VOForm.ManagerCaseForm;
 import com.seu.repository.*;
@@ -16,6 +17,16 @@ import com.seu.service.ManagerService;
 import com.seu.service.impl.DisputeProgressServiceImpl;
 import com.seu.utils.GetWorkingTimeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
 import org.python.antlr.ast.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -262,7 +273,7 @@ public class ManagerController {
         String zone = map.getString("zone");
         String province=map.getString("province");
         String city=map.getString("city");
-        String hospitalName = map.getString("hospitalName");
+        String hospitalName = map.getString("hospital");
 
 
 
@@ -320,6 +331,115 @@ public class ManagerController {
         return managerService.getBasicRoom();
     }
 
+    /** 案例管理，分页查询ES案件 */
+    @PostMapping("/manager/getESList")
+    public ResultVO getESList(@RequestBody JSONObject map){
+        Integer page=map.getInteger("page")-1;
+        Integer size=map.getInteger("size");
+        String type=map.getString("type");
+        String indices=null;
+        String types=null;
+        if(type.trim().equals("dissension_ms")){
+            indices="dissension_ms_index";
+            types="dissension_mstexts";
+        }else if(type.trim().equals("dissension_dx")){
+            indices="dissension_dx_index";
+            types="dissension_dxtexts";
+        }else if(type.trim().equals("dissension")){
+            indices="dissension_index";
+            types="dissensiontexts";
+        }else{
+            return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
+        }
+        try {
+            Client client=new MyTransportClient().getClient();
+            SearchResponse response = client
+                    .prepareSearch(indices)
+                    .setTypes(types)
+                    .setSearchType(SearchType.QUERY_THEN_FETCH)
+                    .setQuery(
+                            QueryBuilders.matchAllQuery()).addSort("_id", SortOrder.ASC).setFrom(page).setSize(size).setExplain(true)
+                    .execute().actionGet();
+            SearchHits searchHits=response.getHits();
+            JSONArray res=JSONArray.parseArray("[]");
+            for(SearchHit hit:searchHits){
+                Map<String,Object> sourceAsMap=hit.getSource();
+                JSONObject obj=JSONObject.parseObject("{}");
+                if(type.trim().equals("dissension")){
+                    obj.put("disputeName",sourceAsMap.get("disputeName"));
+                    obj.put("disputeType",sourceAsMap.get("disputeType"));
+                    obj.put("id",hit.getId());
+                }else{
+                    obj.put("disputeName",sourceAsMap.get("DisputeName"));
+                    obj.put("disputeType",sourceAsMap.get("DisputeType"));
+                    obj.put("id",hit.getId());
+                }
+                res.add(obj);
+            }
+            return ResultVOUtil.ReturnBack(res,200,"success");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultVOUtil.ReturnBack(501,"查询出错");
+        }
+    }
+
+    @PostMapping("/manager/deleteES")
+    public ResultVO deleteES(@RequestBody JSONObject map){
+        String type=map.getString("type");
+        String id=map.getString("id");
+        String indices=null;
+        String types=null;
+        if(type.trim().equals("dissension_ms")){
+            indices="dissension_ms_index";
+            types="dissension_mstexts";
+        }else if(type.trim().equals("dissension_dx")){
+            indices="dissension_dx_index";
+            types="dissension_dxtexts";
+        }else if(type.trim().equals("dissension")){
+            indices="dissension_index";
+            types="dissensiontexts";
+        }else{
+            return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
+        }
+        try {
+            Client client=new MyTransportClient().getClient();
+            DeleteResponse response=client.prepareDelete(indices,types,id).execute().actionGet();
+            return ResultVOUtil.ReturnBack(200,"删除成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultVOUtil.ReturnBack(501,"删除出错");
+        }
+    }
+
+    @PostMapping("/manager/updateES")
+    public ResultVO updateES(@RequestBody JSONObject map){
+        String type=map.getString("type");
+        String id=map.getString("id");
+        String indices=null;
+        String types=null;
+        if(type.trim().equals("dissension_ms")){
+            indices="dissension_ms_index";
+            types="dissension_mstexts";
+        }else if(type.trim().equals("dissension_dx")){
+            indices="dissension_dx_index";
+            types="dissension_dxtexts";
+        }else if(type.trim().equals("dissension")){
+            indices="dissension_index";
+            types="dissensiontexts";
+        }else{
+            return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
+        }
+        map.remove("type");
+        map.remove("id");
+        try {
+            Client client=new MyTransportClient().getClient();
+            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(map.toJSONString(), XContentType.JSON).get();
+            return ResultVOUtil.ReturnBack(200,"更新成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultVOUtil.ReturnBack(501,"更新出错");
+        }
+    }
     //案例管理，添加案件
     @PostMapping("/caseManagement/addCase")
     public ResultVO getCaseList(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
