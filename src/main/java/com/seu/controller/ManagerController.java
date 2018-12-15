@@ -262,7 +262,7 @@ public class ManagerController {
         String zone = map.getString("zone");
         String province=map.getString("province");
         String city=map.getString("city");
-        String hospitalName = map.getString("hospital");
+        String hospitalName = map.getString("hospitalName");
 
 
 
@@ -318,6 +318,18 @@ public class ManagerController {
     public ResultVO getBasicRoom(){
 
         return managerService.getBasicRoom();
+    }
+
+    //案例管理，添加案件
+    @PostMapping("/caseManagement/addCase")
+    public ResultVO getCaseList(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                @RequestParam("caseKind") String caseKind){
+
+        //1.文书文件处理
+        //2.处理结果持久化至es
+
+
+        return ResultVOUtil.ReturnBack(2,"添加成功");
     }
 
 }
