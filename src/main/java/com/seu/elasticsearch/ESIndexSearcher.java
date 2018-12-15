@@ -20,6 +20,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.seu.ViewObject.ResultVO;
+import com.seu.ViewObject.ResultVOUtil;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -39,6 +43,8 @@ import org.elasticsearch.search.SearchHitField;
 
 import com.seu.elasticsearch.json.*;
 import com.hankcs.hanlp.HanLP;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
 
 
 public class ESIndexSearcher {
@@ -594,6 +600,51 @@ public class ESIndexSearcher {
         }
         client.close();
         return result;
+    }
+
+    public ResultVO getESList(Integer page,Integer size,String type){
+        String indices=null;
+        String types=null;
+        if(type.trim().equals("裁判文书")){
+            indices="dissension_ms_index";
+            types="dissension_mstexts";
+        }else if(type.trim().equals("典型案例")){
+            indices="dissension_dx_index";
+            types="dissension_dxtexts";
+        }else if(type.trim().equals("纠纷案例")){
+            indices="dissension_index";
+            types="dissensiontexts";
+        }else{
+            return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
+        }
+        try {
+            Client client=new MyTransportClient().getClient();
+            SearchResponse response = client
+                    .prepareSearch(indices)
+                    .setTypes(types)
+                    .setSearchType(SearchType.QUERY_THEN_FETCH)
+                    .setQuery(
+                            QueryBuilders.matchAllQuery()).addSort("_id", SortOrder.ASC).setFrom(page).setSize(size).setExplain(true)
+                    .execute().actionGet();
+            SearchHits searchHits=response.getHits();
+            JSONArray res=JSONArray.parseArray("[]");
+            for(SearchHit hit:searchHits){
+                Map<String,Object> sourceAsMap=hit.getSource();
+                JSONObject obj=JSONObject.parseObject("{}");
+                if(type.trim().equals("纠纷案例")){
+                    obj.put("disputeName",sourceAsMap.get("disputeName"));
+                    obj.put("disputeType",sourceAsMap.get("disputeType"));
+                }else{
+                    obj.put("disputeName",sourceAsMap.get("DisputeName"));
+                    obj.put("disputeType",sourceAsMap.get("DisputeType"));
+                }
+                res.add(obj);
+            }
+            return ResultVOUtil.ReturnBack(res,200,"success");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultVOUtil.ReturnBack(501,"查询出错");
+        }
     }
 }
 
