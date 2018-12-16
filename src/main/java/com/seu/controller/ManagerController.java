@@ -481,11 +481,11 @@ public class ManagerController {
         }else{
             return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
         }
-//        map.remove("type");
-//        map.remove("id");
+        System.out.println(content.toJSONString());
         try {
             Client client=new MyTransportClient().getClient();
-            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(content.toJSONString(), XContentType.JSON).get();
+//            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(content.toJSONString(), XContentType.JSON).get();
+            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(content.toJSONString()).get();
             return ResultVOUtil.ReturnBack(200,"更新成功");
         }catch (Exception e){
             e.printStackTrace();
