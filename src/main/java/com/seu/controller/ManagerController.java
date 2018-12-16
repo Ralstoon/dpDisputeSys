@@ -416,11 +416,22 @@ public class ManagerController {
         System.out.println(map.toJSONString());
         String type=map.getString("type");
         String id=map.getString("id");
+        JSONObject content=map.getJSONObject("content");
         String indices=null;
         String types=null;
         if(type.trim().equals("dissension_ms")){
             indices="dissension_ms_index";
             types="dissension_mstexts";
+            content.put("DisputeName",content.getString("disputeName"));
+            content.remove("disputeName");
+            content.put("DisputeType",content.getString("disputeType"));
+            content.remove("disputeType");
+            content.put("CourtThink",content.getString("courtThink"));
+            content.remove("courtThink");
+            content.put("JudgeDecision",content.getString("judgeDecision"));
+            content.remove("judgeDecision");
+            content.put("DisputeTag",content.getString("disputeTag"));
+            content.remove("disputeTag");
         }else if(type.trim().equals("dissension_dx")){
             indices="dissension_dx_index";
             types="dissension_dxtexts";
@@ -434,7 +445,7 @@ public class ManagerController {
 //        map.remove("id");
         try {
             Client client=new MyTransportClient().getClient();
-            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(map.getJSONObject("content").toJSONString(), XContentType.JSON).get();
+            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(content.toJSONString(), XContentType.JSON).get();
             return ResultVOUtil.ReturnBack(200,"更新成功");
         }catch (Exception e){
             e.printStackTrace();
