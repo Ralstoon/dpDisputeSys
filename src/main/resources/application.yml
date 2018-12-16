@@ -28,7 +28,7 @@ server:
     # 证书别名
     key-alias: alias
 
-
+ wyyyyy
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
