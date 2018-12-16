@@ -68,6 +68,12 @@ public class SearchController {
     }
 
 
+    @PostMapping(value = "/manager/caseDetails")
+    public Object getCaseDetailsManager(@RequestBody JSONObject map){
+        String caseName=map.getString("caseName");
+        String type=map.getString("type");
+        return keyWordsSearchService.getCaseDetailsManage(caseName,type);
+    }
 
 //    @PostMapping(value = "/postKeyWordList")
 //    public Map<String,Object> postKeyWordList(@RequestBody JSONObject map){

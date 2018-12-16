@@ -929,9 +929,16 @@ public class DisputeProgressController {
         Disputecase disputecase = disputecaseRepository.findOne(caseId);
         JSONObject recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
         JSONArray dissension = recommendedPaper.getJSONArray(type);
-        keyWordsSearchService.getCaseDetails(caseName,type,caseId).get("result");
+        //Object result =  keyWordsSearchService.getCaseDetails(caseName,type,caseId).get("result");
+        //JSONObject res = JSONObject.parseObject(result.toString());
+        JSONObject item = JSONObject.parseObject("{}");
+        item.put("abstract","");
+        item.put("disputeName",caseName);
+        item.put("registerDate","");
 
-
+        dissension.add(item);
+        disputecase.setRecommendedPaper(recommendedPaper.toJSONString());
+        disputecaseRepository.save(disputecase);
         return ResultVOUtil.ReturnBack(123,"类案详情收藏成功");
     }
 
@@ -944,8 +951,9 @@ public class DisputeProgressController {
 
         Disputecase disputecase = disputecaseRepository.findOne(caseId);
 
+        JSONObject recommendedPaper= JSONObject.parseObject("");
         if (!disputecase.getRecommendedPaper().isEmpty()){
-            JSONObject recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
+            recommendedPaper = JSONObject.parseObject(disputecase.getRecommendedPaper());
             JSONArray dissension = recommendedPaper.getJSONArray("dissension");
             JSONArray dissension_dx = recommendedPaper.getJSONArray("dissension_dx");
             JSONArray dissension_ms = recommendedPaper.getJSONArray("dissension_ms");
@@ -967,7 +975,8 @@ public class DisputeProgressController {
             }
         }
 
-
+        disputecase.setRecommendedPaper(recommendedPaper.toJSONString());
+        disputecaseRepository.save(disputecase);
 
         return ResultVOUtil.ReturnBack(123,"类案详情取消收藏成功");
     }

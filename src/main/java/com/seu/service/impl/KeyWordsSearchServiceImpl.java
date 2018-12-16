@@ -181,4 +181,27 @@ public class KeyWordsSearchServiceImpl implements KeyWordsSearchService {
             return map;
         }
     }
+
+    @Override
+    public Map<String, Object> getCaseDetailsManage(String caseName, String type) {
+        //判断是否收藏过
+
+        TitleSearch titleSearch=new TitleSearch();
+        Object result=null;
+        try {
+            if(type.trim()=="dissension_ms" || type.trim().equals("dissension_ms"))
+                result=titleSearch.titleSearchMS(caseName);
+            else if(type.trim()=="dissension_dx" || type.trim().equals("dissension_dx"))
+                result=titleSearch.titleSearchDX(caseName);
+            else
+                result=titleSearch.titleSearch(caseName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            Map<String, Object> map = new HashMap<>();
+            map.put("result",result);
+
+            return map;
+        }
+    }
 }

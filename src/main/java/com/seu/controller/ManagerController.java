@@ -360,6 +360,23 @@ public class ManagerController {
                     .setQuery(
                             QueryBuilders.matchAllQuery()).addSort("_id", SortOrder.ASC).setFrom(page).setSize(size).setExplain(true)
                     .execute().actionGet();
+
+            SearchResponse response2 = client
+                    .prepareSearch(indices)
+                    .setTypes(types)
+                    .setSearchType(SearchType.QUERY_THEN_FETCH)
+                    .setQuery(
+                            QueryBuilders.matchAllQuery()).addSort("_id", SortOrder.ASC).setExplain(true)
+                    .execute().actionGet();
+
+            SearchHits searchHits2=response2.getHits();
+            long total = searchHits2.getTotalHits();
+            long totalPage;
+            if(total%size == 0)
+                totalPage = total/size;
+            else
+                totalPage = total/size + 1;
+
             SearchHits searchHits=response.getHits();
             JSONArray res=JSONArray.parseArray("[]");
             for(SearchHit hit:searchHits){
@@ -368,15 +385,36 @@ public class ManagerController {
                 if(type.trim().equals("dissension")){
                     obj.put("disputeName",sourceAsMap.get("disputeName"));
                     obj.put("disputeType",sourceAsMap.get("disputeType"));
+                    obj.put("acceptDate","201602121");
+                    obj.put("Abstract",sourceAsMap.get("Abstract").toString().replaceAll("</p>", "").replaceAll("<p>", "")
+                            .replaceAll("&nbsp", ""));
                     obj.put("id",hit.getId());
-                }else{
+                }else if(type.trim().equals("dissension_ms")){
                     obj.put("disputeName",sourceAsMap.get("DisputeName"));
                     obj.put("disputeType",sourceAsMap.get("DisputeType"));
+                    obj.put("acceptDate","201602121");
+                    String abs=sourceAsMap.get("JudgeDecision").toString().replaceAll("</p>", "").replaceAll("<p>", "")
+                            .replaceAll("&nbsp", "").replaceAll(";","");
+                    if(abs.length()>=500)
+                        obj.put("Abstract",abs.substring(0,500));
+                    else
+                        obj.put("Abstract",abs);
+                    obj.put("id",hit.getId());
+                }else  if (type.trim().equals("dissension_dx")){
+                    obj.put("disputeName",sourceAsMap.get("DisputeName"));
+                    obj.put("disputeType",sourceAsMap.get("DisputeType"));
+                    obj.put("acceptDate","201602121");
+                    obj.put("Abstract",sourceAsMap.get("Abstract").toString().replaceAll("</p>", "").replaceAll("<p>", "")
+                            .replaceAll("&nbsp", ""));
                     obj.put("id",hit.getId());
                 }
                 res.add(obj);
             }
-            return ResultVOUtil.ReturnBack(res,200,"success");
+            JSONObject jsonObject = JSONObject.parseObject("{}");
+            jsonObject.put("caseList", res);
+            jsonObject.put("totalPage", totalPage);
+
+            return ResultVOUtil.ReturnBack(jsonObject,200,"success");
         }catch (Exception e){
             e.printStackTrace();
             return ResultVOUtil.ReturnBack(501,"查询出错");
@@ -455,7 +493,7 @@ public class ManagerController {
         }
     }
     //案例管理，添加案件
-    @PostMapping("/caseManagement/addCase")
+    @PostMapping("/manager/addCase")
     public ResultVO getCaseList(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
                                 @RequestParam("caseKind") String caseKind){
 
@@ -465,5 +503,7 @@ public class ManagerController {
 
         return ResultVOUtil.ReturnBack(2,"添加成功");
     }
+
+
 
 }
