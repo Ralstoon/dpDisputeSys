@@ -438,6 +438,8 @@ public class ManagerController {
         }else if(type.trim().equals("dissension")){
             indices="dissension_index";
             types="dissensiontexts";
+            content.put("Abstract",content.getString("abstract"));
+            content.remove("abstract");
         }else{
             return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
         }
