@@ -451,6 +451,7 @@ public class ManagerController {
 
     @PostMapping("/manager/updateES")
     public ResultVO updateES(@RequestBody JSONObject map){
+        System.out.println(map.toJSONString());
         String type=map.getString("type");
         String id=map.getString("id");
         String indices=null;
@@ -467,11 +468,11 @@ public class ManagerController {
         }else{
             return ResultVOUtil.ReturnBack(501,"文书类型错误，必须为[裁判文书、典型案例和纠纷案例]其中一种");
         }
-        map.remove("type");
-        map.remove("id");
+//        map.remove("type");
+//        map.remove("id");
         try {
             Client client=new MyTransportClient().getClient();
-            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(map.toJSONString(), XContentType.JSON).get();
+            UpdateResponse response=client.prepareUpdate(indices,types,id).setDoc(map.getJSONObject("content").toJSONString(), XContentType.JSON).get();
             return ResultVOUtil.ReturnBack(200,"更新成功");
         }catch (Exception e){
             e.printStackTrace();
