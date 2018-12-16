@@ -441,4 +441,16 @@ public class ManagerController {
             return ResultVOUtil.ReturnBack(501,"更新出错");
         }
     }
+    //案例管理，添加案件
+    @PostMapping("/caseManagement/addCase")
+    public ResultVO getCaseList(@RequestParam(value = "file", required=false) MultipartFile multipartFile,
+                                @RequestParam("caseKind") String caseKind){
+
+        //1.文书文件处理
+        //2.处理结果持久化至es
+
+
+        return ResultVOUtil.ReturnBack(2,"添加成功");
+    }
+
 }

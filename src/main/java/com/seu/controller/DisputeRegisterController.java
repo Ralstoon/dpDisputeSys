@@ -1,7 +1,15 @@
 package com.seu.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.domian.ConstantData;
@@ -27,9 +35,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -337,5 +348,41 @@ public class DisputeRegisterController {
         String city=map.getString("city");
         JSONObject obj=JSONObject.parseObject(constantDataRepository.findByName("center_list").getData());
         return ResultVOUtil.ReturnBack(obj.getJSONObject(province).getJSONArray(city),200,"成功");
+    }
+
+    @PostMapping("/speechRecognizer")
+    public JSONObject addHospitalAndRoom(@RequestParam("file") MultipartFile multipartFile) throws IOException, ClientException {
+
+        DefaultProfile profile = DefaultProfile.getProfile(
+                "cn-shanghai",          // 您的地域ID
+                "LTAIL1KePAlpKKvH",      // 您的Access Key ID
+                "0ROlCLO3RFb5gWN38s7giQMySrcsn4"); // 您的Access Key Secret
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setDomain("nls-meta.cn-shanghai.aliyuncs.com");
+        request.setVersion("2018-05-18");
+        request.setUriPattern("/pop/2018-05-18/tokens");
+        request.setMethod(MethodType.POST);
+        CommonResponse response = client.getCommonResponse(request);
+        String token ="";
+        if (response.getHttpStatus() == 200) {
+            JSONObject result = JSON.parseObject(response.getData());
+            token = result.getJSONObject("Token").getString("Id");
+            long expireTime = result.getJSONObject("Token").getLongValue("ExpireTime");
+            System.out.println(token);
+        }
+
+        SpeechRecognizerDemo demo = new SpeechRecognizerDemo("odN3sAxS0NCtAyM4",
+                token);
+        InputStream ins = multipartFile.getInputStream();
+        if (null == ins) {
+            System.err.println("open the audio file failed!");
+            System.exit(-1);
+        }
+        demo.process(ins);
+        demo.shutdown();
+        JSONObject jsonObject = JSONObject.parseObject("{}");
+        jsonObject.put("result",demo.result);
+        return jsonObject;
     }
 }

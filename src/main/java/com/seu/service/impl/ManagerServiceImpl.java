@@ -372,7 +372,7 @@ public class ManagerServiceImpl implements ManagerService {
         }
         //有筛选查询
         if(city!=null && !city.equals("") && (hosipital==null||hosipital.equals("")) ){
-
+//        if(city!=null && !city.equals("") ){
 
 
             if(zone==null || zone.equals("")){
@@ -445,7 +445,7 @@ public class ManagerServiceImpl implements ManagerService {
 
 
         Integer totalSize = hospitalFormList.size();
-        Integer totalpage = totalSize/size + 1;
+        Integer totalpage = (totalSize-1)/size + 1;
 
         Integer startIndex = (page)*size;
         List<HospitalForm> hospitalFormListPage = new ArrayList<>();
@@ -455,6 +455,10 @@ public class ManagerServiceImpl implements ManagerService {
         }else {
             endPage=startIndex+size;
         }
+
+        if(endPage>totalSize)
+            endPage = totalSize;
+
 
         for (int i = startIndex; i<endPage;i++){
             hospitalFormListPage.add(hospitalFormList.get(i));

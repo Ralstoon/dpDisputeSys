@@ -323,6 +323,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
             disputecase.setLevel("5");
         }
         String[] temp=disputecase.getProposerId().trim().split(",");
+
         List<String> names=new ArrayList<>();
         for(String s:temp){
             names.add(disputecaseApplyRepository.findOne(s).getName());

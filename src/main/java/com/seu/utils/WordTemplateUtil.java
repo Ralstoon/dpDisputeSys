@@ -108,8 +108,8 @@ public class WordTemplateUtil {
     public ResultVO createWord(JSONArray array,String templateName,String disputeId) {
         try {
             //文件路径
-//            String filePath = "/home/ubuntu/";
-            String filePath = "C:/Users/Administrator/Desktop/";
+            String filePath = "/home/ubuntu/";
+//            String filePath = "C:/Users/Administrator/Desktop/";
             JSONArray res=JSONArray.parseArray("[]");
 
 
