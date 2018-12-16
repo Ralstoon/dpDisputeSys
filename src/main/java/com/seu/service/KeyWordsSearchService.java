@@ -26,4 +26,6 @@ public interface KeyWordsSearchService {
 
     /** 通过类案的名字查询案件具体内容 */
     Map<String, Object> getCaseDetails(String caseName,String type, String caseId);
+
+    Map<String, Object> getCaseDetailsManage(String caseName,String type);
 }
