@@ -1847,8 +1847,9 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             instituteFormMap.put(instituteForm.toString(),instituteForm);
         }
 
-        List<ContactList> contactLists=new ArrayList<>();
+
         for(InstituteForm form:instituteFormMap.values()){
+            List<ContactList> contactLists=new ArrayList<>();
             JSONObject jsonObject = JSONObject.parseObject("{}");
             List<ContactList> lists=contactListRepository.findAllByCityAndZoneAndName(form.getCity(),form.getZone(),form.getHospital());
             for(ContactList c:lists)

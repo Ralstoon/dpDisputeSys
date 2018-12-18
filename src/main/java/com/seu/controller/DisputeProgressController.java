@@ -445,8 +445,13 @@ public class DisputeProgressController {
                                @RequestParam("id") String id,
                                @RequestParam("currentStageContent") String currentStageContent,
 //                               @RequestParam(value = "application", required=false) MultipartFile application,
-                               @RequestParam(value = "application") Boolean application,
+                               //@RequestParam(value = "application") Boolean application,//2018/12/18, 前台未发送此参数，并拒绝修改
                                @RequestParam(value = "applicationDetail", required=false) MultipartFile[] applicationDetail) throws Exception {
+        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(caseId);
+        Boolean application = false;
+        if(disputecaseAccessory.getAppointExpert()!=null){
+            application = true;
+        }
         disputecaseAccessoryService.addExportApply(application, applicationDetail, caseId);
         return disputeProgressService.setAppoint(caseId,currentStageContent);
     }

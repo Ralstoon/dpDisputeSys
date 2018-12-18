@@ -53,7 +53,29 @@ public class GetWorkingTimeUtil {
         Date endTime=curTime;
         Calendar c=Calendar.getInstance();
         while (limitTime!=0){
-            Integer result=getResult(endTime);
+            //Integer result=getResult(endTime);
+            if (EndDate.isWeekday==null){
+
+                FileInputStream freader;
+                freader = new FileInputStream("/home/ubuntu/isWeekday.txt");
+                ObjectInputStream objectInputStream = new ObjectInputStream(freader);
+
+                EndDate.isWeekday = (Map<Date, Integer>) objectInputStream.readObject();
+
+//            Date currentDate = new Date();
+//            Calendar c1=Calendar.getInstance();
+//            c1.setTime(currentDate);
+////            EndDate.isWeekday.clear();
+//            EndDate.isWeekday = new HashMap<>();
+//            for(int i = 0; i<60; i++){
+//
+//                EndDate.isWeekday.put(sdf.parse(sdf.format(c1.getTime())), getResult(c1.getTime()));
+//                c1.add(Calendar.DAY_OF_MONTH,1);
+//            }
+            }
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+
+            Integer result=EndDate.isWeekday.get(sdf.parse(sdf.format(endTime)));
             if(result==0){
                 limitTime=limitTime-1;
             }
