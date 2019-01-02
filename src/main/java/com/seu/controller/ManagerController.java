@@ -273,7 +273,7 @@ public class ManagerController {
         String zone = map.getString("zone");
         String province=map.getString("province");
         String city=map.getString("city");
-        String hospitalName = map.getString("hospital");
+        String hospitalName = map.getString("hospitalName");
 
 
 

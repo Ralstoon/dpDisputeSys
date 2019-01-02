@@ -5,7 +5,8 @@ import java.util.Set;
 
 public class test {
     public static void  main(String[] args){
-        Set<String> se=new HashSet<>();
+        String ss= "中美贸易战";
+        System.out.println(ss.contains("贸ee易"));
 
     }
 }

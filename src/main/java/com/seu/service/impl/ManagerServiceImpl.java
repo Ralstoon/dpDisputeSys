@@ -424,7 +424,7 @@ public class ManagerServiceImpl implements ManagerService {
 
                     Set<String> hospitals = jsonObject.getJSONObject(eachCity).getJSONObject(eachZone).keySet();
                     for(String eachHospital: hospitals){
-                        if(eachHospital.equals(hosipital) && (city.equals(eachCity) || city.equals("") || city==null) && (zone.equals(eachZone) || zone.equals("") || zone==null) ){
+                        if(eachHospital.contains(hosipital) && (city.equals(eachCity) || city.equals("") || city==null) && (zone.equals(eachZone) || zone.equals("") || zone==null) ){
                             HospitalForm hospitalForm = new HospitalForm();
                             hospitalForm.setProvince("江苏省");
                             hospitalForm.setCity(city);
