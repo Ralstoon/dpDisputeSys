@@ -104,7 +104,7 @@ public class GetWorkingTimeUtil {
         if (EndDate.isWeekday==null){
 
             FileInputStream freader;
-            freader = new FileInputStream("/home/ubuntu/isWeekday.txt");
+            freader = new FileInputStream("/root/seu/isWeekday.txt");
             ObjectInputStream objectInputStream = new ObjectInputStream(freader);
 
             EndDate.isWeekday = (Map<Date, Integer>) objectInputStream.readObject();

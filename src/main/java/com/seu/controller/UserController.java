@@ -30,8 +30,10 @@ import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.python.antlr.ast.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
@@ -198,7 +200,7 @@ public class UserController {
     public ResultVO changeMediator(@RequestBody JSONObject obj){
         String userId = obj.getString("id");
         String caseId = obj.getString("caseId");
-        String reason = obj.getString("reason");
+        String reason = obj.getString("reasonForChange");
         List<String> mediatorId = (List<String>) obj.get("mediatorIdList");
         return disputeProgressService.changeMediator(caseId, mediatorId, reason);
     }
@@ -288,4 +290,29 @@ public class UserController {
         data.put("authcode", userService.getCode(phone));
         return ResultVOUtil.ReturnBack(data,123,"获取验证码成功");
     }
+
+
+
+//    @RequestMapping(value = "changeMediator", method = RequestMethod.POST)
+//    public ResultVO changeMediator(@RequestBody JSONObject map){
+//        String caseId = map.getString("caseId");
+//        String reasonForChange = map.getString("reasonForChange");
+//
+//        DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.getOne(caseId);
+//
+//        disputecaseAccessory.setReasonChangemediator(reasonForChange);
+//        disputecaseAccessoryRepository.save(disputecaseAccessory);
+//
+//        log.info("\n开始 [另外分配]\n");
+//        Integer page=map.getInteger("page")-1;
+//        Integer size=map.getInteger("size");
+//
+//        String province = map.getString("province");
+//        String city = map.getString("city");
+//        String mediateCenter = map.getString("mediate_center");
+//
+//        PageRequest pageRequest=new PageRequest(page,size);
+//        log.info("\n结束 [另外分配]\n");
+//        return disputeProgressService.getAdditionalAllocation(province, city, mediateCenter, caseId,pageRequest);
+//    }
 }

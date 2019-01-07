@@ -42,7 +42,25 @@ public class ContactList implements Serializable {
     /** 市 */
     private String city;
 
+    private String email;
+
+    private String otherContact;
+
     public ContactList() {
+    }
+
+    public ContactList(String name, String tele, String contactPerson, String contactPhone, String role, String location, String province, String zone, String city, String email, String otherContact) {
+        this.name = name;
+        this.tele = tele;
+        this.contactPerson = contactPerson;
+        this.contactPhone = contactPhone;
+        this.role = role;
+        this.location = location;
+        this.province = province;
+        this.zone = zone;
+        this.city = city;
+        this.email = email;
+        this.otherContact = otherContact;
     }
 
     public ContactList(String name, String tele, String contactPerson, String contactPhone, String role, String location, String province, String zone, String city) {

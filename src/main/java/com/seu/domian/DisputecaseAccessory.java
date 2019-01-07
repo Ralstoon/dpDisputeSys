@@ -38,7 +38,9 @@ public class DisputecaseAccessory {
     //用户上传
     private String userUpload;
 
-    public DisputecaseAccessory(String id, String disputecaseId, String medicaldamageAssessment, String normaluserUpload, String inquireHospital, String proxyCertification, String notificationAffirm, String appointExpert, String acceptanceNotice, String protocal, String judicialConfirm) {
+    private String inqueryFile;
+
+    public DisputecaseAccessory(String id, String disputecaseId, String medicaldamageAssessment, String normaluserUpload, String inquireHospital, String proxyCertification, String notificationAffirm, String appointExpert, String acceptanceNotice, String protocal, String judicialConfirm, String userUpload, String inqueryFile) {
         this.id = id;
         this.disputecaseId = disputecaseId;
         this.medicaldamageAssessment = medicaldamageAssessment;
@@ -50,6 +52,8 @@ public class DisputecaseAccessory {
         this.acceptanceNotice = acceptanceNotice;
         this.protocal = protocal;
         this.judicialConfirm = judicialConfirm;
+        this.userUpload = userUpload;
+        this.inqueryFile = inqueryFile;
     }
 
     public DisputecaseAccessory() {

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,7 @@ public interface DisputeProgressService {
     ResultVO getHospitalMessage(String caseId);
 
     /** 提交问讯结果（文本），问讯医院 */
-    ResultVO inqueryHospital(JSONObject map);
+    ResultVO inqueryHospital(Integer isFinished, String caseId, String mediatorId, String inquireMessage, MultipartFile[] file) throws IOException;
 
     /** 获取问讯列表 */
     ResultVO getInqueryHospitalList(String caseId);

@@ -1890,13 +1890,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
     @Override
     @Transactional
-    public ResultVO inqueryHospital(JSONObject map) {
+    public ResultVO inqueryHospital(Integer isFinished, String caseId, String mediatorId, String inquireMessages, MultipartFile[] file) throws IOException {
 
 
-        String mediatorId=map.getString("mediatorId");
-        String caseId=map.getString("caseId");
-        Integer isFinished=map.getInteger("isFinished");
-        JSONArray inquireMessage=map.getJSONArray("inquireMessage");
+
+        JSONArray inquireMessage=JSONObject.parseArray(inquireMessages);
 
         /**  先判断当前流程位置*/
         List<Task> tasks=verifyProcessUtil.verifyTask(caseId,"问询医院");
@@ -1927,6 +1925,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 JSONArray hArr=JSONArray.parseArray("[]");
                 ihJS.put(hospitalOne,hArr);
             }
+
             currentAccessory.setInquireHospital(ihJS.toString());
             currentAccessory=disputecaseAccessoryRepository.save(currentAccessory);
         }
@@ -1940,6 +1939,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             String currentHos=obj.getString("hospital");
             JSONArray tmp=ihJS.getJSONArray(currentHos);
             obj.put("mediatorId",mediatorId);
+
+            JSONArray urls = JSONArray.parseArray("[]");
+            for (int j = 0; j < file.length; j++){
+                FileInputStream inputStream = (FileInputStream) file[j].getInputStream();
+                String url = disputecaseAccessoryService.uploadFile(inputStream, caseId+"/"+ file[j].getOriginalFilename());
+                urls.add(url);
+            }
+
+            obj.put("files",urls);
             tmp.add(obj);
             ihJS.put(currentHos,tmp);
         }
@@ -2132,8 +2140,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         changeMediator.add(each);
         disputecaseProcess.setReason(reasonJSON.toJSONString());
 
-        disputecaseProcess.setUserChoose(String.join(",", mediatorId));
-        disputecaseProcessRepository.save(disputecaseProcess);
+//        disputecaseProcess.setUserChoose(String.join(",", mediatorId));
+//        disputecaseProcessRepository.save(disputecaseProcess);
+        for(int i = 0; i < mediatorId.size(); i++){
+            disputeProgressService.updateCaseStatus(caseId,mediatorId.get(i));
+        }
         return ResultVOUtil.ReturnBack(114,"更换调解员");
     }
 

@@ -171,6 +171,8 @@ public class DisputeProgressController {
         String disputeId = map.get("caseId");
         String ID = map.get("id");
 
+        String reasonForDebard = map.get("reasonForDebard");
+
         /** 为案件进程表添加调解员回避状态*/
         disputeProgressService.updateAvoidStatus(disputeId,ID);
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.MEDIATORAVOID_SUCCESS.getCode(),DisputeProgressEnum.MEDIATORAVOID_SUCCESS.getMsg());
@@ -178,13 +180,12 @@ public class DisputeProgressController {
 
 
     /** 用户选择调解员列表 */
+    //2019.1.7  取消用户选调解员，修改为用户剔除
     @PostMapping(value = "user/postMediatorList")
     public ResultVO getUserChoose(@RequestBody Map<String, Object > map){
 
         List<String> pickedList = (List<String>) map.get("MediatorPickedlist");
 
-
-        //String pickedList = map.get("MediatorPickedlist");
         String disputeId = (String) map.get("CaseId");
 
         String mediatorList="";
@@ -193,6 +194,9 @@ public class DisputeProgressController {
         }
         mediatorList=mediatorList.substring(0,mediatorList.length()-1);
         disputeProgressService.updateUserChoose(disputeId,mediatorList);
+        for(int i = 0; i < pickedList.size(); i++){
+            disputeProgressService.updateCaseStatus(disputeId,pickedList.get(i));
+        }
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
     }
 
@@ -685,8 +689,12 @@ public class DisputeProgressController {
 
     /** 提交问讯结果（文本），问讯医院 */
     @PostMapping(value = "/inqueryHospital")
-    public ResultVO inqueryHospital(@RequestBody JSONObject map){
-        return disputeProgressService.inqueryHospital(map);
+    public ResultVO inqueryHospital(@RequestParam("isFinished") Integer isFinished,
+                                    @RequestParam("caseId") String caseId,
+                                    @RequestParam("mediatorId") String mediatorId,
+                                    @RequestParam("inquireMessage") String inquireMessage,
+                                    @RequestParam(value = "file", required=false) MultipartFile[] file) throws IOException {
+        return disputeProgressService.inqueryHospital(isFinished, caseId, mediatorId, inquireMessage, file);
     }
 
 
