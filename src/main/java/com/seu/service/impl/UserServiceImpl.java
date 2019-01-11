@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
                 userForm.setProvince(mediator.getProvince());
                 userForm.setCity(mediator.getCity());
                 userForm.setMediateCenter(mediator.getMediateCenter());
+                userForm.setName(mediator.getMediatorName());
             }
             if(user.getRole().equals("2")){
                 Admin admin = adminRepository.findByFatherId(user.getID());
@@ -95,14 +96,20 @@ public class UserServiceImpl implements UserService {
                 userForm.setCity(admin.getCity());
                 userForm.setMediateCenter(admin.getMediateCenter());
                 userForm.setLevel(admin.getLevel());
+                userForm.setName(admin.getAdminName());
             }
+            if (user.getRole().equals("0")){
+                NormalUser normalUser = normalUserRepository.findByFatherId(user.getID());
+                userForm.setName(normalUser.getUserName());
+            }
+
         }
         return ServerResponse.createBySuccess("用户登录成功", userForm);
     }
 
     @Override
     @Transactional
-    public int register(String phone, String password) {
+    public int register(String phone, String password, String name) {
         //验证手机号是否已存在
 //        int resultCount = normalUserRepository.checkUser(phone);
         if(userRepository.findByPhone(phone)!=null){
@@ -120,6 +127,7 @@ public class UserServiceImpl implements UserService {
         //2、其次对normal_user_detail表
 //        NormalUser saveNormalUser=normalUserDetailService.registerWithNormalUserDetail(user_id);
         NormalUser normalUser=new NormalUser(normalId,ID);
+        normalUser.setUserName(name);
         NormalUser saveNormalUser=normalUserRepository.save(normalUser);
         /** 注册IM */
         registerIMUtil.registerIM(phone,password);

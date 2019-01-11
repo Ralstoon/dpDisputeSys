@@ -16,5 +16,6 @@ public interface DisputecaseApplyRepository extends JpaRepository<DisputecaseApp
     List<DisputecaseApply> findAllByIdCard(String idCard);
     List<DisputecaseApply> findAllByPhone(String phone);
     List<DisputecaseApply> findAllById(String id);
+    List<DisputecaseApply> findAllByDisputecaseId(String caseId);
 
 }

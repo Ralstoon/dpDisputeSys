@@ -504,6 +504,14 @@ public class ManagerController {
         return ResultVOUtil.ReturnBack(2,"添加成功");
     }
 
+    @PostMapping("/advise")
+    public ResultVO advise(@RequestBody JSONObject object){
+        String advise = object.getString("advise");
+        String caseId = object.getString("caseId");
+        String id = object.getString("id");
 
+        //todo: 持久化advise
+        return ResultVOUtil.ReturnBack(233,"success");
+    }
 
 }

@@ -63,8 +63,15 @@ public class ManagerServiceImpl implements ManagerService {
             return ResultVOUtil.ReturnBack(2, "注册失败");
         //2、其次对mediator表
 
-        FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
-        String url = disputecaseAccessoryService.uploadFile(inputStream, normalId + multipartFile.getOriginalFilename());
+        //已修改未上传照片导致的空指针异常，2019/01/11
+        String url = "";
+        if(multipartFile != null){
+            FileInputStream inputStream = (FileInputStream) multipartFile.getInputStream();
+            url = disputecaseAccessoryService.uploadFile(inputStream, normalId + multipartFile.getOriginalFilename());
+        }else{
+            url = "pkzvs6dy8.bkt.clouddn.com/%E7%BC%BA%E7%9C%81.jpg";
+        }
+
 
         Mediator mediator =new Mediator(normalId, ID, mediatorName, idCard, mediateCenter, authorityConfirm,
                 authorityJudiciary,basicInformation,city,province, url);

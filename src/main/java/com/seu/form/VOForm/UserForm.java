@@ -23,4 +23,5 @@ public class UserForm implements Serializable {
     private String city;
     private String mediateCenter;
     private Integer level;
+    private String name;
 }

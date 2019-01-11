@@ -12,10 +12,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
-import com.seu.domian.ConstantData;
-import com.seu.domian.Disputecase;
-import com.seu.domian.DisputecaseApply;
-import com.seu.domian.Mediator;
+import com.seu.domian.*;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeRegisterEnum;
 import com.seu.form.ExpertAppointForm;
@@ -24,6 +21,8 @@ import com.seu.repository.*;
 import com.seu.service.DisputeProgressService;
 import com.seu.service.DisputeRegisterService;
 import com.seu.service.MediatorService;
+import com.seu.util.MD5Util;
+import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
 //import com.sun.deploy.net.URLEncoder;
 import com.sun.org.apache.regexp.internal.RE;
@@ -128,6 +127,15 @@ public class DisputeRegisterController {
 //        return disputeRegisterService.sendInvolvedPeopleInfo(involvedPeople);
 //    }
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DisputecaseApplyRepository disputecaseApplyRepository;
+
+    @Autowired
+    private NormalUserRepository normalUserRepository;
+
     /** 发送医疗过程数据 */
     @PostMapping(value = "/BasicDivideInfo")
     public ResultVO getBasicDivideInfo(HttpServletRequest request){
@@ -175,6 +183,70 @@ public class DisputeRegisterController {
             result.put("caseId",caseId);
             return  ResultVOUtil.ReturnBack(result ,DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getCode(),DisputeRegisterEnum.GETBASICDIVIDEINFO_SUCCESS.getMsg());
         } else {
+
+            List<DisputecaseApply> disputecaseApplies = disputecaseApplyRepository.findAllByDisputecaseId(caseId);
+
+            for( DisputecaseApply each: disputecaseApplies){
+                disputecaseApplyRepository.delete(each);
+            }
+
+            JSONArray array = JSONArray.parseArray(involvedPeople);
+
+            String proposerId = "";
+            String agentId = "";
+            for (int i = 0; i < array.size(); ++i) {
+                JSONObject obj = array.getJSONObject(i);
+                String name = obj.getString("name");
+                String idCard = obj.getString("cardID");
+                String role = (obj.getString("picked").trim().equals("申请人")) ? "0" : "1";
+                String phone = obj.getString("phone");
+                DisputecaseApply applyOne = new DisputecaseApply();
+                String applyId = KeyUtil.genUniqueKey();
+                if (role == "0")
+                    proposerId += applyId + ",";
+                else
+                    agentId += applyId + ",";
+                applyOne.setDisputecaseId(caseId);
+                applyOne.setId(applyId);
+                applyOne.setIdCard(idCard);
+                applyOne.setName(name);
+                applyOne.setRole(role);
+                applyOne.setPhone(phone);
+                /** 查看该手机是否已注册 */
+                User user = userRepository.findByPhone(phone);
+                if (user == null) {
+                    // 未注册,帮忙注册 密码初始为111111
+                    String id = KeyUtil.genUniqueKey();
+                    User newUser = new User();
+                    newUser.setID(id);
+                    newUser.setPassword(MD5Util.MD5EncodeUtf8("111111"));
+                    newUser.setPhone(phone);
+                    newUser.setRole("0");
+                    NormalUser newNU = new NormalUser();
+                    String nuId = KeyUtil.genUniqueKey();
+                    newNU.setIdCard(idCard);
+                    newNU.setNormalId(nuId);
+                    newNU.setFatherId(id);
+                    newNU.setUserName(name);
+                    newUser.setSpecificId(nuId);
+                    userRepository.save(newUser);
+                    normalUserRepository.save(newNU);
+                } else {
+                    // 更新信息表中身份证
+                    NormalUser normalUser = normalUserRepository.findByFatherId(user.getID());
+                    normalUser.setIdCard(idCard);
+                    normalUser.setUserName(name);
+                    normalUserRepository.save(normalUser);
+                }
+
+                disputecaseApplyRepository.save(applyOne);
+            }
+
+            Disputecase disputecase = disputecaseRepository.getOne(caseId);
+            disputecase.setProposerId(proposerId);
+            disputecase.setAgnetId(agentId);
+            disputecaseRepository.save(disputecase);
+
             String stageContent=basicDivideInfo.getJSONArray("stageContent").toJSONString();
             Integer mainRecStage=basicDivideInfo.getInteger("mainRecSatge");//mainRecSatge
             String require=basicDivideInfo.getString("Require");
@@ -269,8 +341,7 @@ public class DisputeRegisterController {
         return ResultVOUtil.ReturnBack(123, "收藏类案推荐成功");
     }
 
-    @Autowired
-    private DisputecaseApplyRepository disputecaseApplyRepository;
+
 
     @PostMapping(value = "/getHistoryCase")
     public ResultVO getHistoryCase(@RequestBody JSONObject map){
@@ -385,4 +456,39 @@ public class DisputeRegisterController {
         jsonObject.put("result",demo.result);
         return jsonObject;
     }
+
+    @PostMapping("/getInfo")
+    public ResultVO getInfo(@RequestBody JSONObject object){
+        String caseId = object.getString("caseId");
+        List<DisputecaseApply> disputecaseApply = disputecaseApplyRepository.findAllByDisputecaseId(caseId);
+        JSONArray involedPeoples = JSONArray.parseArray("[]");
+        for (int i = 0; i < disputecaseApply.size(); i++){
+            JSONObject people = JSONObject.parseObject("{}");
+            people.put("name", disputecaseApply.get(i).getName());
+            people.put("phone", disputecaseApply.get(i).getPhone());
+            people.put("cardID", disputecaseApply.get(i).getIdCard());
+            if(disputecaseApply.get(i).getRole().equals("0")){
+                people.put("picked", "申请人");
+            }else{
+                people.put("picked", "代理人");
+            }
+            involedPeoples.add(people);
+        }
+        Disputecase disputecase = disputecaseRepository.getOne(caseId);
+        JSONObject result = JSONObject.parseObject("{}");
+        JSONObject BasicDivideInfo = JSONObject.parseObject("{}");
+        BasicDivideInfo.put("stageContent", JSONArray.parseArray(disputecase.getMedicalProcess()));
+        BasicDivideInfo.put("mainRecSatge", disputecase.getMainRecStage());
+        BasicDivideInfo.put("Require",disputecase.getAppeal());
+        BasicDivideInfo.put("claimAmount", disputecase.getClaimMoney());
+        BasicDivideInfo.put("mediationProvince", disputecase.getProvince());
+        BasicDivideInfo.put("mediationCenter", disputecase.getMediationCenter());
+        BasicDivideInfo.put("mediationCity", disputecase.getCity());
+        result.put("BasicDivideInfo", BasicDivideInfo);
+        result.put("InvolvedPeople", involedPeoples);
+
+        return ResultVOUtil.ReturnBack(result,233,"success");
+    }
+
+
 }

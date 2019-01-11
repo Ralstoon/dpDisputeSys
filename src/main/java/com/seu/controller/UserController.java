@@ -63,20 +63,41 @@ public class UserController {
     private RedisTemplate redisTemplate;
 
 
-//    @Autowired
-//    private UserRepository userRepository;
-//    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
-//    public ResultVO updatePassword(@RequestBody JSONObject map) {
-//        String phone=map.getString("phone");
-//        String password=map.getString("password");
-//
-//        User user = userRepository.findByPhone(phone);
-//        user.setPassword(MD5Util.MD5EncodeUtf8(password));
-//
-//        userRepository.save(user);
-//
-//        return ResultVOUtil.ReturnBack(112, "密码修改成功");
-//    }
+    @Autowired
+    private UserRepository userRepository;
+    //忘记密码 todo：验证码
+    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
+    public ResultVO updatePassword(@RequestBody JSONObject map) {
+        String phone=map.getString("phone");
+        String password=map.getString("password");
+
+        User user = userRepository.findByPhone(phone);
+        user.setPassword(MD5Util.MD5EncodeUtf8(password));
+
+        userRepository.save(user);
+
+        return ResultVOUtil.ReturnBack(112, "密码修改成功");
+    }
+
+    //登录后，更新密码
+    @RequestMapping(value = "changePassword",method = RequestMethod.POST)
+    public ResultVO changePassword(@RequestBody JSONObject map) {
+        String phone=map.getString("phone");
+        String oldPassword = map.getString("oldPassword");
+        String password=map.getString("newPassword");
+
+        User user = userRepository.findByPhone(phone);
+
+        if(!user.getPassword().equals(MD5Util.MD5EncodeUtf8(oldPassword))){
+            return ResultVOUtil.ReturnBack(0, "原密码错误");
+        }
+
+        user.setPassword(MD5Util.MD5EncodeUtf8(password));
+
+        userRepository.save(user);
+
+        return ResultVOUtil.ReturnBack(1, "密码修改成功");
+    }
 
     /*
      *@Author 吴宇航
@@ -89,8 +110,9 @@ public class UserController {
     public ResultVO register(@RequestBody Map<String,String> map){
         String phone=map.get("phone");
         String password=map.get("password");
+        String name = map.get("name");
 //        log.info("【注册phone为：】{}",phone);
-        int resultNum=userService.register(phone,password);
+        int resultNum=userService.register(phone,password,name);
         if(resultNum==1){
             return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),RegisterEnum.REGISTER_SUCCESS.getMsg());
         }else {

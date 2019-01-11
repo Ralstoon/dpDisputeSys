@@ -1944,7 +1944,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
             for (int j = 0; j < file.length; j++){
                 FileInputStream inputStream = (FileInputStream) file[j].getInputStream();
                 String url = disputecaseAccessoryService.uploadFile(inputStream, caseId+"/"+ file[j].getOriginalFilename());
-                urls.add(url);
+                urls.add("http://"+url);
             }
 
             obj.put("files",urls);
@@ -1976,7 +1976,10 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 
         completeCurrentTask(currentTask.getId(),var);
         log.info("\n完成当前任务:[问询医院] 成功\n");
-        return ResultVOUtil.ReturnBack(112,"提交问询成功");
+        Disputecase disputecase = disputecaseRepository.getOne(caseId);
+        Map<String,String> map = new HashMap<>();
+        map.put("caseLevel", disputecase.getLevel());
+        return ResultVOUtil.ReturnBack(map,112,"提交问询成功");
     }
 
     @Autowired
@@ -2033,16 +2036,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<ExpertAppointForm> list=new ArrayList<>();
         if(filterStatus!=3){
             if(filterStatus==0)
-                pages=disputecaseAccessoryRepository.findBySuspended(2,province,city,mediateCenter,pageRequest);
+                pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
             else if(filterStatus==1 || filterStatus==2)
-                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus),province,city,mediateCenter, pageRequest);
+                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus), pageRequest);
 
             for(Object[] obj:pages.getContent()){
                 ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), String.valueOf(filterStatus));
                 list.add(form);
             }
         }else{
-            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(province,city,mediateCenter,pageRequest);
+            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(pageRequest);
             for(Object[] obj:pages.getContent()){
                 String result="";
                 if(obj[3].toString().equals("0"))
@@ -2143,7 +2146,7 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
 //        disputecaseProcess.setUserChoose(String.join(",", mediatorId));
 //        disputecaseProcessRepository.save(disputecaseProcess);
         for(int i = 0; i < mediatorId.size(); i++){
-            disputeProgressService.updateCaseStatus(caseId,mediatorId.get(i));
+            disputeProgressService.updateAvoidStatus(caseId,mediatorId.get(i));
         }
         return ResultVOUtil.ReturnBack(114,"更换调解员");
     }

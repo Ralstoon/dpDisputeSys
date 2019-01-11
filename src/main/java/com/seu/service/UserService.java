@@ -10,7 +10,7 @@ public interface UserService {
     /** 用户登录 */
     ServerResponse<UserForm> login(String phone, String password);
     /** 用户注册 */
-    int register(String phone,String password);
+    int register(String phone,String password, String name);
 
 //    String findPhoneByUserId(String userId);
 

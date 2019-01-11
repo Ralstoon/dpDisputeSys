@@ -189,13 +189,19 @@ public class DisputeProgressController {
         String disputeId = (String) map.get("CaseId");
 
         String mediatorList="";
+        DisputecaseProcess disputecaseProcess = disputecaseProcessRepository.getOne(disputeId);
         for(int i = 0; i<pickedList.size(); i++){
-            mediatorList = mediatorList + pickedList.get(i) + ",";
+            if(!(disputecaseProcess.getUserChoose().contains(pickedList.get(i)))){
+                mediatorList = mediatorList + pickedList.get(i) + ",";
+            }
+
+
+
         }
         mediatorList=mediatorList.substring(0,mediatorList.length()-1);
         disputeProgressService.updateUserChoose(disputeId,mediatorList);
         for(int i = 0; i < pickedList.size(); i++){
-            disputeProgressService.updateCaseStatus(disputeId,pickedList.get(i));
+            disputeProgressService.updateAvoidStatus(disputeId,pickedList.get(i));
         }
         return ResultVOUtil.ReturnBack(DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getCode(),DisputeProgressEnum.USERCHOOSEMEDIATOR_SUCCESS.getMsg());
     }
@@ -689,12 +695,12 @@ public class DisputeProgressController {
 
     /** 提交问讯结果（文本），问讯医院 */
     @PostMapping(value = "/inqueryHospital")
-    public ResultVO inqueryHospital(@RequestParam("isFinished") Integer isFinished,
+    public ResultVO inqueryHospital(@RequestParam("isFinished") String isFinished,
                                     @RequestParam("caseId") String caseId,
                                     @RequestParam("mediatorId") String mediatorId,
                                     @RequestParam("inquireMessage") String inquireMessage,
                                     @RequestParam(value = "file", required=false) MultipartFile[] file) throws IOException {
-        return disputeProgressService.inqueryHospital(isFinished, caseId, mediatorId, inquireMessage, file);
+        return disputeProgressService.inqueryHospital(Integer.parseInt(isFinished), caseId, mediatorId, inquireMessage, file);
     }
 
 
@@ -834,7 +840,7 @@ public class DisputeProgressController {
                     jsonObject = JSONObject.parseObject("{}");
                     jsonObject.put("stageName", ((JSONObject) stage).getString("name"));
                     jsonObject.put("regConfKind", ((JSONObject)eachResult).getString("name"));
-                    jsonObject.put("subRegConfKind", "补充说明");
+                    jsonObject.put("subRegConfKind", "简要情况");
                     jsonObject.put("value", ((JSONObject)eachResult).getString("added"));
                     result.add(jsonObject);
                 }
