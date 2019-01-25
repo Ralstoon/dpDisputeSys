@@ -844,6 +844,15 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
                 }
             }
 
+            String avoidStatus = disputecaseProcess.getAvoidStatus();
+            if(!(avoidStatus.trim()=="" || avoidStatus.trim().equals(""))){
+                for(String s:avoidStatus.trim().split(",")){
+
+                    Mediator mediator=mediatorRepository.findByFatherId(s);
+                    managerCaseForm.addUserIntention(mediator.getMediatorName(),mediator.getFatherId(),"no");
+                }
+            }
+
             DisputecaseAccessory disputecaseAccessory = disputecaseAccessoryRepository.findByDisputecaseId(disputecase.getId());
 
             managerCaseForm.setUserUpload(JSONArray.parseArray(disputecaseAccessory.getUserUpload()));

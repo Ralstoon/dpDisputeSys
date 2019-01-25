@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
                 userForm.setMediateCenter(admin.getMediateCenter());
                 userForm.setLevel(admin.getLevel());
                 userForm.setName(admin.getAdminName());
+                userForm.setCaseMangeLevel(admin.getCaseMangeLevel());
             }
             if (user.getRole().equals("0")){
                 NormalUser normalUser = normalUserRepository.findByFatherId(user.getID());

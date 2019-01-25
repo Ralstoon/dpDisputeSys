@@ -5,17 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
-import com.seu.domian.Disputecase;
-import com.seu.domian.DisputecaseAccessory;
-import com.seu.domian.DisputecaseProcess;
-import com.seu.domian.Mediator;
+import com.seu.domian.*;
 import com.seu.elasticsearch.MyTransportClient;
 import com.seu.enums.DisputeProgressEnum;
+import com.seu.form.VOForm.AdminForm;
 import com.seu.form.VOForm.ManagerCaseForm;
 import com.seu.repository.*;
 import com.seu.service.ManagerService;
 import com.seu.service.impl.DisputeProgressServiceImpl;
+import com.seu.util.MD5Util;
 import com.seu.utils.GetWorkingTimeUtil;
+import com.seu.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -35,6 +35,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -514,4 +515,310 @@ public class ManagerController {
         return ResultVOUtil.ReturnBack(233,"success");
     }
 
+
+    @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/manager/getManagerAuthorityList")
+    public ResultVO getManagerAuthorityList(@RequestBody JSONObject object){
+        String province = object.getString("province");
+        String city = object.getString("city");
+        String id = object.getString("id");
+        int page = object.getInteger("page") - 1;
+        int size = object.getInteger("size");
+        String filterType = object.getString("filterType");
+        String filterType2 = object.getString("filterType2");
+
+
+       Admin currentAdmin = adminRepository.findByFatherId(id);
+
+        //乱七八糟，先假定
+
+        if(currentAdmin.getLevel().equals("")||currentAdmin.getLevel().equals("0")){
+            return ResultVOUtil.ReturnBack(111,"無權限");
+        }
+
+        if(province == null)
+            province = "";
+        if(city == null)
+            city = "";
+        if(filterType == null)
+            filterType = "";
+        if(filterType2 == null)
+            filterType2 = "";
+
+        PageRequest pageRequest=new PageRequest(page,size);
+        Page<Admin> adminList=null;
+
+        //f1,f2都是空
+        if(filterType.equals("") && filterType2.equals("")){
+
+            adminList = adminRepository.findAllByProvinceAndCityAndLev(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),
+                    String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+        }
+
+        //f1非空，f2空
+        if(!filterType.equals("") && filterType2.equals("")){
+            if(filterType.equals("1"))
+                adminList = adminRepository.findAllWithHasLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("0"))
+                adminList = adminRepository.findAllWithNotHasLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+        }
+        //f1空，f2非空
+        if(filterType.equals("") && !filterType2.equals("")){
+            if(filterType2.equals("1"))
+                adminList = adminRepository.findAllWithHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType2.equals("0"))
+                adminList = adminRepository.findAllWithNotHasCaseManageLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+
+        }
+        //f1,2非空
+        if(!filterType.equals("") && !filterType2.equals("")){
+            if(filterType.equals("1") && filterType2.equals("0"))
+                adminList = adminRepository.findAllWithHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("1") && filterType2.equals("1"))
+                adminList = adminRepository.findAllWithHasLevelAndNotHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("0") && filterType2.equals("0"))
+                adminList = adminRepository.findAllWithNotHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("0") && filterType2.equals("1"))
+                adminList = adminRepository.findAllWithNotHasLevelAndNotHasCaseManageLevel(province,city,pageRequest);
+        }
+
+        Integer totalPages=adminList.getTotalPages();
+        List<AdminForm> adminVoList=new ArrayList<>();
+        for(Admin admin:adminList.getContent()){
+
+            String
+            level =admin.getLevel();
+
+            boolean a1;
+            boolean a2;
+
+            String
+            caseMangeLevel = admin.getCaseMangeLevel();
+
+            if(!level.equals("")){
+                level = "1";
+                a1=true;
+            }else {
+                level = "0";
+                a1 =false;
+            }
+
+            if(!caseMangeLevel.equals("")){
+                caseMangeLevel = "1";
+                a2 = true;
+            }else {
+                caseMangeLevel = "0";
+                a2 = false;
+            }
+
+
+            adminVoList.add(new AdminForm(admin.getId(),admin.getFatherId(),admin.getAdminName(),admin.getMediateCenter(),admin.getCity(),
+                    admin.getProvince(),level,caseMangeLevel,admin.getDuty(),admin.getTele(),a1,a2));
+        }
+        Map<String,Object> var=new HashMap<>();
+        var.put("adminVoList",adminVoList);
+        var.put("totalPages",totalPages);
+        return ResultVOUtil.ReturnBack(var,DisputeProgressEnum.GETNAMEOFAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.GETNAMEOFAUTHORITY_SUCCESS.getMsg());
+
+    }
+
+    @PostMapping("/manager/changeMangerAuthority")
+    public ResultVO changeMangerAuthority(@RequestBody JSONObject object){
+
+        String id = object.getString("id");
+        boolean authority1  = object.getBoolean("authority1");
+        boolean authority2 = object.getBoolean("authority2");
+        Admin admin = adminRepository.getOne(id);
+        if(authority1)
+            admin.setLevel("1");
+        else
+            admin.setLevel("0");
+
+        if (authority2)
+            admin.setCaseMangeLevel("1");
+        else
+            admin.setCaseMangeLevel("0");
+
+        return ResultVOUtil.ReturnBack(123,"改好了");
+    }
+
+    @PostMapping("manager/deleteManger")
+    public ResultVO deleteManger(@RequestBody JSONObject object){
+
+        String id = object.getString("id");
+        Admin admin = adminRepository.getOne(id);
+        String fatherId = admin.getFatherId();
+        adminRepository.delete(admin);
+        userRepository.delete(userRepository.getOne(fatherId));
+
+        return ResultVOUtil.ReturnBack(123,"删除成功");
+    }
+
+    @Autowired
+    private RegisterRepository registerRepository;
+
+    @PostMapping("manager/getRedisterList")
+    public ResultVO getRedisterList(@RequestBody JSONObject object){
+        String province = object.getString("province");
+        String city = object.getString("city");
+        String mediateCenter=object.getString("mediate_center");
+        String id = object.getString("id");
+        int page = object.getInteger("page") - 1;
+        int size = object.getInteger("size");
+
+
+        Admin currentAdmin = adminRepository.findByFatherId(id);
+
+        if(currentAdmin.getCaseMangeLevel()==null || currentAdmin.getLevel() == null)
+            ResultVOUtil.ReturnBack(111,"没有权限");
+
+        String targetRole1 = "";
+        String targetRole2 = "";
+
+        if(currentAdmin.getCaseMangeLevel().equals("0")){
+            targetRole1 = "调解员";
+            targetRole2 = "调解员";
+        }
+
+        if (currentAdmin.getLevel().equals("1")){
+            targetRole1 = "区指导管理者";
+            targetRole2 = "区案件管理者";
+        }
+
+        if (currentAdmin.getLevel().equals("2")){
+            targetRole1 = "市指导管理者";
+            targetRole2 = "市案件管理者";
+        }
+
+        PageRequest pageRequest=new PageRequest(page,size);
+        Page<Register> registerList=null;
+        registerList = registerRepository.findAllByRole(province,city,mediateCenter,targetRole1,targetRole2,pageRequest);
+
+        Map<String,Object> var=new HashMap<>();
+        var.put("registerVoList",registerList.getContent());
+        var.put("totalPages",registerList.getTotalPages());
+        return ResultVOUtil.ReturnBack(var,DisputeProgressEnum.GETNAMEOFAUTHORITY_SUCCESS.getCode(),DisputeProgressEnum.GETNAMEOFAUTHORITY_SUCCESS.getMsg());
+
+    }
+
+    @PostMapping("manager/approveRegister")
+    public ResultVO approveRegister(@RequestBody JSONObject object) throws IOException {
+        boolean result = object.getBoolean("result");
+        String registerId = object.getString("registerId");
+        Register register = registerRepository.getOne(registerId);
+        if (result){
+            if (register.getRole().equals("调解员")){
+                managerService.addMediator(register.getName(), "idcard", register.getMediationCenter(), "0", "0", "",
+                        register.getCity(),register.getProvince(),register.getPhone(), register.getPassword(), null);
+                registerRepository.delete(register);
+            }
+            if (register.getRole().equals("区指导管理者")){
+                User user = userRepository.findByPhone(register.getPhone());
+                if(user==null){
+
+                    //进行注册操作
+                    //1、首先对user表
+                    String normalId= KeyUtil.genUniqueKey();
+                    String ID=KeyUtil.genUniqueKey();
+                    String md5Password = MD5Util.MD5EncodeUtf8(register.getPassword());
+                    User newUser=new User(ID,register.getPhone(),md5Password,"2",normalId);
+                    User saveUser=userRepository.save(newUser);
+                    if(saveUser==null)
+                        return ResultVOUtil.ReturnBack(2, "注册失败");
+                    //2、其次对admin表
+                    Admin newAdmin = new Admin(normalId,ID,register.getName(),"idcard",register.getMediationCenter(),register.getCity(),
+                            register.getProvince(),"0","",register.getPosition(),register.getTelephone());
+                    adminRepository.save(newAdmin);
+
+                }else{
+                    Admin admin = adminRepository.findByFatherId(user.getID());
+                    admin.setLevel("0");
+                    adminRepository.save(admin);
+                }
+            }
+            if (register.getRole().equals("区案件管理者")){
+                User user = userRepository.findByPhone(register.getPhone());
+                if(user==null){
+
+                    //进行注册操作
+                    //1、首先对user表
+                    String normalId= KeyUtil.genUniqueKey();
+                    String ID=KeyUtil.genUniqueKey();
+                    String md5Password = MD5Util.MD5EncodeUtf8(register.getPassword());
+                    User newUser=new User(ID,register.getPhone(),md5Password,"2",normalId);
+                    User saveUser=userRepository.save(newUser);
+                    if(saveUser==null)
+                        return ResultVOUtil.ReturnBack(2, "注册失败");
+                    //2、其次对admin表
+                    Admin newAdmin = new Admin(normalId,ID,register.getName(),"idcard",register.getMediationCenter(),register.getCity(),
+                            register.getProvince(),"","0",register.getPosition(),register.getTelephone());
+                    adminRepository.save(newAdmin);
+
+                }else{
+                    Admin admin = adminRepository.findByFatherId(user.getID());
+                    admin.setCaseMangeLevel("0");
+                    adminRepository.save(admin);
+                }
+            }
+            if (register.getRole().equals("市指导管理者")){
+                User user = userRepository.findByPhone(register.getPhone());
+                if(user==null){
+
+                    //进行注册操作
+                    //1、首先对user表
+                    String normalId= KeyUtil.genUniqueKey();
+                    String ID=KeyUtil.genUniqueKey();
+                    String md5Password = MD5Util.MD5EncodeUtf8(register.getPassword());
+                    User newUser=new User(ID,register.getPhone(),md5Password,"2",normalId);
+                    User saveUser=userRepository.save(newUser);
+                    if(saveUser==null)
+                        return ResultVOUtil.ReturnBack(2, "注册失败");
+                    //2、其次对admin表
+                    Admin newAdmin = new Admin(normalId,ID,register.getName(),"idcard",register.getMediationCenter(),register.getCity(),
+                            register.getProvince(),"1","",register.getPosition(),register.getTelephone());
+                    adminRepository.save(newAdmin);
+
+                }else{
+                    Admin admin = adminRepository.findByFatherId(user.getID());
+                    admin.setLevel("1");
+                    adminRepository.save(admin);
+                }
+            }
+            if (register.getRole().equals("市案件管理者")){
+                User user = userRepository.findByPhone(register.getPhone());
+                if(user==null){
+
+                    //进行注册操作
+                    //1、首先对user表
+                    String normalId= KeyUtil.genUniqueKey();
+                    String ID=KeyUtil.genUniqueKey();
+                    String md5Password = MD5Util.MD5EncodeUtf8(register.getPassword());
+                    User newUser=new User(ID,register.getPhone(),md5Password,"2",normalId);
+                    User saveUser=userRepository.save(newUser);
+                    if(saveUser==null)
+                        return ResultVOUtil.ReturnBack(2, "注册失败");
+                    //2、其次对admin表
+                    Admin newAdmin = new Admin(normalId,ID,register.getName(),"idcard",register.getMediationCenter(),register.getCity(),
+                            register.getProvince(),"","1",register.getPosition(),register.getTelephone());
+                    adminRepository.save(newAdmin);
+
+                }else{
+                    Admin admin = adminRepository.findByFatherId(user.getID());
+                    admin.setCaseMangeLevel("1");
+                    adminRepository.save(admin);
+                }
+            }
+
+        }else {
+            registerRepository.delete(register);
+            return ResultVOUtil.ReturnBack(124,"reject");
+        }
+
+        registerRepository.delete(register);
+        return ResultVOUtil.ReturnBack(123,"success");
+    }
 }

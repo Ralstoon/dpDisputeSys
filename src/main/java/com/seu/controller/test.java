@@ -8,5 +8,6 @@ public class test {
         String ss= "中美贸易战";
         System.out.println(ss.contains("贸ee易"));
 
+        System.out.println(ss.substring(1,2));
     }
 }

@@ -30,18 +30,18 @@ server:
     # 证书别名
     key-alias: alias
 
-  tomcat:
-    accesslog:
-      buffered: true
-      directory: /root/seu
-      enabled: true
-      file-date-format: .yyyy-MM-dd
-      pattern: common
-      prefix: access_log
-      rename-on-rotate: false
-      request-attributes-enabled: false
-      rotate: true
-      suffix: .log
+#  tomcat:
+#    accesslog:
+#      buffered: true
+#      directory: /root/seu
+#      enabled: true
+#      file-date-format: .yyyy-MM-dd
+#      pattern: common
+#      prefix: access_log
+#      rename-on-rotate: false
+#      request-attributes-enabled: false
+#      rotate: true
+#      suffix: .log
 
 
 

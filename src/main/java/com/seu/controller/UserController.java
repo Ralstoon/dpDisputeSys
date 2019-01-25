@@ -16,6 +16,7 @@ import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
 import com.seu.domian.Comment;
 import com.seu.domian.DisputecaseAccessory;
+import com.seu.domian.Register;
 import com.seu.domian.User;
 import com.seu.enums.RegisterEnum;
 import com.seu.enums.UpdateInfoEnum;
@@ -24,6 +25,7 @@ import com.seu.form.NormalUserForm;
 import com.seu.form.VOForm.UserForm;
 import com.seu.repository.CommentRepository;
 import com.seu.repository.DisputecaseAccessoryRepository;
+import com.seu.repository.RegisterRepository;
 import com.seu.repository.UserRepository;
 import com.seu.service.*;
 import com.seu.util.MD5Util;
@@ -99,6 +101,9 @@ public class UserController {
         return ResultVOUtil.ReturnBack(1, "密码修改成功");
     }
 
+    @Autowired
+    private RegisterRepository registerRepository;
+
     /*
      *@Author 吴宇航
      *@Description  注册似乎一定是普通用户
@@ -112,11 +117,45 @@ public class UserController {
         String password=map.get("password");
         String name = map.get("name");
 //        log.info("【注册phone为：】{}",phone);
-        int resultNum=userService.register(phone,password,name);
-        if(resultNum==1){
-            return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),RegisterEnum.REGISTER_SUCCESS.getMsg());
-        }else {
-            return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_FAIL.getCode(),RegisterEnum.REGISTER_FAIL.getMsg());
+        String role = map.get("role");
+        String province = map.get("province");
+        String city = map.get("city");
+        String zone = map.get("zone");
+        String mediationCenter = map.get("mediationCenter");
+        String position = map.get("position");
+        String telePhone = map.get("telePhone");
+
+        if(role.equals("普通用户")){
+            int resultNum=userService.register(phone,password,name);
+            if(resultNum==1){
+                return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),RegisterEnum.REGISTER_SUCCESS.getMsg());
+            }else {
+                return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_FAIL.getCode(),RegisterEnum.REGISTER_FAIL.getMsg());
+            }
+        }
+        else {
+            //判断同手机同角色
+            Register hasRegister = registerRepository.findByPhone(phone);
+
+            if (hasRegister == null || (hasRegister != null && !hasRegister.getRole().equals(role)) ){
+                Register register = new Register();
+                register.setPhone(phone);
+                register.setPassword(password);
+                register.setName(name);
+                register.setId(KeyUtil.genUniqueKey());
+                register.setCity(city);
+                register.setMediationCenter(mediationCenter);
+                register.setPosition(position);
+                register.setProvince(province);
+                register.setRole(role);
+                register.setTelephone(telePhone);
+                register.setZone(zone);
+                registerRepository.save(register);
+                return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),RegisterEnum.REGISTER_SUCCESS.getMsg());
+            }
+
+            return ResultVOUtil.ReturnBack(111,"该手机该角色已经注册");
+
         }
     }
 
