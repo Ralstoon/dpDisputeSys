@@ -576,13 +576,13 @@ public class ManagerController {
         }
         //f1,2非空
         if(!filterType.equals("") && !filterType2.equals("")){
-            if(filterType.equals("1") && filterType2.equals("0"))
-                adminList = adminRepository.findAllWithHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
             if(filterType.equals("1") && filterType2.equals("1"))
+                adminList = adminRepository.findAllWithHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("1") && filterType2.equals("0"))
                 adminList = adminRepository.findAllWithHasLevelAndNotHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
-            if(filterType.equals("0") && filterType2.equals("0"))
-                adminList = adminRepository.findAllWithNotHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
             if(filterType.equals("0") && filterType2.equals("1"))
+                adminList = adminRepository.findAllWithNotHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+            if(filterType.equals("0") && filterType2.equals("0"))
                 adminList = adminRepository.findAllWithNotHasLevelAndNotHasCaseManageLevel(province,city,pageRequest);
         }
 
@@ -599,20 +599,31 @@ public class ManagerController {
             String
             caseMangeLevel = admin.getCaseMangeLevel();
 
-            if(!level.equals("")){
-                level = "1";
-                a1=true;
+//            if(!level.equals("")){
+//                level = "1";
+//                a1=true;
+//            }else {
+//                level = "0";
+//                a1 =false;
+//            }
+//
+//            if(!caseMangeLevel.equals("")){
+//                caseMangeLevel = "1";
+//                a2 = true;
+//            }else {
+//                caseMangeLevel = "0";
+//                a2 = false;
+//            }
+
+            if(level.equals(String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1))){
+                a1 = true;
             }else {
-                level = "0";
                 a1 =false;
             }
-
-            if(!caseMangeLevel.equals("")){
-                caseMangeLevel = "1";
+            if(caseMangeLevel.equals(String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1))){
                 a2 = true;
             }else {
-                caseMangeLevel = "0";
-                a2 = false;
+                a2 =false;
             }
 
 

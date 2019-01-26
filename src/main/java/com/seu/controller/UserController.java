@@ -349,7 +349,8 @@ public class UserController {
 
         Map<String, String> data = new HashMap<>();
         data.put("authcode", userService.getCode(phone));
-        return ResultVOUtil.ReturnBack(data,123,"获取验证码成功");
+
+        return ResultVOUtil.ReturnBack(123,"获取验证码成功");
     }
 
 
