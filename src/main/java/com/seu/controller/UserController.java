@@ -14,6 +14,7 @@ import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
 import com.seu.common.RedisConstant;
 import com.seu.common.ServerResponse;
+import com.seu.common.VerifyCodeGlobal;
 import com.seu.domian.Comment;
 import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.Register;
@@ -31,6 +32,7 @@ import com.seu.service.*;
 import com.seu.util.MD5Util;
 import com.seu.utils.KeyUtil;
 import com.seu.utils.Request2JSONobjUtil;
+import com.seu.utils.VerifyCode;
 import lombok.extern.slf4j.Slf4j;
 import org.python.antlr.ast.Str;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +127,11 @@ public class UserController {
         String mediationCenter = map.get("mediationCenter");
         String position = map.get("position");
         String telePhone = map.get("telePhone");
+        String vertifyCode = map.get("vertifyCode");
+
+        if(!VerifyCodeGlobal.registerCode.get(phone).getCode().equals(vertifyCode)){
+            return ResultVOUtil.ReturnBack(112,"验证码错误");
+        }
 
         if(role.equals("普通用户")){
             int resultNum=userService.register(phone,password,name);
@@ -342,16 +350,6 @@ public class UserController {
         return response;
     }
 
-    //注册验证码请求
-    @RequestMapping(value = "getCode",method = RequestMethod.POST)
-    public ResultVO getZoneList(@RequestBody Map<String, String > map) {
-        String phone = map.get("phone");
-
-        Map<String, String> data = new HashMap<>();
-        data.put("authcode", userService.getCode(phone));
-
-        return ResultVOUtil.ReturnBack(123,"获取验证码成功");
-    }
 
 
 

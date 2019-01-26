@@ -643,16 +643,29 @@ public class ManagerController {
         String id = object.getString("id");
         boolean authority1  = object.getBoolean("authority1");
         boolean authority2 = object.getBoolean("authority2");
+
+        String managerId = object.getString("managerId");
+        Admin currentAdmin = adminRepository.getOne(managerId);
+        String setLevel = "";
+        if ( currentAdmin.getLevel().equals("2")){
+            setLevel = "1";
+        }
+        if ( currentAdmin.getLevel().equals("1")){
+            setLevel = "0";
+        }
+
         Admin admin = adminRepository.getOne(id);
         if(authority1)
-            admin.setLevel("1");
+            admin.setLevel(setLevel);
         else
-            admin.setLevel("0");
+            admin.setLevel("");
 
         if (authority2)
-            admin.setCaseMangeLevel("1");
+            admin.setCaseMangeLevel(setLevel);
         else
-            admin.setCaseMangeLevel("0");
+            admin.setCaseMangeLevel("");
+
+        adminRepository.save(admin);
 
         return ResultVOUtil.ReturnBack(123,"改好了");
     }

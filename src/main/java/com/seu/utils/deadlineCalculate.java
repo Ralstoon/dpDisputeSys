@@ -1,6 +1,7 @@
 package com.seu.utils;
 
 import com.seu.common.EndDate;
+import com.seu.common.VerifyCodeGlobal;
 import com.seu.domian.DisputecaseProcess;
 import com.seu.repository.DisputecaseProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,17 @@ public class  deadlineCalculate {
         for(int i = 0; i<60; i++){
             EndDate.isWeekday.put(sdf.parse(sdf.format(c.getTime())), getWorkingTimeUtil.getResult(c.getTime()));
             c.add(Calendar.DAY_OF_MONTH,1);
+        }
+    }
+
+    @Scheduled(cron="0/10 * * * * ? ") //每10s自动执行
+    public void deleteVerifyCode() throws Exception {
+        System.out.println("执行了");
+        for (String phone : VerifyCodeGlobal.registerCode.keySet()){
+            VerifyCode eachVerifyCode = VerifyCodeGlobal.registerCode.get(phone);
+            if((int)((new Date()).getTime() - eachVerifyCode.getTime().getTime())/1000 > 900){
+                VerifyCodeGlobal.registerCode.remove(phone);
+            }
         }
     }
 }

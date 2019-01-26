@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.seu.ViewObject.ResultVO;
 import com.seu.ViewObject.ResultVOUtil;
+import com.seu.common.VerifyCodeGlobal;
 import com.seu.domian.Disputecase;
 import com.seu.domian.DisputecaseAccessory;
 import com.seu.domian.DisputecaseProcess;
@@ -18,10 +19,7 @@ import com.seu.form.HistoricTaskForm;
 import com.seu.form.VOForm.NormalUserUploadListForm;
 import com.seu.repository.*;
 import com.seu.service.*;
-import com.seu.utils.DisputeProcessReturnMap;
-import com.seu.utils.GetTitleAndAbstract;
-import com.seu.utils.Request2JSONobjUtil;
-import com.seu.utils.VerifyProcessUtil;
+import com.seu.utils.*;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
@@ -66,6 +64,9 @@ public class DisputeProgressController {
 
     @Autowired
     private VerifyProcessUtil verifyProcessUtil;
+
+
+
 
 
     /*
@@ -733,6 +734,9 @@ public class DisputeProgressController {
         int page=map.getInteger("page")-1;
         PageRequest pageRequest=new PageRequest(page,size);
         String filterStatus=map.getString("filterStatus");
+
+        String id = map.getString("id");
+
         Integer status = 0;
         if(filterStatus.equals("0"))
             status = 0;

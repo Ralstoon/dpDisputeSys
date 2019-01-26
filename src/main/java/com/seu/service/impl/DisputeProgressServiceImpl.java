@@ -693,11 +693,11 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         String province=map.getString("province");
         String city=map.getString("city");
         String mediateCenter=map.getString("mediate_center");
-        if(province==null)
+        if(province==null || province.equals(""))
             province="%";
-        if(city==null)
+        if(city==null || city.equals(""))
             city="%";
-        if(mediateCenter==null)
+        if(mediateCenter==null || mediateCenter.equals(""))
             mediateCenter="%";
 
 
@@ -2045,16 +2045,16 @@ public class DisputeProgressServiceImpl implements DisputeProgressService {
         List<ExpertAppointForm> list=new ArrayList<>();
         if(filterStatus!=3){
             if(filterStatus==0)
-                pages=disputecaseAccessoryRepository.findBySuspended(2,pageRequest);
+                pages=disputecaseAccessoryRepository.findBySuspended(2,province,city,mediateCenter,pageRequest);
             else if(filterStatus==1 || filterStatus==2)
-                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus), pageRequest);
+                pages=disputecaseAccessoryRepository.findByParamProfessor(String.valueOf(filterStatus),province,city,mediateCenter, pageRequest);
 
             for(Object[] obj:pages.getContent()){
                 ExpertAppointForm form=new ExpertAppointForm(obj[0].toString(),obj[1].toString(), JSONObject.parseObject(obj[2].toString()).getString("application"), String.valueOf(filterStatus));
                 list.add(form);
             }
         }else{
-            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(pageRequest);
+            pages=disputecaseAccessoryRepository.findBySuspendedAndParamProfessor(province,city,mediateCenter,pageRequest);
             for(Object[] obj:pages.getContent()){
                 String result="";
                 if(obj[3].toString().equals("0"))
