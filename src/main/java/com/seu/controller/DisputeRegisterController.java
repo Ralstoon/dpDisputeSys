@@ -3,6 +3,9 @@ package com.seu.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -273,7 +276,7 @@ public class DisputeRegisterController {
     @PostMapping(value = "/getCityList")
     public ResultVO getCityList(){
         ConstantData constantData = constantDataRepository.findByName("room_list");
-        JSONObject city = JSONObject.parseObject(constantData.getData());
+        JSONObject city = JSONObject.parseObject(constantData.getData(), Feature.OrderedField);
         List<String> cityList = new ArrayList<>(city.keySet());
         Map map = new HashMap();
         map.put("cityList", cityList);
@@ -285,7 +288,7 @@ public class DisputeRegisterController {
     public ResultVO getZoneList(@RequestBody Map<String, String > map1){
         String city = map1.get("city");
         ConstantData constantData = constantDataRepository.findByName("room_list");
-        JSONObject citys = JSONObject.parseObject(constantData.getData());
+        JSONObject citys = JSONObject.parseObject(constantData.getData(), Feature.OrderedField);
         List<String> zoneList = new ArrayList<>(citys.getJSONObject(city).keySet());
         Map map = new HashMap();
         map.put("zoneList", zoneList);

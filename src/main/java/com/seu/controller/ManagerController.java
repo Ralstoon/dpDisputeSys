@@ -556,34 +556,34 @@ public class ManagerController {
         if(filterType.equals("") && filterType2.equals("")){
 
             adminList = adminRepository.findAllByProvinceAndCityAndLev(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),
-                    String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+                    String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),currentAdmin.getId() , pageRequest);
         }
 
         //f1非空，f2空
         if(!filterType.equals("") && filterType2.equals("")){
             if(filterType.equals("1"))
-                adminList = adminRepository.findAllWithHasLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+                adminList = adminRepository.findAllWithHasLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), currentAdmin.getId(),pageRequest);
             if(filterType.equals("0"))
-                adminList = adminRepository.findAllWithNotHasLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+                adminList = adminRepository.findAllWithNotHasLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), currentAdmin.getId(), pageRequest);
         }
         //f1空，f2非空
         if(filterType.equals("") && !filterType2.equals("")){
             if(filterType2.equals("1"))
-                adminList = adminRepository.findAllWithHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+                adminList = adminRepository.findAllWithHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), currentAdmin.getId(), pageRequest);
             if(filterType2.equals("0"))
-                adminList = adminRepository.findAllWithNotHasCaseManageLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), pageRequest);
+                adminList = adminRepository.findAllWithNotHasCaseManageLevel(province, city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), currentAdmin.getId(), pageRequest);
 
         }
         //f1,2非空
         if(!filterType.equals("") && !filterType2.equals("")){
             if(filterType.equals("1") && filterType2.equals("1"))
-                adminList = adminRepository.findAllWithHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+                adminList = adminRepository.findAllWithHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1), currentAdmin.getId(),pageRequest);
             if(filterType.equals("1") && filterType2.equals("0"))
-                adminList = adminRepository.findAllWithHasLevelAndNotHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+                adminList = adminRepository.findAllWithHasLevelAndNotHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),currentAdmin.getId(),pageRequest);
             if(filterType.equals("0") && filterType2.equals("1"))
-                adminList = adminRepository.findAllWithNotHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),pageRequest);
+                adminList = adminRepository.findAllWithNotHasLevelAndHasCaseManageLevel(province,city,String.valueOf(Integer.parseInt(currentAdmin.getLevel()) - 1),currentAdmin.getId(),pageRequest);
             if(filterType.equals("0") && filterType2.equals("0"))
-                adminList = adminRepository.findAllWithNotHasLevelAndNotHasCaseManageLevel(province,city,pageRequest);
+                adminList = adminRepository.findAllWithNotHasLevelAndNotHasCaseManageLevel(province,city,currentAdmin.getId(),pageRequest);
         }
 
         Integer totalPages=adminList.getTotalPages();

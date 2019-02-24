@@ -266,7 +266,7 @@ public class DisputeRegisterServiceImpl implements DisputeRegisterService {
                     String id = KeyUtil.genUniqueKey();
                     User newUser = new User();
                     newUser.setID(id);
-                    newUser.setPassword(MD5Util.MD5EncodeUtf8("111111"));
+                    newUser.setPassword(MD5Util.MD5EncodeUtf8(phone.substring(5)));
                     newUser.setPhone(phone);
                     newUser.setRole("0");
                     NormalUser newNU = new NormalUser();

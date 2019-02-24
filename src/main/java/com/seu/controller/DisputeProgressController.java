@@ -752,11 +752,11 @@ public class DisputeProgressController {
         String province=map.getString("province");
         String city=map.getString("city");
         String mediateCenter=map.getString("mediate_center");
-        if(province==null)
+        if(province==null || province.equals(""))
             province="%";
-        if(city==null)
+        if(city==null || city.equals(""))
             city="%";
-        if(mediateCenter==null)
+        if(mediateCenter==null || mediateCenter.equals(""))
             mediateCenter="%";
 
         return disputeProgressService.getExpertManageList(pageRequest,status,province,city,mediateCenter);

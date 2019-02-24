@@ -75,6 +75,11 @@ public class UserController {
     public ResultVO updatePassword(@RequestBody JSONObject map) {
         String phone=map.getString("phone");
         String password=map.getString("password");
+        String vertifyCode = map.getString("vertifyCode");
+
+        if(!VerifyCodeGlobal.fogetPasswordCode.get(phone).getCode().equals(vertifyCode)){
+            return ResultVOUtil.ReturnBack(112,"验证码错误");
+        }
 
         User user = userRepository.findByPhone(phone);
         user.setPassword(MD5Util.MD5EncodeUtf8(password));
@@ -159,7 +164,7 @@ public class UserController {
                 register.setTelephone(telePhone);
                 register.setZone(zone);
                 registerRepository.save(register);
-                return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),RegisterEnum.REGISTER_SUCCESS.getMsg());
+                return ResultVOUtil.ReturnBack(RegisterEnum.REGISTER_SUCCESS.getCode(),"成功提交等待审批");
             }
 
             return ResultVOUtil.ReturnBack(111,"该手机该角色已经注册");

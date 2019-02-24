@@ -37,18 +37,44 @@ public class DisputecaseAccessoryController {
     @RequestMapping(value = "/register/vertifyCode",method = RequestMethod.POST)
     public ResultVO getZoneList(@RequestBody Map<String, String > map) {
         String phone = map.get("phone");
-        if(VerifyCodeGlobal.registerCode==null){
-            VerifyCodeGlobal.registerCode = new HashMap<>();
+        String category = map.get("category");
+        if(category.equals("0")){
+            if(VerifyCodeGlobal.registerCode==null){
+                VerifyCodeGlobal.registerCode = new HashMap<>();
+            }
+            if(VerifyCodeGlobal.registerCode.get(phone)!=null){
+                if((int)((new Date()).getTime() - VerifyCodeGlobal.registerCode.get(phone).getTime().getTime())/1000 > 300){
+                    VerifyCodeGlobal.registerCode.put(phone,new VerifyCode(userService.getCode(phone),new Date()));
+                    return ResultVOUtil.ReturnBack(123,"获取验证码成功");
+                }
+                return ResultVOUtil.ReturnBack(124,"请勿重复获取验证码");
+            }
+            VerifyCode verifyCode = new VerifyCode(userService.getCode(phone),new Date());
+            VerifyCodeGlobal.registerCode.put(phone,verifyCode);
+
+
+            return ResultVOUtil.ReturnBack(123,"获取验证码成功");
         }
-        if(VerifyCodeGlobal.registerCode.get(phone)!=null){
-            return ResultVOUtil.ReturnBack(124,"请勿重复获取验证码");
+        else {
+            if(VerifyCodeGlobal.fogetPasswordCode==null){
+                VerifyCodeGlobal.fogetPasswordCode = new HashMap<>();
+            }
+            if(VerifyCodeGlobal.fogetPasswordCode.get(phone)!=null){
+                if((int)((new Date()).getTime() - VerifyCodeGlobal.fogetPasswordCode.get(phone).getTime().getTime())/1000 > 300){
+                    VerifyCodeGlobal.fogetPasswordCode.put(phone,new VerifyCode(userService.getCode(phone),new Date()));
+                    return ResultVOUtil.ReturnBack(123,"获取验证码成功");
+                }
+                return ResultVOUtil.ReturnBack(124,"请勿重复获取验证码");
+            }
+
+            VerifyCode verifyCode = new VerifyCode(userService.getCode(phone),new Date());
+            VerifyCodeGlobal.fogetPasswordCode.put(phone,verifyCode);
+
+
+            return ResultVOUtil.ReturnBack(123,"获取验证码成功");
         }
 
-        VerifyCode verifyCode = new VerifyCode(userService.getCode(phone),new Date());
-        VerifyCodeGlobal.registerCode.put(phone,verifyCode);
 
-
-        return ResultVOUtil.ReturnBack(123,"获取验证码成功");
     }
 
     //上传
